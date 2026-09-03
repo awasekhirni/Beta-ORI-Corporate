@@ -1,0 +1,1881 @@
+{
+  "framework_name": "Omni_ML_Algorithm_Selection_Framework_v4",
+  "version": "4.0",
+   "copyright": "2025-26 Beta ORI Inc. Canada. All Rights Reserved. ",
+    "author": "Awase Khirni Syed ",
+   "todo": "to devise strategies to turn it into a fully agentic ML Auto-Pilot, i have to think about organizing this 1. dynamic data profiling & pre-processing triggers, 2. how does each algo perform in resource-contrained search & time budgeting 3. failure recovery & self-correction logic/self correcting RAG, 4. Adaptive Ensemble & optimization, 5. self-reflection & meta-learning memory (dataset fingerprinting & reusability logic) oh! i also need to think about execution logic and agentic patterns that suit this for engine to work as planned. ",
+  "description": "A fully self-contained, exhaustive decision-support JSON. Integrates the complete taxonomy of 150+ ML algorithms (from linear models to state-space Mamba) with dynamic scoring heuristics, feature engineering constraints, computational complexity (Big-O), hyperparameter tuning strategies, cost-sensitivity, and edge deployment checks.",
+  "algorithm_catalog": {
+    "description": "Master taxonomy of 150+ algorithms spanning 19 super-families.",
+    "families": {
+      "1_linear_and_regularized_models": {
+        "regression": [
+          "Ordinary_Least_Squares",
+          "Ridge_Regression",
+          "Lasso_Regression",
+          "Elastic_Net",
+          "Least_Angle_Regression",
+          "Orthogonal_Matching_Pursuit",
+          "Bayesian_Linear_Regression",
+          "Bayesian_Ridge",
+          "ARD_Ridge",
+          "Theil_Sen_Estimator",
+          "RANSAC_Regressor",
+          "Huber_Regressor",
+          "Quantile_Regression",
+          "Passive_Aggressive_Regressor"
+        ],
+        "classification": [
+          "Logistic_Regression",
+          "Multinomial_Logistic_Regression",
+          "Probit_Regression",
+          "Complement_Log_Log",
+          "Linear_Discriminant_Analysis",
+          "Quadratic_Discriminant_Analysis",
+          "Regularized_Discriminant_Analysis",
+          "Fisher_LDA",
+          "Ridge_Classifier"
+        ],
+        "sparse_online": [
+          "SGD_Classifier",
+          "SGD_Regressor",
+          "Perceptron_Algorithm",
+          "Passive_Aggressive_Classifier",
+          "FTRL_Proximal",
+          "Coordinate_Descent"
+        ]
+      },
+      "2_support_vector_and_kernel": {
+        "svm": [
+          "Linear_SVC",
+          "Polynomial_SVC",
+          "RBF_SVC",
+          "Sigmoid_SVC",
+          "Nu_SVC",
+          "One_Class_SVM",
+          "Epsilon_SVR",
+          "Nu_SVR",
+          "Least_Squares_SVM",
+          "Relevance_Vector_Machine"
+        ],
+        "kernel_approx": [
+          "Nystroem",
+          "Random_Fourier_Features",
+          "Additive_Chi2",
+          "Skewed_Chi2"
+        ]
+      },
+      "3_nearest_neighbors": {
+        "neighbors": [
+          "K_Nearest_Neighbors_Classifier",
+          "K_Nearest_Neighbors_Regressor",
+          "Radius_Neighbors_Classifier",
+          "Nearest_Centroid",
+          "Nearest_Shrunken_Centroid",
+          "Large_Margin_Nearest_Neighbor",
+          "Neighborhood_Components_Analysis"
+        ],
+        "prototypes": [
+          "Learning_Vector_Quantization",
+          "Generalized_LVQ",
+          "K_Means_SMOTE"
+        ]
+      },
+      "4_decision_trees_and_rules": {
+        "trees": [
+          "ID3",
+          "C4.5",
+          "C5.0",
+          "CART",
+          "CHAID",
+          "M5_Model_Tree",
+          "Oblique_Tree_OC1",
+          "Random_Multi_Model_Tree"
+        ],
+        "rules": [
+          "OneR",
+          "RIPPER",
+          "CN2",
+          "FOIL",
+          "FURIA",
+          "PART",
+          "Ride_Classifier"
+        ]
+      },
+      "5_ensemble_bagging": {
+        "bagging": [
+          "Bagging_Classifier",
+          "Bagging_Regressor",
+          "Random_Forest_Classifier",
+          "Random_Forest_Regressor",
+          "Extra_Trees",
+          "Random_Subspace",
+          "Rotation_Forest",
+          "Balanced_Bagging",
+          "Pasting"
+        ]
+      },
+      "6_ensemble_boosting": {
+        "classical": [
+          "AdaBoost",
+          "SAMME",
+          "SAMME.R",
+          "LPBoost",
+          "TotalBoost",
+          "BrownBoost",
+          "RUSBoost"
+        ],
+        "gradient_machines": [
+          "GBM",
+          "GBRT",
+          "HistGradientBoosting_Classifier",
+          "HistGradientBoosting_Regressor"
+        ],
+        "modern_gbms": [
+          "XGBoost",
+          "XGBoost_Linear",
+          "XGBoost_RF_Mode",
+          "LightGBM",
+          "LightGBM_GOSS",
+          "CatBoost",
+          "CatBoost_Ordered",
+          "NGBoost",
+          "Explainable_Boosting_Machine",
+          "TabNet",
+          "NODE"
+        ]
+      },
+      "7_ensemble_stacking": {
+        "meta": [
+          "Stacking_Classifier",
+          "Stacking_Regressor",
+          "Blending",
+          "Soft_Voting",
+          "Hard_Voting",
+          "Averaging_Regressor",
+          "Weighted_Ensemble",
+          "SuperLearner"
+        ]
+      },
+      "8_bayesian_graphical": {
+        "naive_bayes": [
+          "Gaussian_Naive_Bayes",
+          "Multinomial_Naive_Bayes",
+          "Bernoulli_Naive_Bayes",
+          "Complement_Naive_Bayes",
+          "Categorical_Naive_Bayes"
+        ],
+        "bayesian_nets": [
+          "Bayesian_Network",
+          "Dynamic_BN",
+          "Tree_Averaged_Naive_Bayes",
+          "Generalized_BN"
+        ],
+        "markov": [
+          "Hidden_Markov_Model",
+          "Maximum_Entropy_Markov",
+          "Conditional_Random_Fields",
+          "Markov_Random_Fields",
+          "Restricted_Boltzmann_Machine"
+        ],
+        "gaussian_processes": [
+          "Gaussian_Process_Regressor",
+          "Gaussian_Process_Classifier",
+          "White_Kernel_GPR",
+          "Sparse_GPR",
+          "Deep_Gaussian_Process"
+        ]
+      },
+      "9_neural_deep_learning": {
+        "mlp": [
+          "MLP_Classifier",
+          "MLP_Regressor",
+          "ResMLP",
+          "MLP_Mixer"
+        ],
+        "cnn": [
+          "LeNet5",
+          "AlexNet",
+          "VGG",
+          "Inception",
+          "ResNet",
+          "DenseNet",
+          "EfficientNet",
+          "MobileNet",
+          "ShuffleNet",
+          "SqueezeNet",
+          "Vision_Transformer",
+          "Swin_Transformer",
+          "ConvNeXt",
+          "Depthwise_Separable_CNN",
+          "1D_CNN",
+          "3D_CNN"
+        ],
+        "rnn": [
+          "Elman_RNN",
+          "Jordan_RNN",
+          "LSTM",
+          "GRU",
+          "BiLSTM",
+          "BiGRU",
+          "Stacked_LSTM",
+          "Echo_State_Network",
+          "IndRNN",
+          "QRNN"
+        ],
+        "transformers": [
+          "Vanilla_Transformer",
+          "BERT",
+          "GPT",
+          "RoBERTa",
+          "XLNet",
+          "ALBERT",
+          "T5",
+          "Longformer",
+          "BigBird",
+          "Sparse_Transformer"
+        ],
+        "state_space": [
+          "SSM",
+          "S4",
+          "Mamba",
+          "H3"
+        ],
+        "generative": [
+          "Autoencoder",
+          "Denoising_AE",
+          "Sparse_AE",
+          "Variational_AE",
+          "VQ_VAE",
+          "GAN",
+          "DCGAN",
+          "StyleGAN",
+          "CycleGAN",
+          "Pix2Pix",
+          "DDPM",
+          "Score_SDE",
+          "Normalizing_Flows",
+          "RealNVP",
+          "GLOW"
+        ],
+        "graph_nn": [
+          "GCN",
+          "GAT",
+          "GraphSAGE",
+          "GIN",
+          "MPNN",
+          "GRN",
+          "TGN",
+          "R_GCN"
+        ],
+        "attentionless": [
+          "MLP_Mixer",
+          "ResMLP",
+          "ConvMixer",
+          "FNet",
+          "S4_Models"
+        ],
+        "neuro_symbolic": [
+          "Deep_Probabilistic_Programming",
+          "Differentiable_Logic_Machines"
+        ]
+      },
+      "10_time_series": {
+        "statistical": [
+          "AR",
+          "MA",
+          "ARMA",
+          "ARIMA",
+          "SARIMA",
+          "SARIMAX",
+          "VAR",
+          "VARMA",
+          "VECM",
+          "ARCH",
+          "GARCH",
+          "EGARCH"
+        ],
+        "smoothing": [
+          "Simple_Exponential_Smoothing",
+          "Holt_Linear_Trend",
+          "Holt_Winters_Additive",
+          "Holt_Winters_Multiplicative",
+          "ETS",
+          "Theta_Method"
+        ],
+        "deep_ts": [
+          "WaveNet",
+          "DeepAR",
+          "Prophet",
+          "NeuralProphet",
+          "N_BEATS",
+          "N_HiTS",
+          "TCN",
+          "Transformer_TFT",
+          "Informer",
+          "Autoformer",
+          "PatchTST",
+          "Crossformer",
+          "FiLM",
+          "DLinear",
+          "NLinear"
+        ],
+        "ml_ts": [
+          "Recursive_GBM_TS",
+          "Direct_SVM_TS",
+          "Lagged_XGBoost",
+          "Lagged_LightGBM"
+        ]
+      },
+      "11_dim_reduction": {
+        "linear": [
+          "PCA",
+          "Sparse_PCA",
+          "Kernel_PCA",
+          "Truncated_SVD",
+          "Incremental_PCA",
+          "Randomized_PCA",
+          "Factor_Analysis",
+          "ICA",
+          "NMF",
+          "LDA_Supervised",
+          "PLS"
+        ],
+        "manifold": [
+          "MDS",
+          "Isomap",
+          "LLE",
+          "Modified_LLE",
+          "Hessian_LLE",
+          "Laplacian_Eigenmaps",
+          "Spectral_Embedding",
+          "t_SNE",
+          "UMAP",
+          "Autoencoder_Embed",
+          "PHATE"
+        ],
+        "selection": [
+          "RFE",
+          "SelectKBest",
+          "SelectPercentile",
+          "Mutual_Information",
+          "Stability_Selection"
+        ]
+      },
+      "12_clustering": {
+        "partitioning": [
+          "K_Means",
+          "K_Means_PlusPlus",
+          "Mini_Batch_K_Means",
+          "K_Medoids",
+          "K_Medians",
+          "Fuzzy_C_Means"
+        ],
+        "hierarchical": [
+          "Agglomerative",
+          "Divisive",
+          "Ward",
+          "Complete_Linkage",
+          "Average_Linkage",
+          "BIRCH",
+          "CURE",
+          "ROCK"
+        ],
+        "density": [
+          "DBSCAN",
+          "OPTICS",
+          "HDBSCAN",
+          "Mean_Shift",
+          "DENCLUE"
+        ],
+        "distribution": [
+          "Gaussian_Mixture",
+          "Expectation_Maximization",
+          "VB_GMM",
+          "Dirichlet_Process_Mixture"
+        ],
+        "spectral": [
+          "Spectral_Clustering",
+          "Affinity_Propagation",
+          "Subspace_Clustering",
+          "Correlation_Clustering"
+        ]
+      },
+      "13_anomaly": {
+        "statistical": [
+          "Elliptic_Envelope",
+          "Mahalanobis_Distance",
+          "Modified_Z_Score"
+        ],
+        "proximity": [
+          "Local_Outlier_Factor",
+          "COF",
+          "KNN_Outlier",
+          "ABOD"
+        ],
+        "tree": [
+          "Isolation_Forest",
+          "Extended_IForest",
+          "Random_Cut_Forest",
+          "Feature_Bagging_Outlier"
+        ],
+        "neural": [
+          "Reconstruction_AE",
+          "VAE_Anomaly",
+          "AnoGAN"
+        ],
+        "one_class": [
+          "One_Class_SVM",
+          "Support_Vector_Data_Description"
+        ]
+      },
+      "14_ranking_recommendation": {
+        "pointwise": [
+          "RankSVM",
+          "RankRidge",
+          "McRank"
+        ],
+        "pairwise": [
+          "RankNet",
+          "LambdaRank",
+          "LambdaMART",
+          "ListNet",
+          "ListMLE"
+        ],
+        "cf": [
+          "Matrix_Factorization_SVD",
+          "NMF_Rec",
+          "ALS",
+          "WALS",
+          "BPR",
+          "SVD_PlusPlus",
+          "FunkSVD",
+          "CoClustering"
+        ],
+        "fm": [
+          "Factorization_Machine",
+          "Field_Aware_FM",
+          "xDeepFM",
+          "DeepFM",
+          "Neural_CF",
+          "Wide_and_Deep"
+        ]
+      },
+      "15_online_streaming": {
+        "sklearn": [
+          "SGD_Classifier_Online",
+          "SGD_Regressor_Online",
+          "Passive_Aggressive_Online",
+          "Perceptron_Online"
+        ],
+        "river": [
+          "River_Linear_Regression",
+          "River_Logistic_Regression",
+          "River_Hoeffding_Tree",
+          "River_Adaptive_Random_Forest",
+          "River_Drift_Detector",
+          "River_AMF"
+        ],
+        "deep_online": [
+          "Online_Backprop",
+          "Incremental_ELM",
+          "OS_ELM"
+        ]
+      },
+      "16_semi_supervised": {
+        "ssl": [
+          "Self_Training",
+          "Co_Training",
+          "Label_Propagation",
+          "Label_Spreading",
+          "S3VM",
+          "TSVM"
+        ],
+        "active": [
+          "Uncertainty_Sampling",
+          "Query_By_Committee",
+          "Expected_Model_Change",
+          "Variance_Reduction"
+        ]
+      },
+      "17_reinforcement": {
+        "tabular": [
+          "Q_Learning",
+          "Double_Q",
+          "SARSA",
+          "Expected_SARSA",
+          "TD_Lambda"
+        ],
+        "deep_value": [
+          "DQN",
+          "Double_DQN",
+          "Dueling_DQN",
+          "Prioritized_Replay",
+          "Rainbow"
+        ],
+        "policy": [
+          "REINFORCE",
+          "A2C",
+          "A3C",
+          "DDPG",
+          "TRPO",
+          "PPO",
+          "SAC",
+          "TD3"
+        ],
+        "model_based": [
+          "Dreamer",
+          "World_Models",
+          "MuZero",
+          "AlphaZero"
+        ]
+      },
+      "18_explainability": {
+        "global": [
+          "RuleFit",
+          "Skope_Rules",
+          "Explainable_Boosting_Machine",
+          "Generalized_Additive_Models"
+        ],
+        "local": [
+          "LIME",
+          "SHAP_Kernel",
+          "SHAP_Tree",
+          "Anchors"
+        ]
+      },
+      "19_probabilistic_programming": {
+        "mcmc": [
+          "Metropolis_Hastings",
+          "HMC",
+          "NUTS"
+        ],
+        "vi": [
+          "Mean_Field_VI",
+          "Stochastic_VI",
+          "Normalizing_Flow_VI"
+        ],
+        "libraries": [
+          "PyMC_Model",
+          "Stan_Model",
+          "Turing_Model",
+          "Edward_Model"
+        ]
+      }
+    }
+  },
+  "problem_type_mapping": {
+    "regression": [
+      "Ordinary_Least_Squares",
+      "Ridge_Regression",
+      "Lasso_Regression",
+      "Elastic_Net",
+      "Huber_Regressor",
+      "Quantile_Regression",
+      "Passive_Aggressive_Regressor",
+      "SGD_Regressor",
+      "Epsilon_SVR",
+      "Nu_SVR",
+      "Gaussian_Process_Regressor",
+      "CART",
+      "M5_Model_Tree",
+      "Random_Forest_Regressor",
+      "Extra_Trees",
+      "GBM",
+      "GBRT",
+      "HistGradientBoosting_Regressor",
+      "XGBoost",
+      "LightGBM",
+      "CatBoost",
+      "NGBoost",
+      "MLP_Regressor",
+      "DeepAR",
+      "Prophet",
+      "N_BEATS",
+      "TCN",
+      "LSTM",
+      "GRU",
+      "Transformer_TFT",
+      "Informer"
+    ],
+    "binary_classification": [
+      "Logistic_Regression",
+      "Probit_Regression",
+      "Complement_Log_Log",
+      "Linear_Discriminant_Analysis",
+      "Quadratic_Discriminant_Analysis",
+      "Ridge_Classifier",
+      "SGD_Classifier",
+      "Perceptron",
+      "Linear_SVC",
+      "RBF_SVC",
+      "Polynomial_SVC",
+      "Nu_SVC",
+      "K_Nearest_Neighbors_Classifier",
+      "Radius_Neighbors_Classifier",
+      "Nearest_Centroid",
+      "CART",
+      "ID3",
+      "C4.5",
+      "Random_Forest_Classifier",
+      "Extra_Trees",
+      "AdaBoost",
+      "LPBoost",
+      "RUSBoost",
+      "GBM",
+      "XGBoost",
+      "LightGBM",
+      "CatBoost",
+      "Gaussian_Naive_Bayes",
+      "Bernoulli_Naive_Bayes",
+      "Complement_Naive_Bayes",
+      "MLP_Classifier",
+      "TabNet",
+      "NODE",
+      "One_Class_SVM",
+      "Isolation_Forest"
+    ],
+    "multi_class_classification": [
+      "Multinomial_Logistic_Regression",
+      "Multinomial_Naive_Bayes",
+      "Linear_Discriminant_Analysis",
+      "Quadratic_Discriminant_Analysis",
+      "Ridge_Classifier",
+      "SGD_Classifier",
+      "Linear_SVC",
+      "RBF_SVC",
+      "K_Nearest_Neighbors_Classifier",
+      "CART",
+      "Random_Forest_Classifier",
+      "Extra_Trees",
+      "AdaBoost",
+      "GBM",
+      "XGBoost",
+      "LightGBM",
+      "CatBoost",
+      "MLP_Classifier",
+      "Vision_Transformer",
+      "ResNet",
+      "EfficientNet"
+    ],
+    "multi_label_classification": [
+      "Binary_Relevance_Classifier_Chain",
+      "Label_Powerset",
+      "Classifier_Chain",
+      "Random_Forest_Multi_Output",
+      "MLP_Multi_Output",
+      "Deep_Learning_Sequence_Models"
+    ],
+    "clustering": [
+      "K_Means",
+      "Mini_Batch_K_Means",
+      "K_Medoids",
+      "Fuzzy_C_Means",
+      "Agglomerative",
+      "Ward",
+      "BIRCH",
+      "DBSCAN",
+      "OPTICS",
+      "HDBSCAN",
+      "Mean_Shift",
+      "Gaussian_Mixture",
+      "VB_GMM",
+      "Dirichlet_Process_Mixture",
+      "Spectral_Clustering",
+      "Affinity_Propagation",
+      "Subspace_Clustering"
+    ],
+    "dimensionality_reduction": [
+      "PCA",
+      "Sparse_PCA",
+      "Kernel_PCA",
+      "Truncated_SVD",
+      "Incremental_PCA",
+      "Factor_Analysis",
+      "ICA",
+      "NMF",
+      "LDA_Supervised",
+      "PLS",
+      "MDS",
+      "Isomap",
+      "LLE",
+      "Laplacian_Eigenmaps",
+      "t_SNE",
+      "UMAP",
+      "PHATE",
+      "Autoencoder_Embed",
+      "RFE",
+      "SelectKBest",
+      "Mutual_Information"
+    ],
+    "anomaly_detection": [
+      "Isolation_Forest",
+      "Extended_IForest",
+      "Local_Outlier_Factor",
+      "COF",
+      "ABOD",
+      "Elliptic_Envelope",
+      "Mahalanobis_Distance",
+      "One_Class_SVM",
+      "Support_Vector_Data_Description",
+      "Reconstruction_AE",
+      "VAE_Anomaly",
+      "AnoGAN",
+      "Random_Cut_Forest",
+      "Feature_Bagging_Outlier"
+    ],
+    "recommendation_systems": [
+      "Matrix_Factorization_SVD",
+      "ALS",
+      "WALS",
+      "BPR",
+      "SVD_PlusPlus",
+      "FunkSVD",
+      "CoClustering",
+      "Factorization_Machine",
+      "Field_Aware_FM",
+      "xDeepFM",
+      "DeepFM",
+      "Neural_CF",
+      "Wide_and_Deep",
+      "LambdaMART",
+      "RankNet",
+      "ListNet"
+    ],
+    "time_series_forecasting": [
+      "AR",
+      "MA",
+      "ARMA",
+      "ARIMA",
+      "SARIMA",
+      "SARIMAX",
+      "VAR",
+      "VARMA",
+      "GARCH",
+      "Simple_Exponential_Smoothing",
+      "Holt_Winters",
+      "ETS",
+      "Theta_Method",
+      "Prophet",
+      "NeuralProphet",
+      "N_BEATS",
+      "N_HiTS",
+      "WaveNet",
+      "DeepAR",
+      "TCN",
+      "Transformer_TFT",
+      "Informer",
+      "Autoformer",
+      "PatchTST",
+      "Crossformer",
+      "LSTM",
+      "GRU",
+      "Lagged_XGBoost",
+      "Lagged_LightGBM"
+    ],
+    "reinforcement_learning": [
+      "Q_Learning",
+      "SARSA",
+      "TD_Lambda",
+      "DQN",
+      "Double_DQN",
+      "Dueling_DQN",
+      "Rainbow",
+      "REINFORCE",
+      "A2C",
+      "A3C",
+      "DDPG",
+      "TRPO",
+      "PPO",
+      "SAC",
+      "TD3",
+      "Dreamer",
+      "MuZero"
+    ],
+    "ranking": [
+      "RankSVM",
+      "RankRidge",
+      "RankNet",
+      "LambdaRank",
+      "LambdaMART",
+      "ListNet",
+      "ListMLE",
+      "McRank"
+    ]
+  },
+  "data_characteristics_suitability": {
+    "linearity": {
+      "linear_data": [
+        "Ordinary_Least_Squares",
+        "Ridge_Regression",
+        "Lasso_Regression",
+        "Elastic_Net",
+        "Logistic_Regression",
+        "Multinomial_Logistic",
+        "Linear_Discriminant_Analysis",
+        "Linear_SVC",
+        "Fisher_LDA",
+        "Ridge_Classifier",
+        "Probit_Regression"
+      ],
+      "non_linear_data": [
+        "Polynomial_SVC",
+        "RBF_SVC",
+        "Sigmoid_SVC",
+        "K_Nearest_Neighbors",
+        "Radius_Neighbors",
+        "CART",
+        "ID3",
+        "C4.5",
+        "Random_Forest",
+        "Extra_Trees",
+        "AdaBoost",
+        "GBM",
+        "XGBoost",
+        "LightGBM",
+        "CatBoost",
+        "MLP_Classifier",
+        "LSTM",
+        "GRU",
+        "Transformer",
+        "Gaussian_Process",
+        "Isomap",
+        "LLE",
+        "t_SNE",
+        "UMAP"
+      ],
+      "mixed_or_unknown": [
+        "XGBoost",
+        "LightGBM",
+        "CatBoost",
+        "Random_Forest",
+        "Gradient_Boosting_Machine",
+        "TabNet",
+        "NODE"
+      ]
+    },
+    "dimensionality": {
+      "low_dimension_under_50": [
+        "All_models_valid",
+        "K_Nearest_Neighbors",
+        "Linear_SVM",
+        "Gaussian_Process",
+        "LDA"
+      ],
+      "high_dimension_50_to_10000": {
+        "preferred": [
+          "Lasso_Regression",
+          "Ridge_Regression",
+          "Elastic_Net",
+          "Linear_SVC",
+          "Logistic_Regression",
+          "Naive_Bayes_Family",
+          "XGBoost",
+          "LightGBM"
+        ],
+        "requires_preprocessing": [
+          "PCA_Then_Any_Model",
+          "Autoencoder_Then_Any_Model",
+          "Truncated_SVD_Then_Any_Model",
+          "Feature_Hashing_Then_Linear_Model"
+        ]
+      },
+      "very_high_dimension_text_10000_plus": [
+        "Multinomial_Naive_Bayes",
+        "Complement_Naive_Bayes",
+        "Linear_SVC",
+        "Logistic_Regression_L1",
+        "Perceptron",
+        "SGD_Classifier",
+        "FastText",
+        "BERT",
+        "RoBERTa",
+        "Transformer_Architectures"
+      ]
+    },
+    "data_size": {
+      "small_samples_under_1000": [
+        "Naive_Bayes",
+        "Linear_Models",
+        "RBF_SVM",
+        "Gaussian_Process",
+        "Decision_Tree",
+        "Shallow_MLP",
+        "Bagging_with_weak_learners"
+      ],
+      "medium_samples_1000_to_100k": [
+        "Random_Forest",
+        "XGBoost",
+        "LightGBM",
+        "CatBoost",
+        "K_Nearest_Neighbors",
+        "MLP_1_2_hidden_layers",
+        "SGD_Models"
+      ],
+      "large_samples_100k_to_10M": [
+        "LightGBM",
+        "XGBoost_Hist",
+        "Random_Forest_approx",
+        "Stochastic_Gradient_Descent",
+        "Deep_Learning_with_MiniBatch",
+        "Vowpal_Wabbit"
+      ],
+      "massive_big_data_10M_plus": [
+        "Distributed_XGBoost",
+        "Spark_ML_RandomForest",
+        "Spark_Linear_Models",
+        "Vowpal_Wabbit",
+        "Online_SGD",
+        "H2O_GLM",
+        "Dask_ML_Models"
+      ]
+    },
+    "data_quality": {
+      "missing_values": [
+        "XGBoost_native_sparsity",
+        "CatBoost_native",
+        "LightGBM_native",
+        "CART_handles_NaNs",
+        "Gradient_Boosting_missing_splits",
+        "Imputation_Plus_Linear_Models"
+      ],
+      "outliers_present": [
+        "Decision_Tree",
+        "Random_Forest",
+        "Huber_Regressor",
+        "RANSAC_Regressor",
+        "Theil_Sen_Estimator",
+        "Isolation_Forest",
+        "Robust_Covariance"
+      ],
+      "noisy_labels": [
+        "Robust_Logistic_Regression",
+        "Random_Forest",
+        "AdaBoost",
+        "Preprocessing_Label_Correction",
+        "Trimmed_Estimators"
+      ],
+      "imbalanced_classes": [
+        "Balanced_Random_Forest",
+        "RUSBoost",
+        "SMOTE_Plus_Any_Model",
+        "XGBoost_scale_pos_weight",
+        "Focal_Loss_Neural_Net",
+        "Cost_Sensitive_SVM",
+        "Threshold_Moving",
+        "Bagging_with_oversampling"
+      ]
+    },
+    "feature_types": {
+      "all_numeric": [
+        "All_standard_models"
+      ],
+      "high_cardinality_categorical_100+_unique": [
+        "CatBoost_native_cat",
+        "LightGBM_native_cat",
+        "Target_Encoding_+_Any_GBM",
+        "Decision_Tree",
+        "Factorization_Machine"
+      ],
+      "low_cardinality_categorical": [
+        "OneHot_Encoding_+_Linear_Models",
+        "Ordinal_Encoding_+_Tree_Models",
+        "Binary_Encoding"
+      ],
+      "text_data": [
+        "TFIDF_+_Linear_SVM",
+        "TFIDF_+_Logistic_Regression",
+        "Word2Vec_+_Deep_NNs",
+        "BERT_FineTune",
+        "RoBERTa",
+        "FastText",
+        "GloVe_+_RNN_LSTM"
+      ],
+      "image_data": [
+        "Convolutional_NNs",
+        "ResNet",
+        "EfficientNet",
+        "Vision_Transformer",
+        "Swin_Transformer",
+        "MLP_Mixer",
+        "ConvNeXt"
+      ],
+      "graph_data": [
+        "Graph_Convolutional_Network",
+        "Graph_Attention_Network",
+        "GraphSAGE",
+        "Message_Passing_NN",
+        "R_GCN"
+      ],
+      "multi_modal": [
+        "Late_Fusion_Ensembles",
+        "Pre_trained_Image_Embedding_+_Tabular_GBM",
+        "Transformer_Cross_Modal",
+        "CLIP_style_architectures"
+      ]
+    }
+  },
+  "feature_engineering_constraints": {
+    "categorical_encoding_preference": {
+      "one_hot": [
+        "Linear_Models",
+        "Linear_SVC",
+        "Naive_Bayes",
+        "K_Nearest_Neighbors",
+        "SVM_without_native_cat"
+      ],
+      "target_encoding": [
+        "XGBoost",
+        "LightGBM",
+        "Regularized_Linear_Models",
+        "Gradient_Boosting"
+      ],
+      "native_categorical_support": [
+        "CatBoost",
+        "LightGBM_optimized",
+        "Decision_Tree",
+        "Random_Forest",
+        "GBM"
+      ]
+    },
+    "scaling_normalization_requirements": {
+      "requires_standardization_minmax": [
+        "SVM_all_kernels",
+        "Linear_Regression",
+        "Logistic_Regression",
+        "K_Nearest_Neighbors",
+        "PCA",
+        "ICA",
+        "NMF",
+        "MLP_Neural_Networks",
+        "Gaussian_Process",
+        "LDA",
+        "QDA"
+      ],
+      "scale_invariant": [
+        "Tree_Based_models",
+        "Naive_Bayes",
+        "Ensemble_GBMs",
+        "Random_Forest",
+        "XGBoost",
+        "LightGBM",
+        "CatBoost",
+        "Decision_Tree"
+      ]
+    }
+  },
+  "tradeoff_taxonomy": {
+    "algorithm_complexity_big_o": {
+      "Ordinary_Least_Squares": {
+        "training": "O(n*d^2)",
+        "inference": "O(d)"
+      },
+      "Ridge_Lasso": {
+        "training": "O(n*d^2)",
+        "inference": "O(d)"
+      },
+      "Logistic_Regression": {
+        "training": "O(n*d)",
+        "inference": "O(d)"
+      },
+      "SGD_Classifier": {
+        "training": "O(k*n*d)",
+        "inference": "O(d)"
+      },
+      "Linear_SVC": {
+        "training": "O(n*d)",
+        "inference": "O(d)"
+      },
+      "RBF_SVC": {
+        "training": "O(n^2) to O(n^3)",
+        "inference": "O(n_sv*d)"
+      },
+      "K_Nearest_Neighbors": {
+        "training": "O(1)",
+        "inference": "O(n*d)"
+      },
+      "CART_Decision_Tree": {
+        "training": "O(n*d*log n)",
+        "inference": "O(log n)"
+      },
+      "Random_Forest": {
+        "training": "O(t*n*d*log n)",
+        "inference": "O(t*log n)"
+      },
+      "XGBoost": {
+        "training": "O(t*n*d*log n)",
+        "inference": "O(t*log n)"
+      },
+      "LightGBM": {
+        "training": "O(t*n*bins)",
+        "inference": "O(t*log n)"
+      },
+      "CatBoost": {
+        "training": "O(t*n*d*log n)",
+        "inference": "O(t*log n)"
+      },
+      "MLP_Neural_Net": {
+        "training": "O(e*n*p)",
+        "inference": "O(p)"
+      },
+      "CNN_ResNet": {
+        "training": "O(e*n*p)",
+        "inference": "O(p)"
+      },
+      "LSTM": {
+        "training": "O(e*n*p*seq_len)",
+        "inference": "O(p*seq_len)"
+      },
+      "Transformer": {
+        "training": "O(e*n*seq_len^2)",
+        "inference": "O(seq_len^2)"
+      },
+      "Gaussian_Process": {
+        "training": "O(n^3)",
+        "inference": "O(n)"
+      },
+      "PCA": {
+        "training": "O(d^3 + n*d^2)",
+        "inference": "O(d^2)"
+      },
+      "K_Means": {
+        "training": "O(k*n*d*iter)",
+        "inference": "O(k*d)"
+      },
+      "DBSCAN": {
+        "training": "O(n*log n)",
+        "inference": "O(log n)"
+      },
+      "Isolation_Forest": {
+        "training": "O(t*n*log n)",
+        "inference": "O(t*log n)"
+      }
+    },
+    "interpretability_explainability_stack": {
+      "highly_interpretable_5": {
+        "models": [
+          "Linear_Regression",
+          "Logistic_Regression",
+          "Probit",
+          "LDA",
+          "Decision_Tree_CART",
+          "ID3",
+          "RuleFit",
+          "EBM",
+          "Naive_Bayes"
+        ],
+        "tools": [
+          "Coefficients",
+          "p-values",
+          "Feature_Importance",
+          "Partial_Dependence_Plots",
+          "Tree_Visualization",
+          "Odds_Ratios"
+        ]
+      },
+      "moderately_interpretable_3": {
+        "models": [
+          "Random_Forest",
+          "XGBoost",
+          "LightGBM",
+          "CatBoost",
+          "KNN",
+          "GAM",
+          "Gaussian_Process"
+        ],
+        "tools": [
+          "Permutation_Importance",
+          "SHAP_TreeExplainer",
+          "Gain_Importance",
+          "LIME",
+          "PDP"
+        ]
+      },
+      "low_interpretability_1": {
+        "models": [
+          "RBF_SVM",
+          "Deep_Neural_Nets",
+          "CNNs",
+          "Transformers",
+          "GANs",
+          "Autoencoders",
+          "Ensemble_Stacking"
+        ],
+        "tools": [
+          "Grad_CAM",
+          "Integrated_Gradients",
+          "LIME",
+          "SHAP_Kernel",
+          "Feature_Ablation",
+          "Surrogate_Models"
+        ]
+      }
+    },
+    "performance_speed_memory_matrix": {
+      "Linear_Regression": {
+        "accuracy": 2,
+        "train_speed": 5,
+        "infer_speed": 5,
+        "memory": 5,
+        "scalability": 9
+      },
+      "Logistic_Regression": {
+        "accuracy": 3,
+        "train_speed": 5,
+        "infer_speed": 5,
+        "memory": 5,
+        "scalability": 9
+      },
+      "SGD_Classifier": {
+        "accuracy": 3,
+        "train_speed": 5,
+        "infer_speed": 5,
+        "memory": 5,
+        "scalability": 10
+      },
+      "Naive_Bayes": {
+        "accuracy": 2,
+        "train_speed": 5,
+        "infer_speed": 5,
+        "memory": 5,
+        "scalability": 10
+      },
+      "Decision_Tree": {
+        "accuracy": 3,
+        "train_speed": 4,
+        "infer_speed": 5,
+        "memory": 4,
+        "scalability": 8
+      },
+      "Random_Forest": {
+        "accuracy": 4,
+        "train_speed": 3,
+        "infer_speed": 4,
+        "memory": 3,
+        "scalability": 7
+      },
+      "XGBoost": {
+        "accuracy": 5,
+        "train_speed": 3,
+        "infer_speed": 4,
+        "memory": 3,
+        "scalability": 6
+      },
+      "LightGBM": {
+        "accuracy": 5,
+        "train_speed": 4,
+        "infer_speed": 5,
+        "memory": 4,
+        "scalability": 8
+      },
+      "CatBoost": {
+        "accuracy": 5,
+        "train_speed": 3,
+        "infer_speed": 4,
+        "memory": 3,
+        "scalability": 6
+      },
+      "RBF_SVM": {
+        "accuracy": 4,
+        "train_speed": 2,
+        "infer_speed": 3,
+        "memory": 2,
+        "scalability": 3
+      },
+      "KNN": {
+        "accuracy": 3,
+        "train_speed": 5,
+        "infer_speed": 1,
+        "memory": 3,
+        "scalability": 4
+      },
+      "MLP_Deep": {
+        "accuracy": 5,
+        "train_speed": 1,
+        "infer_speed": 3,
+        "memory": 1,
+        "scalability": 5
+      },
+      "CNN_ResNet": {
+        "accuracy": 5,
+        "train_speed": 1,
+        "infer_speed": 2,
+        "memory": 1,
+        "scalability": 4
+      },
+      "Transformer": {
+        "accuracy": 5,
+        "train_speed": 1,
+        "infer_speed": 2,
+        "memory": 1,
+        "scalability": 3
+      },
+      "Gaussian_Process": {
+        "accuracy": 4,
+        "train_speed": 1,
+        "infer_speed": 1,
+        "memory": 1,
+        "scalability": 1
+      }
+    }
+  },
+  "cost_sensitive_and_asymmetric_loss": {
+    "class_imbalance_handling": [
+      "SMOTE_oversampling",
+      "ADASYN",
+      "Class_weight_parameter",
+      "Balanced_Bagging",
+      "RUSBoost"
+    ],
+    "high_cost_of_false_negatives_fraud_diagnosis": [
+      "Cost_Sensitive_SVM",
+      "Focal_Loss_Neural_Net",
+      "XGBoost_max_delta_step",
+      "Custom_loss_functions",
+      "Threshold_tuning_with_FNR_constraint"
+    ],
+    "high_cost_of_false_positives_spam_marketing": [
+      "Threshold_tuning_with_FPR_constraint",
+      "Cost_clip_loss",
+      "Precision_recall_optimization",
+      "Calibrated_models_+_Decision_Threshold"
+    ],
+    "unequal_regression_errors": [
+      "Huber_loss",
+      "Quantile_Regression",
+      "Asymmetric_MSE_loss",
+      "Tweedie_Regression",
+      "Expectile_Regression"
+    ]
+  },
+  "hyperparameter_tuning_and_validation": {
+    "tuning_strategy_by_resource": {
+      "low_compute": [
+        "Grid_Search_coarse",
+        "Manual_tuning",
+        "Random_Search_limited"
+      ],
+      "medium_compute": [
+        "Random_Search",
+        "Halving_Grid_Search",
+        "Bayesian_Optimization_small"
+      ],
+      "high_compute": [
+        "Bayesian_Optimization",
+        "Optuna",
+        "Hyperopt",
+        "Successive_Halving"
+      ],
+      "massive_compute": [
+        "Population_Based_Training",
+        "Efficient_Neural_Architecture_Search",
+        "BOHB"
+      ]
+    },
+    "validation_strategy_by_dataset_size": {
+      "small_under_1k": [
+        "Leave_One_Out",
+        "Stratified_10_Fold_CV",
+        "Repeated_CV"
+      ],
+      "medium_1k_to_100k": [
+        "Stratified_5_Fold_CV",
+        "Repeated_Random_Subsampling"
+      ],
+      "large_100k_to_10M": [
+        "Holdout_80_20",
+        "3_Fold_CV",
+        "Time_Series_Split"
+      ],
+      "massive_10M_plus": [
+        "Single_Holdout_90_10",
+        "Progressive_Validation",
+        "Monte_Carlo_CV"
+      ]
+    },
+    "early_stopping_and_pruning": {
+      "supported_natively": [
+        "XGBoost",
+        "LightGBM",
+        "CatBoost",
+        "GBM",
+        "HistGradientBoosting",
+        "Deep_NNs",
+        "Gradient_Boosting"
+      ],
+      "pruning_compatible": [
+        "CART_ccp_alpha",
+        "Random_Forest_min_samples_leaf",
+        "Decision_Tree_pre_prune"
+      ]
+    }
+  },
+  "online_incremental_and_streaming": {
+    "algorithms_for_streaming": [
+      "SGD_Classifier_Online",
+      "SGD_Regressor_Online",
+      "Passive_Aggressive_Online",
+      "Perceptron_Online",
+      "River_Hoeffding_Tree",
+      "River_Adaptive_Random_Forest",
+      "River_Linear_Regression",
+      "Incremental_ELM",
+      "OS_ELM",
+      "FTRL_Proximal"
+    ],
+    "concept_drift_handling": [
+      "ADWIN_detection",
+      "Adaptive_Random_Forest",
+      "Drift_Detection_Method",
+      "Page_Hinkley_Test",
+      "River_AMF"
+    ],
+    "incremental_fit_support": [
+      "Partial_fit_sklearn_models",
+      "Keras_incremental_training",
+      "Online_Backpropagation",
+      "Hedge_Backpropagation"
+    ]
+  },
+  "edge_and_embedded_deployment": {
+    "quantization_support": [
+      "TensorFlow_Lite_quant_int8",
+      "PyTorch_Mobile",
+      "ONNX_quantization",
+      "CoreML_int8",
+      "NVIDIA_TensorRT_int8"
+    ],
+    "pruning_compatible": [
+      "Decision_Tree_pruned",
+      "NN_pruning_via_magnitude",
+      "Structured_Pruning",
+      "Lottery_Ticket_Hypothesis"
+    ],
+    "on_device_inference_engines": [
+      "TFLite",
+      "OpenVINO",
+      "TensorRT",
+      "CoreML",
+      "Android_NNAPI",
+      "XNNPACK"
+    ],
+    "model_size_constraints_under_100MB": [
+      "Logistic_Regression",
+      "Decision_Tree",
+      "Quantized_LightGBM",
+      "SqueezeNet",
+      "MobileNet_v2",
+      "ShuffleNet",
+      "ProxylessNAS"
+    ]
+  },
+  "scalability_and_efficiency_strategies": {
+    "big_data_strategies": {
+      "algorithm_level": [
+        "Spark_MLlib_implementations",
+        "Distributed_XGBoost",
+        "Vowpal_Wabbit",
+        "Dask_ML",
+        "H2O_AI",
+        "Ray_RLlib",
+        "Horovod_Distributed_Deep_Learning"
+      ],
+      "data_level": [
+        "Mini_batch_Gradient_Descent",
+        "Stochastic_Gradient_Descent",
+        "Feature_Hashing",
+        "Dimensionality_Reduction",
+        "Active_Learning_sampling",
+        "Data_Sketching"
+      ],
+      "infrastructure_level": [
+        "Parameter_Server_architecture",
+        "Model_Parallelism",
+        "Data_Parallelism",
+        "GPU_acceleration_CUDA",
+        "Mixed_precision_training_FP16",
+        "Pipeline_Parallelism"
+      ]
+    },
+    "limited_resources_strategies": {
+      "memory_optimization": [
+        "Use_sparse_matrices_CSR_CSC",
+        "LightGBM_histogram_based",
+        "Reduce_tree_depth",
+        "Limit_estimators_count",
+        "Online_learning_chunked",
+        "Gradient_Checkpointing"
+      ],
+      "compute_optimization": [
+        "SGD_linear_models",
+        "Naive_Bayes",
+        "Simplified_feature_set",
+        "Use_early_stopping",
+        "Employ_transfer_learning",
+        "Knowledge_Distillation"
+      ],
+      "time_optimization": [
+        "Early_stopping_rounds",
+        "Reduce_number_of_boosted_rounds",
+        "Decrease_max_bins",
+        "Use_simpler_baseline_first",
+        "Dask_parallel_preprocessing"
+      ]
+    }
+  },
+  "algorithm_scoring_heuristic": {
+    "description": "Weighted scores (0-10) for top 50 algorithms. The system automatically ranks the top 3 based on user-defined priority weights (Accuracy, Training Speed, Inference Speed, Interpretability, Memory).",
+    "default_weights": {
+      "accuracy": 0.35,
+      "train_time": 0.2,
+      "infer_time": 0.15,
+      "interpretability": 0.2,
+      "memory": 0.1
+    },
+    "aggregated_scores": {
+      "Ordinary_Least_Squares": {
+        "accuracy": 2,
+        "train_time": 10,
+        "infer_time": 10,
+        "interpretability": 10,
+        "memory": 10
+      },
+      "Ridge_Lasso": {
+        "accuracy": 3,
+        "train_time": 9,
+        "infer_time": 10,
+        "interpretability": 9,
+        "memory": 9
+      },
+      "Logistic_Regression": {
+        "accuracy": 5,
+        "train_time": 9,
+        "infer_time": 10,
+        "interpretability": 10,
+        "memory": 9
+      },
+      "SGD_Classifier": {
+        "accuracy": 4,
+        "train_time": 10,
+        "infer_time": 10,
+        "interpretability": 8,
+        "memory": 10
+      },
+      "Naive_Bayes": {
+        "accuracy": 3,
+        "train_time": 10,
+        "infer_time": 10,
+        "interpretability": 10,
+        "memory": 10
+      },
+      "Decision_Tree": {
+        "accuracy": 4,
+        "train_time": 8,
+        "infer_time": 9,
+        "interpretability": 9,
+        "memory": 8
+      },
+      "Random_Forest": {
+        "accuracy": 8,
+        "train_time": 6,
+        "infer_time": 7,
+        "interpretability": 4,
+        "memory": 5
+      },
+      "XGBoost": {
+        "accuracy": 10,
+        "train_time": 5,
+        "infer_time": 7,
+        "interpretability": 4,
+        "memory": 5
+      },
+      "LightGBM": {
+        "accuracy": 10,
+        "train_time": 8,
+        "infer_time": 9,
+        "interpretability": 4,
+        "memory": 7
+      },
+      "CatBoost": {
+        "accuracy": 10,
+        "train_time": 6,
+        "infer_time": 8,
+        "interpretability": 4,
+        "memory": 6
+      },
+      "RBF_SVM": {
+        "accuracy": 8,
+        "train_time": 2,
+        "infer_time": 4,
+        "interpretability": 2,
+        "memory": 3
+      },
+      "Linear_SVM": {
+        "accuracy": 6,
+        "train_time": 6,
+        "infer_time": 8,
+        "interpretability": 5,
+        "memory": 6
+      },
+      "KNN": {
+        "accuracy": 6,
+        "train_time": 10,
+        "infer_time": 1,
+        "interpretability": 8,
+        "memory": 4
+      },
+      "Gaussian_Process": {
+        "accuracy": 8,
+        "train_time": 1,
+        "infer_time": 1,
+        "interpretability": 6,
+        "memory": 1
+      },
+      "MLP_Shallow": {
+        "accuracy": 7,
+        "train_time": 4,
+        "infer_time": 6,
+        "interpretability": 3,
+        "memory": 5
+      },
+      "MLP_Deep": {
+        "accuracy": 10,
+        "train_time": 1,
+        "infer_time": 3,
+        "interpretability": 1,
+        "memory": 2
+      },
+      "CNN_ResNet": {
+        "accuracy": 10,
+        "train_time": 1,
+        "infer_time": 2,
+        "interpretability": 1,
+        "memory": 1
+      },
+      "LSTM": {
+        "accuracy": 9,
+        "train_time": 2,
+        "infer_time": 3,
+        "interpretability": 1,
+        "memory": 2
+      },
+      "Transformer": {
+        "accuracy": 10,
+        "train_time": 1,
+        "infer_time": 2,
+        "interpretability": 1,
+        "memory": 1
+      },
+      "TabNet": {
+        "accuracy": 9,
+        "train_time": 3,
+        "infer_time": 4,
+        "interpretability": 5,
+        "memory": 4
+      },
+      "EBM_Explainable_Boosting": {
+        "accuracy": 8,
+        "train_time": 4,
+        "infer_time": 6,
+        "interpretability": 10,
+        "memory": 6
+      },
+      "Isolation_Forest": {
+        "accuracy": 7,
+        "train_time": 8,
+        "infer_time": 9,
+        "interpretability": 6,
+        "memory": 8
+      },
+      "DBSCAN": {
+        "accuracy": 7,
+        "train_time": 7,
+        "infer_time": 8,
+        "interpretability": 7,
+        "memory": 6
+      },
+      "K_Means": {
+        "accuracy": 6,
+        "train_time": 9,
+        "infer_time": 9,
+        "interpretability": 8,
+        "memory": 9
+      },
+      "PCA": {
+        "accuracy": 5,
+        "train_time": 8,
+        "infer_time": 9,
+        "interpretability": 9,
+        "memory": 8
+      },
+      "UMAP": {
+        "accuracy": 6,
+        "train_time": 6,
+        "infer_time": 7,
+        "interpretability": 5,
+        "memory": 5
+      }
+    }
+  },
+  "scenario_based_recommendations": [
+    {
+      "scenario": "High-dimensional sparse text data with limited compute.",
+      "recommended": [
+        "Multinomial_Naive_Bayes",
+        "Linear_SVC",
+        "Logistic_Regression_with_L1",
+        "Complement_Naive_Bayes"
+      ],
+      "fallback": [
+        "XGBoost_Histogram",
+        "Feature_Hashing_+_SGD",
+        "FastText"
+      ]
+    },
+    {
+      "scenario": "Non-linear tabular data with mixed cat features, missing values, and outliers.",
+      "recommended": [
+        "CatBoost",
+        "LightGBM",
+        "XGBoost",
+        "Random_Forest"
+      ],
+      "fallback": [
+        "GBM",
+        "Extra_Trees",
+        "TabNet"
+      ]
+    },
+    {
+      "scenario": "Large-scale vision tasks requiring SOTA accuracy.",
+      "recommended": [
+        "CNN_ResNet",
+        "EfficientNet",
+        "Vision_Transformer",
+        "ConvNeXt"
+      ],
+      "fallback": [
+        "Pre_trained_Models_+_Fine_tuning",
+        "DenseNet",
+        "MobileNet_for_Edge"
+      ]
+    },
+    {
+      "scenario": "High-stakes medical/financial decisions demanding full explainability.",
+      "recommended": [
+        "Logistic_Regression",
+        "CART_Decision_Tree",
+        "EBM_Explainable_Boosting",
+        "RuleFit"
+      ],
+      "fallback": [
+        "Random_Forest_+_SHAP",
+        "XGBoost_+_TreeExplainer",
+        "LIME_+_LightGBM"
+      ]
+    },
+    {
+      "scenario": "Time-series forecasting with complex seasonality and exogenous variables.",
+      "recommended": [
+        "Prophet",
+        "SARIMAX",
+        "N_BEATS",
+        "Transformer_TFT"
+      ],
+      "fallback": [
+        "Lagged_XGBoost",
+        "LSTM",
+        "Autoformer",
+        "PatchTST"
+      ]
+    },
+    {
+      "scenario": "Unsupervised segmentation of high-dimensional customer data.",
+      "recommended": [
+        "UMAP_+_HDBSCAN",
+        "PCA_+_K_Means",
+        "Gaussian_Mixture_Models"
+      ],
+      "fallback": [
+        "Spectral_Clustering",
+        "Agglomerative",
+        "DBSCAN"
+      ]
+    },
+    {
+      "scenario": "Real-time IoT sensor data with concept drift.",
+      "recommended": [
+        "River_Adaptive_Random_Forest",
+        "SGD_with_ADWIN",
+        "Online_ELM"
+      ],
+      "fallback": [
+        "Batch_retraining_with_sliding_window",
+        "Isolation_Forest_for_drift_detection"
+      ]
+    },
+    {
+      "scenario": "Asymmetric cost fraud detection (False Negatives cost 10x more).",
+      "recommended": [
+        "Cost_Sensitive_XGBoost",
+        "Focal_Loss_Neural_Net",
+        "Isolation_Forest_+_cost_threshold"
+      ],
+      "fallback": [
+        "Balanced_Random_Forest",
+        "Threshold_tuning_on_LightGBM"
+      ]
+    },
+    {
+      "scenario": "Mobile/Edge deployment with <50MB RAM and battery constraints.",
+      "recommended": [
+        "Quantized_Logistic_Regression",
+        "Pruned_Decision_Tree",
+        "TFLite_MobileNetV3",
+        "SqueezeNet"
+      ],
+      "fallback": [
+        "ONNX_quantized_LightGBM",
+        "CoreML_linear_model",
+        "ShuffleNet"
+      ]
+    },
+    {
+      "scenario": "Graph-structured data (social networks, molecules).",
+      "recommended": [
+        "Graph_Convolutional_Network",
+        "Graph_Attention_Network",
+        "GraphSAGE"
+      ],
+      "fallback": [
+        "R_GCN",
+        "MPNN",
+        "TGN_for_temporal_graphs"
+      ]
+    }
+  ],
+  "decision_workflow": {
+    "step_1_define_problem": "Select from regression, binary/multi/multi-label classification, clustering, dim reduction, anomaly, recommendation, ranking, time-series, or RL.",
+    "step_2_assess_data": "Evaluate n_samples, n_features, linearity, noise, missing %, feature types (cat/text/image/graph), and target balance.",
+    "step_3_define_constraints": "Prioritize trade-offs using the scoring heuristic (Accuracy, Speed, Interpretability, Memory, Scalability).",
+    "step_4_apply_feature_mapping": "Check scaling requirements, categorical encoding preference, and specialized data pipelines (NLP tokenizers, CNN augmenters).",
+    "step_5_narrow_models": "Filter using 'Data Characteristics Suitability' and 'Scoring Heuristic' to get top 2-4 candidates.",
+    "step_6_baseline_model": "Train a simple baseline (e.g., Linear model, shallow DT, or Naive Bayes) to establish a performance floor.",
+    "step_7_iterate_progressively": "Move to complex models (GBMs or NNs) if baseline underperforms, applying scalability strategies (mini-batch, early stopping).",
+    "step_8_tuning_strategy": "Select a tuner (Optuna for high compute, Random Search for medium, Manual for low) and CV method (K-Fold or TimeSeriesSplit).",
+    "step_9_cost_validation": "If asymmetric costs exist, calibrate thresholds on the validation set to minimize business risk.",
+    "step_10_interpret_and_explain": "Apply the recommended explainability stack (SHAP, LIME, PDP) for stakeholder sign-off.",
+    "step_11_deployment_check": "If edge/embedded, apply quantization/pruning and convert to TFLite/CoreML/ONNX. If massive scale, convert to Spark/Dask/ONNX Runtime."
+  },
+  "final_expert_notes": [
+    "For tabular data, LightGBM / XGBoost / CatBoost are the undisputed kings. Start here unless you need extreme interpretability.",
+    "For unstructured data (images/text/audio), deep learning (CNNs/Transformers) is mandatory.",
+    "Always benchmark a simple linear model first—it provides a sanity check and often outperforms complex models on small/noisy data.",
+    "Budget 30% of your time for feature engineering and handling missing/outlier values—this yields higher ROI than algorithm selection.",
+    "When in doubt about scalability, use histogram-based tree models (LightGBM) over exact-split GBMs (XGBoost default).",
+    "For regression with outliers, Huber/Quantile regression or RANSAC often beat OLS and complex trees.",
+    "Do not use RBF-SVM or Gaussian Processes beyond 50,000 samples—they do not scale.",
+    "For state-of-the-art on long sequences (text/genomics), consider State-Space models (Mamba) over Transformers for linear-time inference.",
+    "Leverage AutoML libraries (AutoGluon, H2O, TPOT) for rapid preliminary benchmarking, then switch to manual tuning for final production models."
+  ]
+}
