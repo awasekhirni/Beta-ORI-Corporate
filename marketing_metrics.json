@@ -1,0 +1,2684 @@
+{
+  "marketing_metrics": [
+    {
+      "id": 1,
+      "name": "Revenue",
+      "category": "Corporate Financial",
+      "business_case": "Measure top-line growth and overall business strength from production and sales.",
+      "computation": "Multiply actual price by quantity sold or billable hours.",
+      "variables": {
+        "Price": "Actual price received",
+        "Quantity": "Units sold or hours billed"
+      },
+      "formula": "Revenue = Price × Quantity",
+      "example": "Consulting firm charges $2M fixed fee. Revenue = $2,000,000.",
+      "data_sources": [
+        "ERP",
+        "CRM",
+        "Billing System"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        2,
+        4,
+        6
+      ],
+      "modern_context": "Increasingly tracked in real-time via streaming data pipelines for intraday pacing."
+    },
+    {
+      "id": 2,
+      "name": "Gross Profit",
+      "category": "Corporate Financial",
+      "business_case": "Indicate if costs of producing goods/services are under control relative to sales.",
+      "computation": "Subtract cost of revenue (COGS) from total revenue.",
+      "variables": {
+        "Total Revenue": "Total sales",
+        "Cost of Revenue": "Direct costs of goods/services sold"
+      },
+      "formula": "Gross Profit = Total Revenue - Cost of Revenue",
+      "example": "Revenue $14.8B, Cost $11.2B. Gross Profit = $3.6B.",
+      "data_sources": [
+        "ERP",
+        "General Ledger"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        1,
+        3,
+        4
+      ],
+      "modern_context": "Cloud computing costs are increasingly factored into COGS for digital/SaaS products."
+    },
+    {
+      "id": 3,
+      "name": "Value-to-Volume Ratio (VVR)",
+      "category": "Corporate Financial",
+      "business_case": "Determine marketing efficiency compared to competition by comparing profit share to volume share.",
+      "computation": "Divide firm's % of market gross profits by firm's % of market dollar volume.",
+      "variables": {
+        "% Pgm": "Firm's gross profit / Combined market gross profit",
+        "% Vm": "Firm's revenue / Combined market revenue"
+      },
+      "formula": "VVR = % Pgm / % Vm",
+      "example": "Boeing VVR = 0.693 / 0.547 = 126.7% (highly effective).",
+      "data_sources": [
+        "Internal Finance",
+        "Competitor Intelligence",
+        "Market Research"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "High",
+      "related_metrics": [
+        9,
+        10
+      ],
+      "modern_context": "Requires robust external data scraping or syndicated data (e.g., Nielsen, Gartner) for accurate market totals."
+    },
+    {
+      "id": 4,
+      "name": "Net Profit",
+      "category": "Corporate Financial",
+      "business_case": "Determine marketing's contribution to the bottom line after all costs, taxes, and expenses.",
+      "computation": "Subtract all operating expenses, interest, and taxes from gross profit.",
+      "variables": {
+        "Gross Profit": "Revenue minus COGS",
+        "Expenses": "SG&A, R&D, interest, taxes"
+      },
+      "formula": "Net Profit = Gross Profit - Total Expenses",
+      "example": "Global Publishing: $300M sales, costs yield $11.5M net profit.",
+      "data_sources": [
+        "General Ledger",
+        "ERP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        2,
+        6,
+        7
+      ],
+      "modern_context": "Marketing's specific contribution is often isolated via 'Net Marketing Contribution' to avoid dilution by corporate overhead."
+    },
+    {
+      "id": 5,
+      "name": "Earnings-Based Value (YPEG)",
+      "category": "Corporate Financial",
+      "business_case": "Assess company value and marketing's impact on shareholder value via forward-looking stock performance.",
+      "computation": "Divide current P/E ratio by future EPS growth rate.",
+      "variables": {
+        "P/E": "Stock Price / EPS",
+        "Future Growth": "Projected EPS growth rate"
+      },
+      "formula": "YPEG = P/E / Future EPS Growth Rate",
+      "example": "Stock $50, EPS $0.50. P/E = 100. If growth is 10%, YPEG = 10.0 (overvalued).",
+      "data_sources": [
+        "Financial Markets",
+        "Investor Relations"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "High",
+      "related_metrics": [
+        4,
+        8
+      ],
+      "modern_context": "ESG performance is increasingly factored into P/E multiples by institutional investors."
+    },
+    {
+      "id": 6,
+      "name": "Return on Sales (ROS)",
+      "category": "Corporate Financial",
+      "business_case": "Understand the amount of profit produced relative to each dollar of sales.",
+      "computation": "Divide net profit before tax by total sales.",
+      "variables": {
+        "Pnbt": "Net profit before tax",
+        "Sales": "Total sales revenue"
+      },
+      "formula": "ROS = Pnbt / Sales",
+      "example": "$11.5M profit / $300M sales = 3.8% ROS.",
+      "data_sources": [
+        "Income Statement"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        4,
+        7
+      ],
+      "modern_context": "Used to evaluate if marketing-driven price premiums are translating to actual margin expansion."
+    },
+    {
+      "id": 7,
+      "name": "Return on Assets (ROA)",
+      "category": "Corporate Financial",
+      "business_case": "Measure efficiency in generating profits from existing operational assets.",
+      "computation": "Divide net profit before tax by total assets.",
+      "variables": {
+        "Pnbt": "Net profit before tax",
+        "A": "Total assets (debt + equity)"
+      },
+      "formula": "ROA = Pnbt / A",
+      "example": "$11.5M profit / $425M assets = 2.7% ROA.",
+      "data_sources": [
+        "Balance Sheet",
+        "Income Statement"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        6,
+        8
+      ],
+      "modern_context": "For digital companies, 'assets' increasingly include intangible data assets and IP."
+    },
+    {
+      "id": 8,
+      "name": "Return on Equity (ROE)",
+      "category": "Corporate Financial",
+      "business_case": "Measure efficiency in generating profits from stockholders' equity.",
+      "computation": "Divide net profit before tax by owner's equity.",
+      "variables": {
+        "Pnbt": "Net profit before tax",
+        "Equity": "Assets minus liabilities"
+      },
+      "formula": "ROE = Pnbt / Equity",
+      "example": "$11.5M profit / $92M equity = 12.5% ROE.",
+      "data_sources": [
+        "Balance Sheet",
+        "Income Statement"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        5,
+        7
+      ],
+      "modern_context": "Can be artificially inflated by high debt leverage; requires context."
+    },
+    {
+      "id": 9,
+      "name": "Market Share",
+      "category": "Marketing Planning",
+      "business_case": "Measure firm's relative market position versus competitors.",
+      "computation": "Divide company sales by total market sales.",
+      "variables": {
+        "Sit": "Company sales in time t",
+        "ΣSit": "Sum of all market sales in time t"
+      },
+      "formula": "Market Share = (Sit / ΣSit) × 100",
+      "example": "SIA revenue $11B / Global market $736B = 1.5% share.",
+      "data_sources": [
+        "Syndicated Research",
+        "Internal Sales",
+        "Competitor Reports"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        10,
+        11
+      ],
+      "modern_context": "Increasingly measured in 'Share of Search' (Google Trends) as a leading indicator of future market share."
+    },
+    {
+      "id": 10,
+      "name": "Relative Market Share",
+      "category": "Marketing Planning",
+      "business_case": "Measure performance compared specifically to the largest competitor.",
+      "computation": "Divide brand's market share by largest competitor's market share.",
+      "variables": {
+        "Brand Share": "Brand's revenue or units",
+        "Competitor Share": "Largest competitor's revenue or units"
+      },
+      "formula": "Relative Share = Brand Share / Competitor Share",
+      "example": "BMW 2M units / Mercedes 2.23M units = 0.89 relative share.",
+      "data_sources": [
+        "Competitor Intelligence",
+        "Internal Sales"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        9,
+        20
+      ],
+      "modern_context": "A ratio > 1.0 indicates market leadership and potential pricing power."
+    },
+    {
+      "id": 11,
+      "name": "Market Growth",
+      "category": "Marketing Planning",
+      "business_case": "Understand if company growth is faster, equal to, or less than overall market dynamics.",
+      "computation": "Compare current total market sales to preceding period sales.",
+      "variables": {
+        "Current Market": "Total market sales this period",
+        "Prior Market": "Total market sales last period"
+      },
+      "formula": "Growth Rate = (Current Market - Prior Market) / Prior Market",
+      "example": "($500M - $400M) / $400M = 25% market growth.",
+      "data_sources": [
+        "Industry Reports",
+        "Macro Economic Data"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        9,
+        12
+      ],
+      "modern_context": "Crucial for distinguishing between organic company growth and a rising tide lifting all boats."
+    },
+    {
+      "id": 12,
+      "name": "Market Demand",
+      "category": "Marketing Planning",
+      "business_case": "Measure total demand to indicate additional opportunity for growth.",
+      "computation": "Sum of repeat/replacement purchases and new purchases.",
+      "variables": {
+        "Prt": "Repeat purchases in time t",
+        "Pnt": "New purchases in time t"
+      },
+      "formula": "Market Demand = Prt + Pnt",
+      "example": "$5M repeat + $2M new = $7M total market demand.",
+      "data_sources": [
+        "Market Research",
+        "Internal Sales Data"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        11,
+        13
+      ],
+      "modern_context": "AI-driven predictive demand forecasting is replacing static historical demand calculations."
+    },
+    {
+      "id": 13,
+      "name": "Market Penetration",
+      "category": "Marketing Planning",
+      "business_case": "Understand efforts to increase sales via market share growth or increased usage.",
+      "computation": "Divide company sales volume to target segment by total target market sales.",
+      "variables": {
+        "Segment Sales": "Company sales to target",
+        "Total Market Sales": "Total potential market sales"
+      },
+      "formula": "Penetration = (Segment Sales / Total Market Sales) × 100",
+      "example": "$20M current / $25M potential = 80% penetration.",
+      "data_sources": [
+        "CRM",
+        "Market Research"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        9,
+        33
+      ],
+      "modern_context": "Ansoff Matrix guides whether to push penetration (existing market/product) or diversify."
+    },
+    {
+      "id": 14,
+      "name": "Program/Nonprogram Ratio (PNPR)",
+      "category": "Marketing Planning",
+      "business_case": "Measure marketing efficiency by comparing program spend to overhead/admin support.",
+      "computation": "Divide program expenses by total support dollar spending.",
+      "variables": {
+        "Program": "Direct marketing activity costs",
+        "Total Support": "Program + Nonprogram expenses"
+      },
+      "formula": "PNPR = Program Expenses / Total Support Expenses",
+      "example": "$217K program / $280K total = 77.5% PNPR.",
+      "data_sources": [
+        "Marketing Budget System",
+        "ERP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        15
+      ],
+      "modern_context": "A higher ratio indicates leaner operations and more dollars going directly to customer-facing activities."
+    },
+    {
+      "id": 15,
+      "name": "Program/Payroll Ratio (PPR)",
+      "category": "Marketing Planning",
+      "business_case": "Gain insight by focusing specifically on program expenses versus payroll costs.",
+      "computation": "Divide program-specific marketing expenses by total marketing payroll.",
+      "variables": {
+        "Program": "Program-specific marketing spend",
+        "Payroll": "Salary, benefits, related payroll costs"
+      },
+      "formula": "PPR = Program Expenses / Payroll Expenses",
+      "example": "$325K program / $675K payroll = 48% PPR.",
+      "data_sources": [
+        "HRIS",
+        "Marketing Budget System"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        14
+      ],
+      "modern_context": "Helps identify if a marketing department is top-heavy with management vs. execution."
+    },
+    {
+      "id": 16,
+      "name": "Causal Forecast",
+      "category": "Marketing Planning",
+      "business_case": "Understand how many products will be produced under given demand conditions using variable relationships.",
+      "computation": "Use linear regression to find relationship between dependent and independent variables.",
+      "variables": {
+        "y": "Dependent variable (e.g., sales)",
+        "x": "Independent variable (e.g., ad spend)",
+        "a": "Intercept",
+        "b": "Slope"
+      },
+      "formula": "y = a + bx",
+      "example": "Beef ordered (y) = 33.7 + 0.93 * Meals served (x).",
+      "data_sources": [
+        "Historical Sales",
+        "External Variables"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        17
+      ],
+      "modern_context": "Foundation for modern Marketing Mix Modeling (MMM) and causal inference techniques."
+    },
+    {
+      "id": 17,
+      "name": "Time Series Analysis",
+      "category": "Marketing Planning",
+      "business_case": "Use past quantitative data to predict future performance and spot trends.",
+      "computation": "Apply naïve forecast, moving average, weighted moving average, or exponential smoothing.",
+      "variables": {
+        "Ft": "Forecast for period t",
+        "Ft-1": "Previous forecast",
+        "At-1": "Actual previous period",
+        "α": "Smoothing constant"
+      },
+      "formula": "Exponential Smoothing: Ft = Ft-1 + α(At-1 - Ft-1)",
+      "example": "Feb Forecast = 70 + 0.6(75 - 70) = 73.",
+      "data_sources": [
+        "Historical Sales Data"
+      ],
+      "update_frequency": "Weekly/Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        16
+      ],
+      "modern_context": "Now augmented by ML models (e.g., Prophet, ARIMA) that automatically handle seasonality and holidays."
+    },
+    {
+      "id": 18,
+      "name": "Brand Equity (Magnitude)",
+      "category": "Brand Metrics",
+      "business_case": "Know the intangible value the brand contributes beyond book value.",
+      "computation": "Subtract total marketing costs from total revenues to find magnitude of brand value.",
+      "variables": {
+        "Total Revenues": "Gross sales",
+        "Marketing Costs": "Total marketing expenditures"
+      },
+      "formula": "Magnitude of Brand Value = Total Revenues - Total Marketing Costs",
+      "example": "$2M Revenue - $1M Marketing Cost = $1M Brand Value magnitude.",
+      "data_sources": [
+        "Income Statement",
+        "Marketing Budget"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "High",
+      "related_metrics": [
+        19,
+        20
+      ],
+      "modern_context": "Often validated by third-party brand valuation firms (Interbrand, BrandFinance)."
+    },
+    {
+      "id": 19,
+      "name": "Brand Scorecards",
+      "category": "Brand Metrics",
+      "business_case": "Identify and assess intangible factors within brand equity (assets vs. liabilities).",
+      "computation": "Score 5 brand assets and 5 brand liabilities on a 1-20 scale, then subtract liabilities from assets.",
+      "variables": {
+        "Assets": "Awareness, leadership, quality, relevance, loyalty",
+        "Liabilities": "Dissatisfaction, environmental issues, failures, lawsuits"
+      },
+      "formula": "Brand Equity Score = Total Asset Score - Total Liability Score",
+      "example": "Asset score 85 - Liability score 15 = Net Brand Equity Score of 70.",
+      "data_sources": "['Brand Tracking Surveys', 'Social Listening', 'PR Monitoring']",
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        18,
+        110
+      ],
+      "modern_context": "Social listening AI now automates the scoring of brand liabilities (e.g., negative sentiment spikes)."
+    },
+    {
+      "id": 20,
+      "name": "Brand Premium",
+      "category": "Brand Metrics",
+      "business_case": "Determine the extra price commanded due to brand distinction and unique value.",
+      "computation": "Subtract the overall average retail price for the category from the brand's average price.",
+      "variables": {
+        "Pbrand": "Brand's average price",
+        "Pac": "Category average retail price"
+      },
+      "formula": "Brand Premium = Pbrand - Pac",
+      "example": "Premium cooler $400 - Category average $100 = $300 brand premium.",
+      "data_sources": [
+        "Pricing Data",
+        "Competitor Pricing",
+        "Retail Audits"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        40,
+        18
+      ],
+      "modern_context": "A key indicator of pricing power and insulation from commodity price wars."
+    },
+    {
+      "id": 21,
+      "name": "Brand Contribution & Review Analysis",
+      "category": "Brand Metrics",
+      "business_case": "Maximize brand value by determining each brand's tangible/intangible contributions to market cap.",
+      "computation": "Snapshot review of financial (revenues, costs, share) and nonfinancial (awareness, quality) criteria.",
+      "variables": {
+        "Gross Brand Contribution": "Revenues - Brand-specific marketing costs",
+        "Qualitative Scores": "1-5 scale on reputation, differentiation"
+      },
+      "formula": "Brand Contribution % = Gross Brand Contribution / Firm’s Total Revenues",
+      "example": "Brand contributes 15% of firm's total revenues and scores 4.5/5 on market awareness.",
+      "data_sources": [
+        "Financial Reports",
+        "Brand Tracking"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "High",
+      "related_metrics": [
+        18,
+        19
+      ],
+      "modern_context": "Used for portfolio rationalization (deciding which sub-brands to invest in or divest)."
+    },
+    {
+      "id": 22,
+      "name": "Net Sales Contribution",
+      "category": "Customer Metrics",
+      "business_case": "Measure the specific financial sales contribution of each targeted customer segment.",
+      "computation": "Divide segment sales by total sales for all segments.",
+      "variables": {
+        "Segment Sales": "Sales from specific segment",
+        "Total Sales": "Total sales across all segments"
+      },
+      "formula": "Net Sales Contribution = (Segment Sales / Total Sales) × 100",
+      "example": "Segment A sales $25M / Total $100M = 25% contribution.",
+      "data_sources": [
+        "CRM",
+        "ERP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        24,
+        91
+      ],
+      "modern_context": "Essential for evaluating the ROI of segment-specific marketing campaigns."
+    },
+    {
+      "id": 23,
+      "name": "Time-Driven Activity-Based Costing (TDABC)",
+      "category": "Customer Metrics",
+      "business_case": "Measure indirect costs supporting customer-related activities to ensure true profitability.",
+      "computation": "Multiply cost per hour of department by specific time devoted to the activity.",
+      "variables": {
+        "Ch": "Cost per hour",
+        "Tu": "Time in units (hours)"
+      },
+      "formula": "Total Cost (TC) = Ch × Tu",
+      "example": "$300/hr × 0.75 hours = $225 cost to service customer.",
+      "data_sources": [
+        "Time Tracking",
+        "Finance/HRIS"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        25
+      ],
+      "modern_context": "Reveals hidden costs of 'high-maintenance' customers who appear profitable on surface revenue metrics."
+    },
+    {
+      "id": 24,
+      "name": "Segment Profitability",
+      "category": "Customer Metrics",
+      "business_case": "Determine if a specific customer segment is profitable, not just generating top-line revenue.",
+      "computation": "Calculate net marketing contribution, marketing ROS, and marketing ROI for the segment.",
+      "variables": {
+        "NMC": "Net marketing contribution",
+        "Marketing Expenses": "Cost to target segment"
+      },
+      "formula": "Marketing ROI = Net Marketing Contribution / Marketing Expenses",
+      "example": "$1.875M NMC / $3.75M Marketing Expense = 50% Marketing ROI.",
+      "data_sources": [
+        "CRM",
+        "Marketing Automation",
+        "Finance"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        22,
+        25
+      ],
+      "modern_context": "Drives 'Next Best Action' models to shift spend from low-ROI segments to high-ROI segments."
+    },
+    {
+      "id": 25,
+      "name": "Customer Profitability",
+      "category": "Customer Metrics",
+      "business_case": "Measure whether resources used to acquire and support a specific customer yield positive results.",
+      "computation": "Subtract costs incurred to acquire and support the customer from revenues generated by them.",
+      "variables": {
+        "rt": "Revenues from customer in time t",
+        "ct": "Costs to acquire/support customer in time t"
+      },
+      "formula": "Customer Profitability = rt - ct",
+      "example": "Wholesaler generates $500K revenue, costs $450K to support = $50K profitability.",
+      "data_sources": [
+        "CRM",
+        "ERP",
+        "Support Ticketing"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        23,
+        34
+      ],
+      "modern_context": "Foundation for tiered customer service models (e.g., dedicating CSMs only to highly profitable accounts)."
+    },
+    {
+      "id": 26,
+      "name": "Share of Customer (Wallet Share)",
+      "category": "Customer Metrics",
+      "business_case": "Know the company's share of each acquired customer's total potential business.",
+      "computation": "Divide company's sales to a specific customer by that customer's total purchases of that product type.",
+      "variables": {
+        "Company Sales": "Sales to specific customer",
+        "Customer Total Spend": "Customer's total spend in category"
+      },
+      "formula": "Share of Customer = (Company Sales / Customer Total Spend) × 100",
+      "example": "$100K sales / $1M customer budget = 10% share of customer.",
+      "data_sources": [
+        "CRM",
+        "Customer Surveys",
+        "Enriched Third-Party Data"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "High",
+      "related_metrics": [
+        34,
+        109
+      ],
+      "modern_context": "Often easier and cheaper to grow than acquiring new customers; targeted via cross-sell/up-sell AI models."
+    },
+    {
+      "id": 27,
+      "name": "Return on Customer (ROC)",
+      "category": "Customer Metrics",
+      "business_case": "Evaluate the added value derived from customer investments over a specified period.",
+      "computation": "Divide total value created (current year profit + change in customer equity) by beginning year customer equity.",
+      "variables": {
+        "Profit": "Current year profit from customer",
+        "Δ Equity": "Change in customer equity",
+        "Beg Equity": "Beginning year customer equity"
+      },
+      "formula": "ROC = (Profit + Δ Equity) / Beg Equity",
+      "example": "($250K profit + $0 equity change) / $1M beg equity = 25% ROC.",
+      "data_sources": [
+        "CRM",
+        "Finance"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "High",
+      "related_metrics": [
+        34,
+        25
+      ],
+      "modern_context": "Prevents short-term promotional thinking that boosts current profit but destroys long-term customer equity."
+    },
+    {
+      "id": 28,
+      "name": "New Customer Gains",
+      "category": "Customer Metrics",
+      "business_case": "Evaluate the success of new customer acquisition efforts and market development.",
+      "computation": "Subtract number of customers at the beginning of the period from the number at the end.",
+      "variables": {
+        "Cet": "Customers at end of time t",
+        "Cbt": "Customers at beginning of time t"
+      },
+      "formula": "New Customer Gain = Cet - Cbt",
+      "example": "1,500 end - 1,200 beginning = 300 new customer gains.",
+      "data_sources": [
+        "CRM",
+        "CDP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        29,
+        32
+      ],
+      "modern_context": "Must be evaluated alongside CAC to ensure growth is not being bought unsustainably."
+    },
+    {
+      "id": 29,
+      "name": "Customer Acquisition Cost (CAC)",
+      "category": "Customer Metrics",
+      "business_case": "Determine the cost of reaching, attracting, and acquiring targeted customers.",
+      "computation": "Divide total acquisition expenses by total new customers.",
+      "variables": {
+        "Total Acquisition Cost": "Total spend to acquire",
+        "New Customers": "Number of new customers acquired"
+      },
+      "formula": "CAC = Total Acquisition Cost / New Customers",
+      "example": "($0.35 mailer + $0.25 list) / 3% conversion = $20 CAC.",
+      "data_sources": [
+        "Marketing Automation",
+        "Ad Platforms",
+        "CRM"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        34,
+        67
+      ],
+      "modern_context": "The golden rule is LTV:CAC ratio should be >= 3:1 for sustainable enterprise growth."
+    },
+    {
+      "id": 30,
+      "name": "Cost Per Lead (CPL)",
+      "category": "Customer Metrics",
+      "business_case": "Measure the cost of acquiring customer leads to determine if they can be profitable.",
+      "computation": "Divide total advertising costs (direct + indirect) by the number of leads acquired.",
+      "variables": {
+        "TAC": "Total Advertising Costs",
+        "Leads": "Number of leads generated"
+      },
+      "formula": "CPL = TAC / Leads",
+      "example": "$7,600 TAC / 200 leads = $38 CPL.",
+      "data_sources": [
+        "Ad Platforms",
+        "Marketing Automation"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        29,
+        53
+      ],
+      "modern_context": "Must be paired with 'Lead Quality Score' to avoid optimizing for cheap, unqualified leads."
+    },
+    {
+      "id": 31,
+      "name": "Retention Rate",
+      "category": "Customer Metrics",
+      "business_case": "Measure the percentage of customers retained over time, as retaining is cheaper than acquiring.",
+      "computation": "Divide active customers at end of period by active customers at start of period.",
+      "variables": {
+        "Ca": "Active customers at end of period",
+        "Cat": "Active customers at start of period"
+      },
+      "formula": "Retention Rate = (Ca / Cat) × 100",
+      "example": "900 end / 1,000 start = 90% retention rate.",
+      "data_sources": [
+        "CRM",
+        "Subscription Billing"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        32,
+        34
+      ],
+      "modern_context": "A 5% increase in retention can increase profits by 25-95% (Bain & Co)."
+    },
+    {
+      "id": 32,
+      "name": "Churn Rate",
+      "category": "Customer Metrics",
+      "business_case": "Know how many customers are lost to refine marketing and reduce attrition.",
+      "computation": "Divide number of customers lost during a period by total customers at the start of the period.",
+      "variables": {
+        "Lost Customers": "Customers who left in time t",
+        "Start Customers": "Total customers at start of time t"
+      },
+      "formula": "Churn Rate = (Lost Customers / Start Customers) × 100",
+      "example": "50 lost / 1,000 start = 5% churn rate.",
+      "data_sources": [
+        "CRM",
+        "Subscription Billing"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        31,
+        34
+      ],
+      "modern_context": "Predictive churn models now flag 'at-risk' customers before they actually churn, enabling proactive retention campaigns."
+    },
+    {
+      "id": 33,
+      "name": "Consumer Franchise",
+      "category": "Customer Metrics",
+      "business_case": "Identify regular, core buyers with the highest likelihood of continuing to purchase.",
+      "computation": "Sum of (probability of buying × number of buyers) for both committed and uncommitted segments.",
+      "variables": {
+        "P1": "Probability of committed buying",
+        "N1": "Number of committed buyers",
+        "P2": "Probability of uncommitted buying",
+        "N2": "Number of uncommitted buyers"
+      },
+      "formula": "Sales = (P1 × N1) + (P2 × N2)",
+      "example": "(60% × 100,000) + (20% × 10,000) = 62,000 sales.",
+      "data_sources": [
+        "CRM",
+        "Loyalty Program Data"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "High",
+      "related_metrics": [
+        31,
+        34
+      ],
+      "modern_context": "Helps allocate budget: it's often more efficient to increase purchase frequency of the committed franchise than to convert the uncommitted."
+    },
+    {
+      "id": 34,
+      "name": "Customer Lifetime Value (CLTV)",
+      "category": "Customer Metrics",
+      "business_case": "Know how much a customer is worth to the business over the entire relationship.",
+      "computation": "Calculate gross profit over lifetime, subtract acquisition cost, add referral value, and apply adjustment factor.",
+      "variables": {
+        "M": "Avg money spent per purchase",
+        "C": "Avg cost to service",
+        "P": "Purchases per year",
+        "Y": "Years retained",
+        "A": "Acquisition cost",
+        "N": "New customers referred",
+        "F": "Adjustment factor"
+      },
+      "formula": "CLTV = [(M - C) × (P × Y) - A + (A × N)] × F",
+      "example": "[($220-$70) × (3×20) - $25 + ($25×5)] × 1.3 = $11,830.",
+      "data_sources": [
+        "CRM",
+        "Finance",
+        "CDP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        29,
+        31,
+        35
+      ],
+      "modern_context": "The cornerstone of modern marketing. ML models now calculate individualized, predictive CLTV for every single user."
+    },
+    {
+      "id": 35,
+      "name": "Customer Brand Value (CBV)",
+      "category": "Customer Metrics",
+      "business_case": "Determine the approximate value of the average customer to the brand.",
+      "computation": "Multiply penetration rate, buying rate, share of purchase, and gross contribution margin.",
+      "variables": {
+        "P": "Penetration %",
+        "BR": "Buying rate (units/year)",
+        "SOP": "Share of purchase",
+        "M": "Gross contribution margin"
+      },
+      "formula": "CBV = P × BR × SOP × M",
+      "example": "0.12 × 4 × 0.025 × 0.60 = 0.0072 (0.72% of brand value).",
+      "data_sources": [
+        "Market Research",
+        "Internal Sales"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "High",
+      "related_metrics": [
+        18,
+        34
+      ],
+      "modern_context": "Helps prioritize which customer segments to target for brand-building campaigns."
+    },
+    {
+      "id": 36,
+      "name": "Customer Losses",
+      "category": "Customer Metrics",
+      "business_case": "See how many customers have been lost versus retained to adjust future marketing plans.",
+      "computation": "Subtract active customers at end of period from active customers at beginning of period.",
+      "variables": {
+        "Cbt": "Customers at beginning of time t",
+        "Cet": "Customers at end of time t"
+      },
+      "formula": "Customer Loss = Cbt - Cet",
+      "example": "1,200 beginning - 1,000 end = 200 customer losses.",
+      "data_sources": [
+        "CRM"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        32,
+        31
+      ],
+      "modern_context": "Should trigger automated 'win-back' or 'exit survey' workflows to capture qualitative reasons for departure."
+    },
+    {
+      "id": 37,
+      "name": "Usage (Lifecycle Costs)",
+      "category": "Product/Offering",
+      "business_case": "Determine product usage and maximum financial benefits at different prices relative to lifecycle costs.",
+      "computation": "Compare benchmark lifecycle costs (purchase + install + maintenance) to new solution costs.",
+      "variables": {
+        "Purchase Price": "Initial cost",
+        "Installation": "Setup cost",
+        "Maintenance": "Ongoing usage cost"
+      },
+      "formula": "Total Lifecycle Cost = Purchase + Installation + Maintenance",
+      "example": "New solution: $375 price + $100 install + $400 maintenance = $875 (vs $1,000 benchmark).",
+      "data_sources": [
+        "Product Analytics",
+        "Support Costs"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        20,
+        40
+      ],
+      "modern_context": "Critical for B2B SaaS, where low upfront cost but high implementation/maintenance can destroy perceived value."
+    },
+    {
+      "id": 38,
+      "name": "New Product Purchase Rate",
+      "category": "Product/Offering",
+      "business_case": "Estimate the potential success and penetration rate of a proposed new product.",
+      "computation": "Apply diffusion/penetration model using rate of penetration and total eventual buyers.",
+      "variables": {
+        "r": "Rate of penetration of untapped potential",
+        "q": "% of total households eventually buying",
+        "t": "Time period"
+      },
+      "formula": "qt = r × q × (1 - r)^(t-1)",
+      "example": "Year 1: 0.4 × 0.2 × (0.6)^0 = 0.08 (8% penetration).",
+      "data_sources": [
+        "Market Research",
+        "Product Analytics"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        13,
+        39
+      ],
+      "modern_context": "Helps forecast supply chain and marketing budget needs for product launches."
+    },
+    {
+      "id": 39,
+      "name": "Marketing Cost Per Unit (MCPU)",
+      "category": "Product/Offering",
+      "business_case": "Know the marketing cost associated with each unit sold to assess promotional efficiency.",
+      "computation": "Divide total marketing spend by total units shipped/sold.",
+      "variables": {
+        "Total Marketing Spend": "Total marketing budget",
+        "Total Units": "Total units sold/shipped"
+      },
+      "formula": "MCPU = Total Marketing Spend / Total Units",
+      "example": "$726M spend / 55.5M PCs = $13.08 MCPU.",
+      "data_sources": [
+        "Marketing Budget",
+        "ERP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        29,
+        45
+      ],
+      "modern_context": "Should decline as a product matures and organic/word-of-mouth growth increases."
+    },
+    {
+      "id": 40,
+      "name": "Price (Net Price)",
+      "category": "Price Metrics",
+      "business_case": "Determine the right final price realizing after discounts, allowances, and taxes.",
+      "computation": "Start with list price and subtract discounts, allowances, and taxes.",
+      "variables": {
+        "PL": "List price",
+        "D": "Discounts %",
+        "A": "Allowances %",
+        "T": "Taxes/Tariffs %"
+      },
+      "formula": "Net Price = PL × (1 - D - A) × (1 - T)",
+      "example": "$10 list - 5% discount - 2% allowance - 5% tax = $8.80 net.",
+      "data_sources": [
+        "Pricing System",
+        "ERP"
+      ],
+      "update_frequency": "Real-time",
+      "complexity": "Low",
+      "related_metrics": [
+        41,
+        43
+      ],
+      "modern_context": "Dynamic pricing algorithms now adjust net price in real-time based on demand elasticity and competitor scraping."
+    },
+    {
+      "id": 41,
+      "name": "Mark-Up Pricing",
+      "category": "Price Metrics",
+      "business_case": "Determine the percentage to add to costs to recover costs and make a target profit.",
+      "computation": "Calculate unit cost, then add the desired mark-up percentage.",
+      "variables": {
+        "Unit Cost": "(Fixed Costs / Expected Sales) + Variable Costs",
+        "Mark-up %": "Desired profit percentage"
+      },
+      "formula": "Mark-Up Price = Unit Cost × (1 + Mark-up %)",
+      "example": "($200K/40K + $15) × 1.20 = $20 × 1.20 = $24.",
+      "data_sources": [
+        "Finance",
+        "Product Management"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Low",
+      "related_metrics": [
+        40,
+        42
+      ],
+      "modern_context": "Simple but dangerous if it ignores customer willingness-to-pay and competitor positioning."
+    },
+    {
+      "id": 42,
+      "name": "Target Return Pricing",
+      "category": "Price Metrics",
+      "business_case": "Determine the best price to cover all costs and yield a specified target ROI.",
+      "computation": "Add the target return on investment to total costs, then divide by expected unit sales.",
+      "variables": {
+        "Total Cost": "Fixed + Variable costs",
+        "Target ROI": "Desired return on invested capital",
+        "Unit Sales": "Expected number of units sold"
+      },
+      "formula": "Target Price = (Total Cost + Target ROI) / Unit Sales",
+      "example": "($3.5M total cost + $750K target ROI) / 100,000 units = $42.50.",
+      "data_sources": [
+        "Finance",
+        "Sales Forecasts"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "Medium",
+      "related_metrics": [
+        41,
+        45
+      ],
+      "modern_context": "Requires accurate demand forecasting; ignores price elasticity which can cause volume to miss targets."
+    },
+    {
+      "id": 43,
+      "name": "Sales Price Variance (SPV)",
+      "category": "Price Metrics",
+      "business_case": "Identify factors causing actual prices to differ from budgeted prices.",
+      "computation": "Multiply actual quantity sold by the difference between actual price and budgeted price.",
+      "variables": {
+        "Qa": "Actual quantity sold",
+        "Pa": "Actual price",
+        "Pb": "Budgeted price"
+      },
+      "formula": "SPV = Qa × (Pa - Pb)",
+      "example": "120,000 units × ($4 actual - $5 budget) = -$120,000 variance.",
+      "data_sources": [
+        "ERP",
+        "Sales Systems"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        40,
+        107
+      ],
+      "modern_context": "Highlights if sales teams are over-discounting to close deals, eroding brand premium."
+    },
+    {
+      "id": 44,
+      "name": "Markdown Goods Percentage (MGP)",
+      "category": "Price Metrics",
+      "business_case": "Determine the percentage of total net sales attributed to products sold at reduced prices.",
+      "computation": "Divide total markdown sales by total net sales.",
+      "variables": {
+        "Markdown Sales": "Revenue from discounted items",
+        "Total Net Sales": "Total revenue"
+      },
+      "formula": "MGP = (Markdown Sales / Total Net Sales) × 100",
+      "example": "$2,500 markdown / $10,000 total = 25% MGP.",
+      "data_sources": [
+        "POS Systems",
+        "E-commerce Platform"
+      ],
+      "update_frequency": "Weekly",
+      "complexity": "Low",
+      "related_metrics": [
+        82,
+        88
+      ],
+      "modern_context": "High MGP indicates poor initial pricing, overstocking, or weak product-market fit."
+    },
+    {
+      "id": 45,
+      "name": "Profit Impact",
+      "category": "Price Metrics",
+      "business_case": "Calculate potential profit when manufacturing, product, and pricing activities are included.",
+      "computation": "Calculate manufacturing sales price, then contribution per unit, then multiply by units sold and subtract fixed costs.",
+      "variables": {
+        "Cpu": "Contribution per unit (MSP - Variable Cost)",
+        "Us": "Units sold",
+        "Cfc": "Total fixed costs"
+      },
+      "formula": "Profit Impact = (Cpu × Us) - Cfc",
+      "example": "($3.20 × 7,000,000) - $1,800,000 = $20,600,000.",
+      "data_sources": [
+        "Finance",
+        "Product Management"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        42,
+        84
+      ],
+      "modern_context": "Used for 'What-If' scenario planning before launching new products or pricing changes."
+    },
+    {
+      "id": 46,
+      "name": "Share of Voice (SOV)",
+      "category": "Advertising/Promotion",
+      "business_case": "Measure the organization’s share of total media expenditures in the market.",
+      "computation": "Divide company's advertising spend by total market advertising spend for the product category.",
+      "variables": {
+        "Company Ad Spend": "Firm's advertising budget",
+        "Total Market Ad Spend": "Sum of all competitors' ad spend"
+      },
+      "formula": "Share of Voice = (Company Ad Spend / Total Market Ad Spend) × 100",
+      "example": "$5M spend / $100M market = 5% share of voice.",
+      "data_sources": [
+        "Ad Platforms",
+        "Competitive Intelligence (e.g., Pathmatics)"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        9,
+        51
+      ],
+      "modern_context": "Excess Share of Voice (ESOV = SOV - Market Share) is a leading indicator of future market share growth."
+    },
+    {
+      "id": 47,
+      "name": "Recall",
+      "category": "Advertising/Promotion",
+      "business_case": "Determine advertising effectiveness based on whether audiences can recall the ad without prompting.",
+      "computation": "Survey-based metric measuring top-of-mind or dominant brand recall.",
+      "variables": {
+        "Unaided Recall": "% remembering without prompts",
+        "Aided Recall": "% remembering with prompts"
+      },
+      "formula": "Recall Rate = (Respondents recalling brand / Total respondents) × 100",
+      "example": "45 out of 100 respondents name the brand first = 45% top-of-mind recall.",
+      "data_sources": [
+        "Brand Tracking Surveys"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        48,
+        18
+      ],
+      "modern_context": "Unaided recall is a strong proxy for brand equity and mental availability."
+    },
+    {
+      "id": 48,
+      "name": "Recognition",
+      "category": "Advertising/Promotion",
+      "business_case": "Determine if consumers remember the company, ad, or product when shown it again.",
+      "computation": "Survey-based metric asking if the consumer has been exposed to the brand/ad before.",
+      "variables": {
+        "Recognized": "Number of respondents recognizing the ad",
+        "Total Surveyed": "Total number of respondents"
+      },
+      "formula": "Recognition Rate = (Recognized / Total Surveyed) × 100",
+      "example": "90 out of 100 recognize the ad when shown = 90% recognition.",
+      "data_sources": [
+        "Brand Tracking Surveys"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Low",
+      "related_metrics": [
+        47
+      ],
+      "modern_context": "High recognition with low recall indicates the ad is memorable but not strongly linked to the brand name."
+    },
+    {
+      "id": 49,
+      "name": "Reach",
+      "category": "Advertising/Promotion",
+      "business_case": "Evaluate the size of the audience reached at least once during an ad campaign.",
+      "computation": "Divide the number of unique households/people exposed by the total target market.",
+      "variables": {
+        "Exposed Audience": "Unique individuals/households reached",
+        "Total Target Market": "Total population in target"
+      },
+      "formula": "Reach = (Exposed Audience / Total Target Market) × 100",
+      "example": "5 households reached out of 10 total = 50% reach.",
+      "data_sources": [
+        "Ad Platforms",
+        "Media Kits"
+      ],
+      "update_frequency": "Campaign-level",
+      "complexity": "Low",
+      "related_metrics": [
+        50,
+        51
+      ],
+      "modern_context": "In digital, 'Unique Reach' is hard to measure accurately across devices without unified identity resolution."
+    },
+    {
+      "id": 50,
+      "name": "Frequency",
+      "category": "Advertising/Promotion",
+      "business_case": "Determine how often to run an advertisement to build lasting memory.",
+      "computation": "Divide total number of ad exposures by the reach (number of unique people reached).",
+      "variables": {
+        "Total Exposures": "Total number of times ad was shown",
+        "Reach": "Number of unique people reached"
+      },
+      "formula": "Frequency = Total Exposures / Reach",
+      "example": "15 total exposures / 5 households = 3.0 frequency.",
+      "data_sources": [
+        "Ad Platforms"
+      ],
+      "update_frequency": "Campaign-level",
+      "complexity": "Low",
+      "related_metrics": [
+        49,
+        51
+      ],
+      "modern_context": "Effective Frequency (usually 3-7x) is required before an ad drives action; beyond that, diminishing returns and ad fatigue set in."
+    },
+    {
+      "id": 51,
+      "name": "Gross Rating Points (GRP)",
+      "category": "Advertising/Promotion",
+      "business_case": "Measure the total volume of advertising exposures a media campaign will generate.",
+      "computation": "Multiply reach (as a percentage) by frequency.",
+      "variables": {
+        "Reach": "% of target audience reached",
+        "Frequency": "Average number of exposures per person"
+      },
+      "formula": "GRP = Reach × Frequency",
+      "example": "75% reach × 3 frequency = 225 GRPs.",
+      "data_sources": [
+        "Media Planning Tools",
+        "Nielsen"
+      ],
+      "update_frequency": "Campaign-level",
+      "complexity": "Medium",
+      "related_metrics": [
+        49,
+        50,
+        52
+      ],
+      "modern_context": "Traditional broadcast metric, now adapted to 'Digital GRPs' for online video and display campaigns."
+    },
+    {
+      "id": 52,
+      "name": "Cost Per Gross Rating Point (CPP)",
+      "category": "Advertising/Promotion",
+      "business_case": "Measure the cost efficiency of reaching one rating point (1% of the market).",
+      "computation": "Divide total cost of the media buy by the total GRPs delivered.",
+      "variables": {
+        "Total Media Cost": "Total spend on the campaign",
+        "Total GRPs": "Gross Rating Points delivered"
+      },
+      "formula": "CPP = Total Media Cost / Total GRPs",
+      "example": "$100,000 cost / 225 GRPs = $444 CPP.",
+      "data_sources": [
+        "Media Buying Platforms"
+      ],
+      "update_frequency": "Campaign-level",
+      "complexity": "Medium",
+      "related_metrics": [
+        51,
+        66
+      ],
+      "modern_context": "Used to compare the relative efficiency of different TV networks or radio stations."
+    },
+    {
+      "id": 53,
+      "name": "Response Rate",
+      "category": "Advertising/Promotion",
+      "business_case": "Measure the percentage of people who respond to a direct marketing offer.",
+      "computation": "Divide the number of responses by the total number of offers sent.",
+      "variables": {
+        "Responses": "Number of people who responded",
+        "Total Sent": "Total number of mailers/offers sent"
+      },
+      "formula": "Response Rate = (Responses / Total Sent) × 100",
+      "example": "200 responses / 10,000 sent = 2% response rate.",
+      "data_sources": [
+        "Marketing Automation",
+        "Direct Mail Vendor"
+      ],
+      "update_frequency": "Campaign-level",
+      "complexity": "Low",
+      "related_metrics": [
+        54,
+        30
+      ],
+      "modern_context": "Email response rates are declining; personalization and dynamic content are required to maintain baseline rates."
+    },
+    {
+      "id": 54,
+      "name": "Conversion Rate",
+      "category": "Advertising/Promotion",
+      "business_case": "Measure how many respondents actually convert to purchasing customers.",
+      "computation": "Divide the number of actual buyers by the total number of respondents.",
+      "variables": {
+        "Buyers": "Number of respondents who purchased",
+        "Respondents": "Total number of people who responded"
+      },
+      "formula": "Conversion Rate = (Buyers / Respondents) × 100",
+      "example": "75 buyers / 200 respondents = 37.5% conversion rate.",
+      "data_sources": [
+        "Web Analytics",
+        "CRM",
+        "E-commerce Platform"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        53,
+        67
+      ],
+      "modern_context": "The ultimate metric for CRO (Conversion Rate Optimization) efforts, including A/B testing landing pages."
+    },
+    {
+      "id": 55,
+      "name": "Advertising-To-Sales Ratio",
+      "category": "Advertising/Promotion",
+      "business_case": "Determine the return and efficiency of advertising programs relative to total sales.",
+      "computation": "Divide total advertising expenditure by total sales revenue.",
+      "variables": {
+        "Total Ad Spend": "Total advertising costs",
+        "Total Sales": "Total revenue generated"
+      },
+      "formula": "Ad-to-Sales Ratio = (Total Ad Spend / Total Sales) × 100",
+      "example": "$3.2B ad spend / $32.4B sales = 9.8% ratio.",
+      "data_sources": [
+        "Finance",
+        "Ad Platforms"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        74,
+        61
+      ],
+      "modern_context": "Varies wildly by industry (e.g., CPG is high, B2B SaaS is lower but shifting as PLG grows)."
+    },
+    {
+      "id": 56,
+      "name": "Promotion Profit",
+      "category": "Advertising/Promotion",
+      "business_case": "Measure the actual profit resulting from marketing’s promotional campaigns.",
+      "computation": "Calculate incremental profit from discounted and regular sales, subtract baseline loss and promo costs.",
+      "variables": {
+        "Uid": "Incremental units on deal",
+        "Mr": "Regular margin",
+        "D": "Discount",
+        "Ui": "Undiscounted incremental units",
+        "Ubd": "Base units on deal",
+        "Cp": "Promo costs"
+      },
+      "formula": "PP = {Uid × (Mr - D)} + {Ui × Mr} - {Ubd × D} - Cp",
+      "example": "{70K × ($0.80-$0.50)} + {30K × $0.80} - {60K × $0.50} - Cp = $15K - Cp.",
+      "data_sources": [
+        "POS",
+        "Promotion Management System"
+      ],
+      "update_frequency": "Post-Campaign",
+      "complexity": "High",
+      "related_metrics": [
+        44,
+        45
+      ],
+      "modern_context": "Reveals if a promotion merely cannibalized future full-price sales or genuinely generated incremental profit."
+    },
+    {
+      "id": 57,
+      "name": "Direct Marketing Revenue Goals",
+      "category": "Direct Marketing",
+      "business_case": "Ascertain how many direct marketing pieces must be sent to achieve a specific revenue target.",
+      "computation": "Divide target revenue by the product of average sale, response rate, and conversion rate.",
+      "variables": {
+        "Target Revenue": "Desired revenue",
+        "Avg Sale": "Average spend per buyer",
+        "RR": "Response rate",
+        "CR": "Conversion rate"
+      },
+      "formula": "Pieces Needed = Target Revenue / (Avg Sale × RR × CR)",
+      "example": "$400,000 / ($300 × 0.02 × 0.75) = 88,889 pieces.",
+      "data_sources": [
+        "Historical Campaign Data",
+        "Finance"
+      ],
+      "update_frequency": "Campaign Planning",
+      "complexity": "Medium",
+      "related_metrics": [
+        58,
+        53
+      ],
+      "modern_context": "Foundational for reverse-engineering media buy requirements from top-down revenue targets."
+    },
+    {
+      "id": 58,
+      "name": "Direct Marketing Profit Goals",
+      "category": "Direct Marketing",
+      "business_case": "Estimate the number of communications needed to achieve a specific profit target.",
+      "computation": "Divide target profit by the product of average sale, target profit margin, response rate, and conversion rate.",
+      "variables": {
+        "Target Profit": "Desired profit",
+        "Avg Sale": "Average spend per buyer",
+        "PM": "Target profit margin %",
+        "RR": "Response rate",
+        "CR": "Conversion rate"
+      },
+      "formula": "Pieces Needed = Target Profit / (Avg Sale × PM × RR × CR)",
+      "example": "$120,000 / ($300 × 0.30 × 0.02 × 0.75) = 88,889 pieces.",
+      "data_sources": [
+        "Historical Campaign Data",
+        "Finance"
+      ],
+      "update_frequency": "Campaign Planning",
+      "complexity": "Medium",
+      "related_metrics": [
+        57,
+        60
+      ],
+      "modern_context": "Ensures campaigns are not just revenue-positive, but actually contribute to the bottom line."
+    },
+    {
+      "id": 59,
+      "name": "Direct Marketing Gross Profit",
+      "category": "Direct Marketing",
+      "business_case": "Determine if a campaign of a certain size will produce a positive gross profit.",
+      "computation": "Multiply pieces sent by profit goal %, average sale, response rate, and conversion rate.",
+      "variables": {
+        "DM": "Number of pieces",
+        "P": "Profit goal %",
+        "Sa": "Average sale",
+        "Rr": "Response rate",
+        "Cr": "Conversion rate"
+      },
+      "formula": "Gross Profit = DM × P × Sa × Rr × Cr",
+      "example": "88,889 × 0.30 × $300 × 0.02 × 0.75 = $120,000 gross profit.",
+      "data_sources": [
+        "Campaign Analytics"
+      ],
+      "update_frequency": "Post-Campaign",
+      "complexity": "Low",
+      "related_metrics": [
+        58,
+        60
+      ],
+      "modern_context": "A quick sanity check before factoring in fixed overhead or campaign execution costs."
+    },
+    {
+      "id": 60,
+      "name": "Direct Marketing Net Profit",
+      "category": "Direct Marketing",
+      "business_case": "Determine net profitability after accounting for the operational costs of the campaign.",
+      "computation": "Subtract the cost of the direct marketing campaign from the direct marketing gross profit.",
+      "variables": {
+        "Gross Profit": "Revenue minus COGS from campaign",
+        "Cdm": "Cost of direct marketing campaign"
+      },
+      "formula": "Net Profit = Gross Profit - Cdm",
+      "example": "$120,000 gross profit - $8,000 campaign cost = $112,000 net profit.",
+      "data_sources": [
+        "Campaign Analytics",
+        "Finance"
+      ],
+      "update_frequency": "Post-Campaign",
+      "complexity": "Low",
+      "related_metrics": [
+        59,
+        61
+      ],
+      "modern_context": "The definitive go/no-go metric for scaling a direct marketing channel."
+    },
+    {
+      "id": 61,
+      "name": "Direct Marketing ROI",
+      "category": "Direct Marketing",
+      "business_case": "Know the return on investment for a given direct marketing project.",
+      "computation": "Divide net profit from the campaign by the total cost of the campaign.",
+      "variables": {
+        "Net Profit": "Revenue - All Campaign Costs",
+        "Total Cost": "Total investment in the campaign"
+      },
+      "formula": "ROI = (Net Profit / Total Cost) × 100",
+      "example": "($625,000 revenue - $200,000 cost) / $200,000 cost = 212.5% ROI.",
+      "data_sources": [
+        "Campaign Analytics",
+        "Finance"
+      ],
+      "update_frequency": "Post-Campaign",
+      "complexity": "Low",
+      "related_metrics": [
+        60,
+        74
+      ],
+      "modern_context": "Should be calculated both on a 'first-touch' and 'multi-touch' basis for accuracy."
+    },
+    {
+      "id": 62,
+      "name": "Gross Page Impressions (GPI)",
+      "category": "Digital/Social",
+      "business_case": "Measure total website traffic volume to gauge overall market interest.",
+      "computation": "Count the total number of times any person has accessed the website, including repeats.",
+      "variables": {
+        "Total Requests": "Sum of all page loads"
+      },
+      "formula": "GPI = Total Page Requests",
+      "example": "Server logs show 1,500,000 total page requests in a month.",
+      "data_sources": [
+        "Web Analytics (Google Analytics, Adobe)"
+      ],
+      "update_frequency": "Real-time",
+      "complexity": "Low",
+      "related_metrics": [
+        63,
+        73
+      ],
+      "modern_context": "A vanity metric if not paired with engagement or conversion metrics; 'Unique Visitors' is generally more useful."
+    },
+    {
+      "id": 63,
+      "name": "Word of Mouth (WOM) Multiplier",
+      "category": "Digital/Social",
+      "business_case": "Understand if social media activities are generating organic, referral traffic.",
+      "computation": "Divide the sum of direct clicks and clicks from recommendations by direct clicks.",
+      "variables": {
+        "Direct Clicks": "Clicks connecting directly to site",
+        "Referral Clicks": "Clicks from links, social, ads"
+      },
+      "formula": "WOM Multiplier = (Direct Clicks + Referral Clicks) / Direct Clicks",
+      "example": "(1,000,000 + 1,380,000) / 1,000,000 = 2.38.",
+      "data_sources": [
+        "Web Analytics",
+        "Social Listening"
+      ],
+      "update_frequency": "Weekly",
+      "complexity": "Medium",
+      "related_metrics": [
+        64,
+        69
+      ],
+      "modern_context": "A high WOM multiplier indicates strong product-led growth (PLG) and brand advocacy."
+    },
+    {
+      "id": 64,
+      "name": "Total Clicks",
+      "category": "Digital/Social",
+      "business_case": "Determine the potential multiplier gained from word-of-mouth sharing.",
+      "computation": "Multiply the WOM multiplier by the number of direct clicks.",
+      "variables": {
+        "WOM": "Word of mouth multiplier",
+        "Direct Clicks": "Direct site clicks"
+      },
+      "formula": "Total Clicks = WOM × Direct Clicks",
+      "example": "2.38 × 1,000,000 = 2,380,000 total clicks.",
+      "data_sources": [
+        "Web Analytics"
+      ],
+      "update_frequency": "Real-time",
+      "complexity": "Low",
+      "related_metrics": [
+        63,
+        65
+      ],
+      "modern_context": "Helps justify investment in referral programs and shareable content."
+    },
+    {
+      "id": 65,
+      "name": "Click Through Rate (CTR)",
+      "category": "Digital/Social",
+      "business_case": "Determine if online advertising is inspiring people to click through to the website.",
+      "computation": "Divide the total number of clicks by the total number of impressions.",
+      "variables": {
+        "Clicks": "Total clicks on the ad",
+        "Impressions": "Total times ad was shown"
+      },
+      "formula": "CTR = (Clicks / Impressions) × 100",
+      "example": "32,000 clicks / 1,000,000 impressions = 3.2% CTR.",
+      "data_sources": [
+        "Ad Platforms"
+      ],
+      "update_frequency": "Real-time",
+      "complexity": "Low",
+      "related_metrics": [
+        66,
+        54
+      ],
+      "modern_context": "High CTR with low conversion indicates a misleading ad or a poorly optimized landing page."
+    },
+    {
+      "id": 66,
+      "name": "Cost Per Click (CPC)",
+      "category": "Digital/Social",
+      "business_case": "Understand the cost of marketing programs designed to generate clicks and WOM.",
+      "computation": "Divide total campaign cost by direct clicks, then divide by the WOM multiplier.",
+      "variables": {
+        "Total Cost": "Total online marketing campaign cost",
+        "Direct Clicks": "Number of direct clicks",
+        "WOM": "Word of mouth multiplier"
+      },
+      "formula": "CPCwom = (Total Cost / Direct Clicks) / WOM",
+      "example": "($50,000 / 100,000) / 4.8 = $0.104 per click with WOM.",
+      "data_sources": [
+        "Ad Platforms"
+      ],
+      "update_frequency": "Real-time",
+      "complexity": "Medium",
+      "related_metrics": [
+        65,
+        67
+      ],
+      "modern_context": "Rising CPCs in mature markets necessitate a shift toward organic SEO and first-party data activation."
+    },
+    {
+      "id": 67,
+      "name": "Cost Per Action (CPA)",
+      "category": "Digital/Social",
+      "business_case": "Find out the cost of converting a prospect to a customer (completed transaction).",
+      "computation": "Divide total marketing investment by the number of new customers acquired.",
+      "variables": {
+        "Total Investment": "Total spend on campaign",
+        "New Customers": "Number of completed actions/sales"
+      },
+      "formula": "CPA = Total Investment / New Customers",
+      "example": "$50,000 spend / 1,000 new customers = $50 CPA.",
+      "data_sources": [
+        "Ad Platforms",
+        "CRM"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Medium",
+      "related_metrics": [
+        29,
+        74
+      ],
+      "modern_context": "The north star metric for performance marketing, though it must be contextualized by the quality/LTV of the acquired user."
+    },
+    {
+      "id": 68,
+      "name": "Pay Per Lead (PPL)",
+      "category": "Digital/Social",
+      "business_case": "Payment method and metric for acquiring qualified customer leads online.",
+      "computation": "Count the number of actual, qualifying registrations generated by the ad.",
+      "variables": {
+        "Qualified Leads": "Number of valid registrations",
+        "Cost Per Lead": "Agreed fee per lead"
+      },
+      "formula": "Total PPL Cost = Qualified Leads × Cost Per Lead",
+      "example": "100 registrations × $10/lead = $1,000 total PPL cost.",
+      "data_sources": [
+        "Lead Gen Platforms",
+        "CRM"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        30,
+        67
+      ],
+      "modern_context": "Requires strict fraud detection (bot filtering) to ensure 'leads' are genuine humans."
+    },
+    {
+      "id": 69,
+      "name": "Activity Ratio (Social Media)",
+      "category": "Digital/Social",
+      "business_case": "Measure the percentage of the customer base that is actively engaging on social media.",
+      "computation": "Divide the number of active members by the total number of members.",
+      "variables": {
+        "Active Members": "Regularly engaging users",
+        "Total Members": "All accumulated followers/members"
+      },
+      "formula": "Activity Ratio = (Active Members / Total Members) × 100",
+      "example": "100,000 active / 1,000,000 total = 10% activity ratio.",
+      "data_sources": [
+        "Social Media Analytics"
+      ],
+      "update_frequency": "Weekly",
+      "complexity": "Low",
+      "related_metrics": [
+        63,
+        72
+      ],
+      "modern_context": "Follower count is a vanity metric; activity ratio measures true community health and algorithmic favor."
+    },
+    {
+      "id": 70,
+      "name": "Deductive Social Media ROI",
+      "category": "Digital/Social",
+      "business_case": "Assess if social media efforts are yielding a positive return based on sequential funnel estimates.",
+      "computation": "Multiply audience reach by view %, compelling %, visit %, and purchase % to get buyers, then calculate ROI.",
+      "variables": {
+        "Reach": "Target audience size",
+        "View %": "% who see the post",
+        "Compelling %": "% who find it compelling",
+        "Visit %": "% who visit site",
+        "Convert %": "% who purchase",
+        "Profit/Unit": "Profit per sale",
+        "Campaign Cost": "Total social media cost"
+      },
+      "formula": "ROI = ((Reach × View% × Compelling% × Visit% × Convert% × Profit/Unit) - Campaign Cost) / Campaign Cost",
+      "example": "((250K × 12% × 10% × 20% × 20% × $35) - $1,500) / $1,500 = 180% ROI.",
+      "data_sources": [
+        "Social Analytics",
+        "Web Analytics",
+        "Finance"
+      ],
+      "update_frequency": "Campaign-level",
+      "complexity": "High",
+      "related_metrics": [
+        72,
+        61
+      ],
+      "modern_context": "Highly dependent on accurate attribution; often supplemented by lift studies to prove causality."
+    },
+    {
+      "id": 71,
+      "name": "Resolution Time",
+      "category": "Digital/Social",
+      "business_case": "Evaluate how quickly customer inquiries are resolved via social media channels.",
+      "computation": "Divide total inquiry response time by the total number of service inquiries.",
+      "variables": {
+        "Total Response Time": "Sum of all response times (minutes)",
+        "Total Inquiries": "Number of inquiries received"
+      },
+      "formula": "Avg Resolution Time = Total Response Time / Total Inquiries",
+      "example": "6,000 minutes / 500 inquiries = 12 minutes per response.",
+      "data_sources": [
+        "Social Customer Care Tools (e.g., Sprinklr, Zendesk)"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        110,
+        31
+      ],
+      "modern_context": "A key driver of public brand perception; slow responses on Twitter/X can go viral negatively."
+    },
+    {
+      "id": 72,
+      "name": "Social Media Profitability",
+      "category": "Digital/Social",
+      "business_case": "Evaluate whether social media efforts (blogging, tweeting) produce profitable results.",
+      "computation": "Calculate gross profit per sale, multiply by follower conversion funnel, and subtract hourly labor costs.",
+      "variables": {
+        "R": "Revenue per sale",
+        "Cg": "Cost of goods per sale",
+        "F": "Number of followers",
+        "Cr": "Click rate %",
+        "Or": "Opt-in rate %",
+        "Pr": "Purchase rate %",
+        "h": "Hourly rate",
+        "T": "Time spent (hours)"
+      },
+      "formula": "Profit = (R - Cg) × (F × Cr × Or × Pr) - (h × T)",
+      "example": "($500 - $80) × (3,500 × 0.30 × 0.05 × 0.30) - ($65 × 60) = $2,715 profit.",
+      "data_sources": [
+        "Social Analytics",
+        "Finance",
+        "Time Tracking"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        70,
+        69
+      ],
+      "modern_context": "Forces marketers to account for the hidden labor cost of content creation and community management."
+    },
+    {
+      "id": 73,
+      "name": "Bounce Rate",
+      "category": "Digital/Social",
+      "business_case": "Determine the percentage of visitors that leave the website after viewing only one page.",
+      "computation": "Divide single-page visitors by total visitors to that page.",
+      "variables": {
+        "Single-Page Visitors": "Visitors who left immediately",
+        "Total Visitors": "Total visitors to the page"
+      },
+      "formula": "Bounce Rate = (Single-Page Visitors / Total Visitors) × 100",
+      "example": "100 single-page / 150 total = 66.7% bounce rate.",
+      "data_sources": [
+        "Web Analytics"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        62,
+        54
+      ],
+      "modern_context": "In GA4, replaced by 'Engagement Rate' (the inverse), as a high bounce rate is normal for single-page blogs or contact pages."
+    },
+    {
+      "id": 74,
+      "name": "Return On Advertising Spend (ROAS)",
+      "category": "Digital/Social",
+      "business_case": "Measure how much revenue is made specifically from an advertising campaign.",
+      "computation": "Divide revenue generated from the ad by the cost of the ad.",
+      "variables": {
+        "Ad Revenue": "Revenue directly attributed to ad",
+        "Ad Cost": "Total cost of the ad campaign"
+      },
+      "formula": "ROAS = Ad Revenue / Ad Cost",
+      "example": "$18,000 revenue / $12,000 cost = 1.5 (or $1.50 per $1 spent).",
+      "data_sources": [
+        "Ad Platforms",
+        "E-commerce Platform"
+      ],
+      "update_frequency": "Real-time",
+      "complexity": "Medium",
+      "related_metrics": [
+        67,
+        61
+      ],
+      "modern_context": "ROAS ignores COGS and overhead. A ROAS of 2.0 might still be unprofitable if gross margins are 40%."
+    },
+    {
+      "id": 75,
+      "name": "Cost Per Sales Dollar",
+      "category": "Place/Distribution",
+      "business_case": "Measure the cost incurred for each dollar of credit sales generated (e.g., collection costs).",
+      "computation": "Divide total departmental operating costs (fixed + variable) by annual revenue.",
+      "variables": {
+        "Total Operating Costs": "Fixed + Variable costs to support sales",
+        "Annual Revenue": "Total expected revenue"
+      },
+      "formula": "Cost Per Sales Dollar = Total Operating Costs / Annual Revenue",
+      "example": "$150,000 costs / $200,000 revenue = $0.75 per sales dollar.",
+      "data_sources": [
+        "Finance",
+        "Accounts Receivable"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        86,
+        4
+      ],
+      "modern_context": "Highlights inefficiencies in the order-to-cash process or high payment processing fees."
+    },
+    {
+      "id": 76,
+      "name": "Transactions Per Customer (TPC)",
+      "category": "Place/Distribution",
+      "business_case": "Determine how many in-store potential customers convert to actual buying customers.",
+      "computation": "Divide total transactions by total customer traffic.",
+      "variables": {
+        "Total Transactions": "Number of actual purchases",
+        "Customer Traffic": "Total number of people entering"
+      },
+      "formula": "TPC = (Total Transactions / Customer Traffic) × 100",
+      "example": "100 transactions / 1,000 traffic = 10% TPC.",
+      "data_sources": [
+        "POS",
+        "Foot Traffic Counters"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Medium",
+      "related_metrics": [
+        80,
+        87
+      ],
+      "modern_context": "Also known as 'Conversion Rate' in physical retail; optimized via store layout and staff placement."
+    },
+    {
+      "id": 77,
+      "name": "Transactions Per Hour (TPH)",
+      "category": "Place/Distribution",
+      "business_case": "Know transaction patterns to optimize employee scheduling and promotion timing.",
+      "computation": "Divide total transactions by the total number of operating hours.",
+      "variables": {
+        "Total Transactions": "Number of sales in period",
+        "Total Hours": "Number of operating hours in period"
+      },
+      "formula": "TPH = Total Transactions / Total Hours",
+      "example": "1,600 transactions / (13 hours × 7 days) = 17.6 TPH.",
+      "data_sources": [
+        "POS"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        76,
+        80
+      ],
+      "modern_context": "Enables dynamic staffing models (e.g., scheduling more cashiers during the 5 PM - 7 PM rush)."
+    },
+    {
+      "id": 78,
+      "name": "Average Transaction Size",
+      "category": "Place/Distribution",
+      "business_case": "Measure the average financial value of each transaction to gauge upselling success.",
+      "computation": "Divide total sales revenue by the total number of transactions.",
+      "variables": {
+        "Total Sales": "Total revenue in period",
+        "Total Transactions": "Number of transactions in period"
+      },
+      "formula": "Avg Transaction Size = Total Sales / Total Transactions",
+      "example": "$1,000,000 / 50,000 transactions = $20 per transaction.",
+      "data_sources": [
+        "POS",
+        "E-commerce Platform"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        79,
+        85
+      ],
+      "modern_context": "Also known as Average Order Value (AOV); targeted for growth via bundling and free-shipping thresholds."
+    },
+    {
+      "id": 79,
+      "name": "Average Items Per Transaction",
+      "category": "Place/Distribution",
+      "business_case": "Know the typical transaction profile to understand customer purchase patterns and item affinity.",
+      "computation": "Divide total items sold by the total number of transactions.",
+      "variables": {
+        "Total Items Sold": "Total quantity of individual items",
+        "Total Transactions": "Number of transactions"
+      },
+      "formula": "Avg Items Per Transaction = Total Items Sold / Total Transactions",
+      "example": "200 items / 50 transactions = 4 items per transaction.",
+      "data_sources": [
+        "POS",
+        "E-commerce Platform"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        78
+      ],
+      "modern_context": "Drives 'Market Basket Analysis' and 'Frequently Bought Together' recommendation engines."
+    },
+    {
+      "id": 80,
+      "name": "Hourly Customer Traffic (HCT)",
+      "category": "Place/Distribution",
+      "business_case": "Measure total customer traffic during specific periods to optimize staffing and store hours.",
+      "computation": "Divide total customer traffic by the number of hours in the period.",
+      "variables": {
+        "Total Customer Traffic": "Total people entering store",
+        "Total Hours": "Number of operating hours"
+      },
+      "formula": "HCT = Total Customer Traffic / Total Hours",
+      "example": "1,000 customers / 10 hours = 100 customers per hour.",
+      "data_sources": [
+        "Foot Traffic Counters",
+        "POS"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Low",
+      "related_metrics": [
+        76,
+        77
+      ],
+      "modern_context": "Modern computer vision AI can now track dwell time and heatmaps alongside raw HCT."
+    },
+    {
+      "id": 81,
+      "name": "Returns to Net Sales (RTN)",
+      "category": "Place/Distribution",
+      "business_case": "Measure returns from customer sales, indicating rates of customer satisfaction or product issues.",
+      "computation": "Divide total returns and allowances by total net sales.",
+      "variables": {
+        "Total Returns": "Value of returned products/allowances",
+        "Net Sales": "Total net sales revenue"
+      },
+      "formula": "RTN = (Total Returns / Net Sales) × 100",
+      "example": "$30,000 returns / $1,000,000 net sales = 3% RTN.",
+      "data_sources": [
+        "POS",
+        "Returns Management System"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        82,
+        32
+      ],
+      "modern_context": "High RTN in e-commerce (especially apparel) is a major profitability leak, driving investment in better sizing tech."
+    },
+    {
+      "id": 82,
+      "name": "Inventory Turnover",
+      "category": "Place/Distribution",
+      "business_case": "Understand how quickly inventory is being sold, indicating product popularity and capital efficiency.",
+      "computation": "Divide total annual sales (at cost) by average inventory (at cost).",
+      "variables": {
+        "Total Sales": "Annual sales value",
+        "Average Inventory": "Average inventory value held"
+      },
+      "formula": "Inventory Turnover = Total Sales / Average Inventory",
+      "example": "$80M sales / $8M avg inventory = 10x turnover.",
+      "data_sources": [
+        "ERP",
+        "Warehouse Management System"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        83,
+        84
+      ],
+      "modern_context": "Too high may indicate stockouts and lost sales; too low indicates obsolescence and high carrying costs."
+    },
+    {
+      "id": 83,
+      "name": "Percent Inventory Carrying Costs (PICC)",
+      "category": "Place/Distribution",
+      "business_case": "Determine the percentage of net sales attributed to the costs of managing unsold inventory.",
+      "computation": "Divide total inventory carrying costs by net sales.",
+      "variables": {
+        "Carrying Costs": "Storage, insurance, shrinkage, labor costs",
+        "Net Sales": "Total net sales revenue"
+      },
+      "formula": "PICC = (Carrying Costs / Net Sales) × 100",
+      "example": "$300,000 carrying costs / $1,000,000 net sales = 30% PICC.",
+      "data_sources": [
+        "Finance",
+        "Warehouse Management System"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        82,
+        84
+      ],
+      "modern_context": "Typically ranges from 20-30% of inventory value annually; a key target for supply chain optimization."
+    },
+    {
+      "id": 84,
+      "name": "Gross Margin Return on Inventory Investment (GMROII)",
+      "category": "Place/Distribution",
+      "business_case": "Measure the products with the highest return on the money invested in inventory.",
+      "computation": "Divide gross margin by average inventory at cost.",
+      "variables": {
+        "Gross Margin": "Total gross profit from sales",
+        "Avg Inventory at Cost": "Average value of inventory held"
+      },
+      "formula": "GMROII = Gross Margin / Avg Inventory at Cost",
+      "example": "$3M gross margin / $1M avg inventory = 3.0 (or 300% return).",
+      "data_sources": [
+        "ERP",
+        "Finance"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        82,
+        83
+      ],
+      "modern_context": "The ultimate retail productivity metric, balancing the trade-off between high margins and fast turnover."
+    },
+    {
+      "id": 85,
+      "name": "Sales Per Square Foot (SPSF)",
+      "category": "Place/Distribution",
+      "business_case": "Maximize the productivity of expensive retail selling space.",
+      "computation": "Divide total sales by the total selling area in square feet.",
+      "variables": {
+        "Total Sales": "Total revenue generated",
+        "Selling Area": "Total square footage of selling space"
+      },
+      "formula": "SPSF = Total Sales / Selling Area",
+      "example": "$2,000,000 sales / 10,000 sq ft = $200 SPSF.",
+      "data_sources": [
+        "POS",
+        "Facilities Management"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        78,
+        86
+      ],
+      "modern_context": "Apple Stores famously dominate this metric, validating their minimalist, high-touch store design."
+    },
+    {
+      "id": 86,
+      "name": "Sales/Profits Per Employee (SPPE)",
+      "category": "Place/Distribution",
+      "business_case": "Evaluate the financial contribution and productivity generated by each employee.",
+      "computation": "Divide total sales (or profits) by the total number of full-time employees.",
+      "variables": {
+        "Total Sales/Profits": "Total revenue or net profit",
+        "Total Employees": "Number of full-time employees"
+      },
+      "formula": "SPPE = Total Sales (or Profits) / Total Employees",
+      "example": "$60M sales / 600 employees = $100,000 sales per employee.",
+      "data_sources": [
+        "HRIS",
+        "Finance"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Low",
+      "related_metrics": [
+        75,
+        105
+      ],
+      "modern_context": "A key benchmark for operational efficiency, especially in labor-intensive retail and service sectors."
+    },
+    {
+      "id": 87,
+      "name": "Retail Close Ratio",
+      "category": "Place/Distribution",
+      "business_case": "Determine how many prospective customers (shoppers) become paying customers.",
+      "computation": "Divide total number of buyers by total shopper traffic.",
+      "variables": {
+        "Total Buyers": "Number of actual transactions",
+        "Total Shoppers": "Total number of people entering"
+      },
+      "formula": "Close Ratio = (Total Buyers / Total Shoppers) × 100",
+      "example": "300 buyers / 1,500 shoppers = 20% close ratio.",
+      "data_sources": [
+        "POS",
+        "Foot Traffic Counters"
+      ],
+      "update_frequency": "Daily",
+      "complexity": "Medium",
+      "related_metrics": [
+        76,
+        54
+      ],
+      "modern_context": "Directly tied to sales staff training, product availability, and in-store experience."
+    },
+    {
+      "id": 88,
+      "name": "Retail Margin Percentage (RMP)",
+      "category": "Place/Distribution",
+      "business_case": "Determine the profit margin realized after purchasing from the wholesaler and selling to the consumer.",
+      "computation": "Subtract wholesale cost from retail price, then divide by retail price.",
+      "variables": {
+        "Retail Price": "Price sold to consumer",
+        "Wholesale Cost": "Price paid to supplier"
+      },
+      "formula": "RMP = ((Retail Price - Wholesale Cost) / Retail Price) × 100",
+      "example": "($5.00 - $2.50) / $5.00 = 50% RMP.",
+      "data_sources": [
+        "POS",
+        "Procurement"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        40,
+        84
+      ],
+      "modern_context": "Private label/store brands are often pushed to improve RMP compared to national brands."
+    },
+    {
+      "id": 89,
+      "name": "Percent Utilization of Discounts (PUD)",
+      "category": "Place/Distribution",
+      "business_case": "Understand the impact on margin when supplier discounts are offered and whether they are captured.",
+      "computation": "Divide the total value of discounts actually taken by total purchases from the supplier.",
+      "variables": {
+        "Discounts Taken": "Total value of discounts received",
+        "Total Purchases": "Total gross purchase value"
+      },
+      "formula": "PUD = (Discounts Taken / Total Purchases) × 100",
+      "example": "$40,000 discounts / $200,000 purchases = 20% PUD.",
+      "data_sources": [
+        "Procurement",
+        "Accounts Payable"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        88,
+        82
+      ],
+      "modern_context": "Low PUD indicates poor procurement negotiation or operational failures (e.g., missing payment windows for early-pay discounts)."
+    },
+    {
+      "id": 90,
+      "name": "Shrinkage to Net Sales (SNS)",
+      "category": "Place/Distribution",
+      "business_case": "Determine the percentage of inventory lost to theft, error, or damage relative to sales.",
+      "computation": "Subtract actual inventory from book inventory, then divide by net sales.",
+      "variables": {
+        "Book Inventory": "Expected inventory value",
+        "Actual Inventory": "Physically counted inventory value",
+        "Net Sales": "Total net sales"
+      },
+      "formula": "SNS = ((Book Inventory - Actual Inventory) / Net Sales) × 100",
+      "example": "($62,000 - $55,000) / $71,000 = 9.9% SNS.",
+      "data_sources": [
+        "Warehouse Management",
+        "POS",
+        "Audit"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        81,
+        82
+      ],
+      "modern_context": "Rising retail shrink (theft) is driving investments in RFID, computer vision, and electronic article surveillance (EAS)."
+    },
+    {
+      "id": 91,
+      "name": "Net Sales Contribution (Sales)",
+      "category": "Sales Metrics",
+      "business_case": "Determine how much a specific sales territory or segment represents of total company sales.",
+      "computation": "Divide territory/segment sales by total sales for all territories.",
+      "variables": {
+        "Territory Sales": "Sales from specific territory",
+        "Total Sales": "Total company sales"
+      },
+      "formula": "Net Sales Contribution = (Territory Sales / Total Sales) × 100",
+      "example": "$25M territory / $100M total = 25% contribution.",
+      "data_sources": [
+        "CRM",
+        "ERP"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        22,
+        105
+      ],
+      "modern_context": "Used to reallocate sales headcount and marketing support to the highest-contributing regions."
+    },
+    {
+      "id": 92,
+      "name": "Absolute Index (AI)",
+      "category": "Sales Metrics",
+      "business_case": "Determine overall sales performance against budget to guide bonus awards.",
+      "computation": "Divide actual revenues by estimated (budgeted) revenues.",
+      "variables": {
+        "Actual Revenues": "Realized sales",
+        "Estimated Revenues": "Target/budgeted sales"
+      },
+      "formula": "Absolute Index = Actual Revenues / Estimated Revenues",
+      "example": "$26M actual / $20M estimated = 1.3 AI (30% over target).",
+      "data_sources": [
+        "CRM",
+        "Finance"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        93,
+        100
+      ],
+      "modern_context": "An AI > 1.0 is the primary trigger for variable compensation payout."
+    },
+    {
+      "id": 93,
+      "name": "Relative Index (RI)",
+      "category": "Sales Metrics",
+      "business_case": "Understand the relative performance ranking of each sales territory against each other.",
+      "computation": "Rank territories based on their Absolute Index or actual revenue performance.",
+      "variables": {
+        "Absolute Index": "Performance factor of each territory"
+      },
+      "formula": "RI = Rank(Absolute Index) from highest to lowest",
+      "example": "Territory D (1.4) is Rank 1, Territory B (0.85) is Rank 5.",
+      "data_sources": [
+        "CRM",
+        "Finance"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        92
+      ],
+      "modern_context": "Useful for identifying best practices in top-ranked territories to replicate in underperforming ones."
+    },
+    {
+      "id": 94,
+      "name": "Percent of Sales",
+      "category": "Sales Metrics",
+      "business_case": "Determine the optimal sales force size as a percentage of total projected sales.",
+      "computation": "Multiply projected revenues by industry field sales ratio, then allocate to field/support staff.",
+      "variables": {
+        "PR": "Projected revenues",
+        "FSR": "Field sales ratio %",
+        "SFP": "Sales force percent (field + support)"
+      },
+      "formula": "Sales Force Dollars = (PR × FSR) × SFP",
+      "example": "($60M × 0.036) × 0.80 = $1,728,000 sales force budget.",
+      "data_sources": [
+        "Finance",
+        "HR",
+        "Industry Benchmarks"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "Medium",
+      "related_metrics": [
+        98,
+        99
+      ],
+      "modern_context": "Being disrupted by Product-Led Growth (PLG), which reduces the need for large, expensive field sales teams."
+    },
+    {
+      "id": 95,
+      "name": "Independent Sales Rep Analysis",
+      "category": "Sales Metrics",
+      "business_case": "Determine whether to use a dedicated (higher fixed cost) or independent (commission-based) sales force.",
+      "computation": "Set the total cost equations of both forces equal to each other and solve for breakeven sales volume.",
+      "variables": {
+        "Fixed Cost": "Salary/benefits of dedicated force",
+        "Comm Rate": "Commission rate of independent force",
+        "x": "Breakeven sales volume"
+      },
+      "formula": "Dedicated Cost = Independent Cost (solve for x)",
+      "example": "$3M + 4%x = $25K + 7%x → Breakeven x = $99.16M.",
+      "data_sources": [
+        "Finance",
+        "HR"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "High",
+      "related_metrics": [
+        104
+      ],
+      "modern_context": "Many companies use a hybrid model: dedicated reps for strategic enterprise accounts, independent reps for SMB/long-tail."
+    },
+    {
+      "id": 96,
+      "name": "Turnover Rate",
+      "category": "Sales Metrics",
+      "business_case": "Measure sales force departures to manage recruiting and retention costs.",
+      "computation": "Divide the number of salesperson departures by total sales force size.",
+      "variables": {
+        "Departures": "Number of reps who left",
+        "Total Force": "Total number of salespeople"
+      },
+      "formula": "Turnover Rate = (Departures / Total Force) × 100",
+      "example": "75 departures / 1,000 total = 7.5% turnover rate.",
+      "data_sources": [
+        "HRIS"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Low",
+      "related_metrics": [
+        97
+      ],
+      "modern_context": "High turnover destroys institutional knowledge and customer relationships; a leading indicator of poor management or unrealistic quotas."
+    },
+    {
+      "id": 97,
+      "name": "Recruiting Yield",
+      "category": "Sales Metrics",
+      "business_case": "Determine the number of applicants required to ultimately fill vacant sales positions.",
+      "computation": "Divide the number of needed hires by the product of offer rate and acceptance rate.",
+      "variables": {
+        "Needed Hires": "Target number of new reps",
+        "Offer Rate": "% of applicants offered jobs",
+        "Acceptance Rate": "% of offers accepted"
+      },
+      "formula": "Applicants Needed = Needed Hires / (Offer Rate × Acceptance Rate)",
+      "example": "25 / (0.20 × 0.75) = 167 applicants needed.",
+      "data_sources": [
+        "HRIS",
+        "ATS"
+      ],
+      "update_frequency": "As Needed",
+      "complexity": "Medium",
+      "related_metrics": [
+        96
+      ],
+      "modern_context": "Critical for scaling sales teams rapidly; low yield indicates a weak employer brand or uncompetitive compensation."
+    },
+    {
+      "id": 98,
+      "name": "Breakdown Approach",
+      "category": "Sales Metrics",
+      "business_case": "Determine sales force size based on historical sales, new contracts, and market growth forecasts.",
+      "computation": "Calculate total forecasted sales, then divide by the average sales per person.",
+      "variables": {
+        "FSp": "Current year preliminary sales forecast",
+        "MG": "Market growth in dollars",
+        "SPP": "Average sales per person"
+      },
+      "formula": "Sales Force Size = (FSp + MG) / SPP",
+      "example": "($105M + $15.75M) / $1M per rep = 121 salespeople needed.",
+      "data_sources": [
+        "Sales Forecasts",
+        "HR"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "Medium",
+      "related_metrics": [
+        94,
+        99
+      ],
+      "modern_context": "Simple but assumes linear scalability, which often breaks down due to management span-of-control limits."
+    },
+    {
+      "id": 99,
+      "name": "Workload Approach",
+      "category": "Sales Metrics",
+      "business_case": "Determine the right size for the sales force based on the total amount of customer calling work expected.",
+      "computation": "Divide total selling effort needed (customers × frequency) by average calls made per salesperson.",
+      "variables": {
+        "Total Customers": "Number of customers to reach",
+        "Frequency": "Calls per customer",
+        "Calls Per Rep": "Average capacity per salesperson"
+      },
+      "formula": "Sales Force Size = (Total Customers × Frequency) / Calls Per Rep",
+      "example": "(3,000 × 1) / 100 calls = 30 salespersons.",
+      "data_sources": [
+        "CRM",
+        "Time Tracking"
+      ],
+      "update_frequency": "Annually",
+      "complexity": "Medium",
+      "related_metrics": [
+        98
+      ],
+      "modern_context": "More accurate than the breakdown approach as it is grounded in the actual time required to service the market."
+    },
+    {
+      "id": 100,
+      "name": "Sales Performance Quotas",
+      "category": "Sales Metrics",
+      "business_case": "Structure sales volume, unit, point, profit, or activity quotas to guide and motivate sales reps.",
+      "computation": "Set targets based on historical data, growth plans, or strategic product priorities.",
+      "variables": {
+        "Target": "Quota amount (dollars, units, or points)",
+        "Actual": "Achieved amount"
+      },
+      "formula": "Quota % Achieved = (Actual / Target) × 100",
+      "example": "$1.35M actual / $1.2M target = 113% quota achieved.",
+      "data_sources": [
+        "CRM",
+        "Compensation System"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        92,
+        106
+      ],
+      "modern_context": "Modern quota setting uses AI to recommend individualized, achievable quotas based on territory potential, not just historical run-rates."
+    },
+    {
+      "id": 101,
+      "name": "Average Sales Per Call",
+      "category": "Sales Metrics",
+      "business_case": "Measure how much each salesperson generates in dollars per sales call.",
+      "computation": "Divide total sales revenue generated by the total number of sales calls made.",
+      "variables": {
+        "Total Sales": "Revenue generated in period",
+        "Total Calls": "Number of sales calls made"
+      },
+      "formula": "Avg Sales Per Call = Total Sales / Total Calls",
+      "example": "$20,000 sales / 75 calls = $267 per call.",
+      "data_sources": [
+        "CRM",
+        "Telephony/Meeting Software"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Low",
+      "related_metrics": [
+        103,
+        106
+      ],
+      "modern_context": "Helps reps prioritize high-value accounts over low-yield administrative calls."
+    },
+    {
+      "id": 102,
+      "name": "Close Process and Close Ratio",
+      "category": "Sales Metrics",
+      "business_case": "Evaluate each salesperson’s performance in converting potential customers to closed deals.",
+      "computation": "Divide the number of customers who completed the process to close by total potential customers.",
+      "variables": {
+        "Closed Deals": "Number of successful sales",
+        "Total Potentials": "Number of prospects entered into cycle"
+      },
+      "formula": "Close Ratio = (Closed Deals / Total Potentials) × 100",
+      "example": "7 closed / 12 potentials = 58% close ratio.",
+      "data_sources": [
+        "CRM"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        54,
+        109
+      ],
+      "modern_context": "A low close ratio despite high activity indicates a need for better sales training, not more leads."
+    },
+    {
+      "id": 103,
+      "name": "Cost Per Call",
+      "category": "Sales Metrics",
+      "business_case": "Know how much each salesperson’s time and expenses are worth per customer contact.",
+      "computation": "Divide total annual direct sales expenses (compensation + expenses) by total calls per year.",
+      "variables": {
+        "Total Expenses": "Salary, benefits, travel, materials",
+        "Total Calls": "Net selling days × avg calls per day"
+      },
+      "formula": "Cost Per Call = Total Expenses / Total Calls",
+      "example": "$166,543 expenses / 615 calls = $270.80 per call.",
+      "data_sources": [
+        "Finance",
+        "CRM",
+        "Expense Management"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        101,
+        104
+      ],
+      "modern_context": "Justifies the shift to inside sales or digital self-serve models for low-value accounts."
+    },
+    {
+      "id": 104,
+      "name": "Break-Even Sales Volume",
+      "category": "Sales Metrics",
+      "business_case": "Determine the minimum customer sale size needed to cover the cost of selling to them.",
+      "computation": "Divide the cost per call by the industry-standard sales cost percentage, or multiply cost per call by calls needed to close.",
+      "variables": {
+        "Cost Per Call": "Expense per sales call",
+        "Calls to Close": "Average number of calls to make a sale"
+      },
+      "formula": "Break-Even Volume = Cost Per Call × Calls to Close",
+      "example": "$131.60 × 4.8 calls = $631.68 minimum sale size.",
+      "data_sources": [
+        "Finance",
+        "CRM"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Medium",
+      "related_metrics": [
+        103,
+        95
+      ],
+      "modern_context": "Used to establish minimum order quantities (MOQs) or to route sub-threshold accounts to digital channels."
+    },
+    {
+      "id": 105,
+      "name": "Sales Productivity",
+      "category": "Sales Metrics",
+      "business_case": "Know how productive the sales team is in generating revenue or profit per person.",
+      "computation": "Divide total sales revenue (or profit) by the total number of salespeople.",
+      "variables": {
+        "Total Revenue": "Total sales generated",
+        "Total Salespeople": "Number of sales reps"
+      },
+      "formula": "Sales Productivity = Total Revenue / Total Salespeople",
+      "example": "$42M revenue / 100 reps = $420,000 per salesperson.",
+      "data_sources": [
+        "CRM",
+        "Finance",
+        "HRIS"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Low",
+      "related_metrics": [
+        86,
+        91
+      ],
+      "modern_context": "The ultimate measure of sales force efficiency; declining productivity signals the need for better tools, training, or territory realignment."
+    },
+    {
+      "id": 106,
+      "name": "Four Factor Model",
+      "category": "Sales Metrics",
+      "business_case": "Evaluate salesperson efforts across four specific, measurable activity areas.",
+      "computation": "Multiply days worked, calls per day, bookings per call, and sales dollars per booking.",
+      "variables": {
+        "Days": "Days worked",
+        "Calls/Day": "Total calls / Days worked",
+        "Bookings/Call": "Group bookings / Total calls",
+        "Sales/Booking": "Sales $ / Bookings"
+      },
+      "formula": "Total Sales Estimate = Days × (Calls/Day) × (Bookings/Call) × (Sales/Booking)",
+      "example": "230 × 12 × 0.036 × $6,222 = $618,218 estimated sales.",
+      "data_sources": [
+        "CRM",
+        "Time Tracking"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        101,
+        102
+      ],
+      "modern_context": "Helps diagnose *why* a rep is underperforming (e.g., high calls/day but low bookings/call indicates poor pitching skills)."
+    },
+    {
+      "id": 107,
+      "name": "Sales Variance Analysis",
+      "category": "Sales Metrics",
+      "business_case": "Measure the differences between actual and budgeted sales to see where deviations occurred.",
+      "computation": "Calculate sales value, price, and volume variances to isolate the root cause of performance gaps.",
+      "variables": {
+        "Actual Sales": "Realized revenue",
+        "Budgeted Sales": "Planned revenue"
+      },
+      "formula": "Sales Value Variance = Actual Sales - Budgeted Sales",
+      "example": "$4.98M actual - $4.875M budget = $105,000 favorable variance.",
+      "data_sources": [
+        "Finance",
+        "CRM"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "High",
+      "related_metrics": [
+        43,
+        108
+      ],
+      "modern_context": "Essential for management accounting to separate the impact of pricing decisions from volume execution."
+    },
+    {
+      "id": 108,
+      "name": "Sales Volume Variance",
+      "category": "Sales Metrics",
+      "business_case": "Measure the financial impact specifically from changes in the quantity of units sold.",
+      "computation": "Multiply the difference between actual quantity and budgeted quantity by the budgeted price.",
+      "variables": {
+        "Qa": "Actual quantity sold",
+        "Qb": "Budgeted quantity sold",
+        "Pb": "Budgeted price per unit"
+      },
+      "formula": "Sales Volume Variance = (Qa - Qb) × Pb",
+      "example": "(90,000 - 100,000) × $25 = -$250,000 unfavorable variance.",
+      "data_sources": [
+        "Finance",
+        "CRM"
+      ],
+      "update_frequency": "Monthly",
+      "complexity": "Medium",
+      "related_metrics": [
+        107,
+        43
+      ],
+      "modern_context": "Helps isolate whether a revenue miss was due to selling fewer units (volume) or selling them cheaper (price)."
+    },
+    {
+      "id": 109,
+      "name": "Sales Enablement",
+      "category": "Sales Metrics",
+      "business_case": "Determine how effective salespeople are at doing their jobs due to new training, tools, or focus.",
+      "computation": "Compare leading indicators (e.g., certification completion) and lagging indicators (e.g., win rate, NPS) before and after enablement initiatives.",
+      "variables": {
+        "Leading": "Training completion, content usage",
+        "Lagging": "Win/loss rate, conversion rate, NPS"
+      },
+      "formula": "Effectiveness = Δ(Lagging Indicators) post-enablement vs. baseline",
+      "example": "Win rate increased from 20% to 28% after new ROI selling training.",
+      "data_sources": [
+        "Sales Enablement Platform",
+        "CRM"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "High",
+      "related_metrics": [
+        102,
+        110
+      ],
+      "modern_context": "Moving from tracking 'content downloads' to tracking 'content impact on deal velocity and win rates'."
+    },
+    {
+      "id": 110,
+      "name": "Net Promoter Score (NPS)",
+      "category": "Sales Metrics",
+      "business_case": "Understand whether targeted stakeholders would recommend the company and its solutions to others.",
+      "computation": "Subtract the percentage of detractors (0-6) from the percentage of promoters (9-10).",
+      "variables": {
+        "Promoters": "% rating 9-10",
+        "Detractors": "% rating 0-6"
+      },
+      "formula": "NPS = % Promoters - % Detractors",
+      "example": "(250/500 = 50% Promoters) - (150/500 = 30% Detractors) = 20 NPS.",
+      "data_sources": [
+        "Survey Tools (Qualtrics, SurveyMonkey)",
+        "CRM"
+      ],
+      "update_frequency": "Quarterly",
+      "complexity": "Low",
+      "related_metrics": [
+        31,
+        71
+      ],
+      "modern_context": "Increasingly replaced or supplemented by Customer Effort Score (CES) and Customer Satisfaction (CSAT) for more actionable, transactional feedback."
+    }
+  ]
+}
