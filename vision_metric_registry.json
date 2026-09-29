@@ -1,0 +1,886 @@
+{
+  "vision_metric_registry": {
+    "metadata": {
+      "schema_version": "3.0.0",
+      "basis": "Krig Computer Vision Metrics: Survey, Taxonomy, and Analysis (2014)",
+      "description": "World-class reference schema for classifying, evaluating, routing, and deploying computer vision feature descriptors across heterogeneous compute platforms, environmental contexts, and multimodal sensor configurations.",
+      "taxonomy_axes": {
+        "shape_and_pattern": "How pixels are sampled from the target image (rectangle, circle, sparse pairs, strips, deformable, volumetric)",
+        "density": "Extent of image used: Global, Regional, Sparse Local",
+        "spectra": "Scalar and vector quantities: gradient magnitude/direction, binary, color, depth, surface normals, Fourier, statistical moments"
+      }
+    },
+
+    "hardware_capability_taxonomy": {
+      "compute_units": {
+        "DSP_VLIW": {
+          "description": "Digital Signal Processor with Very Long Instruction Word for pixel-level sensor processing",
+          "ideal_operations": ["de-mosaicking", "dead pixel correction", "vignette correction", "LUT contrast remap", "color space conversion", "point operations", "line operations"],
+          "data_types": ["uint8", "uint16", "int16"],
+          "memory_profile": "High-bandwidth local register file, on-chip SRAM",
+          "power_profile": "Low (optimized for always-on sensor pipeline)",
+          "accelerators": ["geometric warp unit", "fixed-function correlator"]
+        },
+        "GPU_SIMT": {
+          "description": "Graphics Processing Unit with Single Instruction Multiple Threading for area operations",
+          "ideal_operations": ["convolution", "morphology", "HOG", "LBP", "super-pixel segmentation", "integral images", "MVS stereo matching", "bilateral filter", "Gaussian pyramid", "color segmentation"],
+          "data_types": ["uint8", "uint16", "int16", "int32", "float16", "float32"],
+          "memory_profile": "Scatter-gather via texture sampler, shared memory tiling, global VRAM",
+          "power_profile": "Medium-High (depends on thread occupancy and memory bandwidth)",
+          "accelerators": ["texture sampler (warp/interpolation)", "compute shader cores", "media engine (motion blur compensation)"]
+        },
+        "CPU_SIMD": {
+          "description": "Central Processing Unit with SIMD instruction extensions (SSE/AVX/NEON) for vectorized operations",
+          "ideal_operations": ["Hamming distance (XOR + popcount)", "SAD/SSD", "integral image computation", "FREAK/ORB descriptor extraction", "color space conversion", "histogram binning"],
+          "data_types": ["uint8", "int16", "int32", "float32", "float64"],
+          "memory_profile": "Cache-coherent, L1/L2/L3 hierarchy, register files",
+          "power_profile": "Medium",
+          "accelerators": ["SIMD lanes (128/256/512-bit)", "AES-NI (for hashing)", "MPX (pointer checking)"]
+        },
+        "CPU_Threads": {
+          "description": "Multi-core CPU with coarse-grain thread parallelism for algorithmic/serial code",
+          "ideal_operations": ["perimeter tracing", "polygon shape metrics", "Fourier descriptors", "graph search", "database matching", "geometric constraint solving", "RANSAC", "bundle adjustment", "SIFT descriptor generation"],
+          "data_types": ["int32", "int64", "float32", "float64"],
+          "memory_profile": "Cache-coherent scatter-gather, shared system memory, page-pinned buffers",
+          "power_profile": "Medium-High (scales with core count)",
+          "accelerators": ["OS thread scheduler", "NUMA-aware memory allocation"]
+        },
+        "CPU_General": {
+          "description": "Single-threaded scalar CPU for branching-heavy, serial algorithmic code",
+          "ideal_operations": ["classifier logic", "decision trees", "constraint evaluation", "database queries", "pose estimation (6DOF)", "feature culling"],
+          "data_types": ["int32", "float32", "float64"],
+          "memory_profile": "Standard cache hierarchy",
+          "power_profile": "Low-Medium",
+          "accelerators": ["branch predictor", "out-of-order execution"]
+        },
+        "NPU_Tensor": {
+          "description": "Neural Processing Unit with tensor cores for deep learning inference",
+          "ideal_operations": ["convolutional neural network inference", "feature learning", "sparse coding", "deep matching (DeepFlow)", "classification (SVM/softmax)"],
+          "data_types": ["int8", "float16", "bfloat16", "float32"],
+          "memory_profile": "On-chip SRAM, HBM, unified memory",
+          "power_profile": "High peak, high efficiency per TOPS",
+          "accelerators": ["matrix multiply-accumulate (MAC) arrays", "activation engines"]
+        },
+        "Fixed_Function_HW": {
+          "description": "Application-specific silicon for common vision primitives",
+          "ideal_operations": ["optical flow engine", "stereo disparity correlator", "depth sensor ISP", "DMA memory copy", "video encode/decode motion estimation (DCT)"],
+          "data_types": ["uint8", "int16", "fixed-point"],
+          "memory_profile": "Dedicated SRAM, DMA-driven",
+          "power_profile": "Very Low (purpose-built)",
+          "accelerators": ["hardware correlator", "H.264/H.265 motion estimation block", "TOF timing logic"]
+        }
+      },
+      "memory_hierarchy": {
+        "register_file": {"latency_cycles": 1, "bandwidth": "highest", "power_per_access": "lowest"},
+        "L1_cache": {"latency_cycles": "3-5", "bandwidth": "very high", "power_per_access": "low"},
+        "L2_cache": {"latency_cycles": "10-20", "bandwidth": "high", "power_per_access": "medium"},
+        "L3_cache": {"latency_cycles": "30-50", "bandwidth": "medium", "power_per_access": "medium-high"},
+        "system_memory": {"latency_cycles": "100-300", "bandwidth": "limited", "power_per_access": "highest"},
+        "VRAM": {"latency_cycles": "200-400", "bandwidth": "high (wide bus)", "power_per_access": "high"}
+      },
+      "data_access_patterns": {
+        "in_place": {"description": "Read and write same buffer; minimal memory traffic", "example": "LBP pixel comparison, point operations"},
+        "source_destination": {"description": "Separate read/write buffers", "example": "convolution, Gaussian blur"},
+        "scatter_gather": {"description": "Non-contiguous memory access", "example": "FREAK sparse point-pair sampling, D-NETS strip sampling"},
+        "streaming": {"description": "Sequential line-by-line access", "example": "FFT separable transform, sensor readout"},
+        "tiled": {"description": "Block-based with overlap for area operations", "example": "HOG block normalization, morphology"}
+      }
+    },
+
+    "context_awareness_taxonomy": {
+      "environmental_conditions": {
+        "illumination": {
+          "controlled_indoor": {"lux_range": "300-500", "color_temp": "3200-4500K", "challenges": ["shadows", "specular reflections"]},
+          "office_fluorescent": {"lux_range": "400-600", "color_temp": "4000-5000K", "challenges": ["flicker", "green cast"]},
+          "outdoor_daylight": {"lux_range": "10000-100000", "color_temp": "5500-6500K", "challenges": ["harsh shadows", "overexposure", "dynamic range"]},
+          "outdoor_overcast": {"lux_range": "1000-5000", "color_temp": "6500-7500K", "challenges": ["low contrast", "flat lighting"]},
+          "dawn_dusk": {"lux_range": "10-500", "color_temp": "2000-3500K", "challenges": ["rapid color shift", "low SNR"]},
+          "night_artificial": {"lux_range": "1-50", "color_temp": "2700-4000K", "challenges": ["extreme noise", "motion blur", "IR contamination"]},
+          "underwater": {"lux_range": "variable", "color_temp": "blue-shifted", "challenges": ["absorption", "scattering", "caustics"]}
+        },
+        "weather": ["clear", "rain", "snow", "fog", "haze", "dust_storm"],
+        "scene_dynamics": {
+          "static": "No motion in scene or camera",
+          "slow_motion": "Pedestrian walking, slow conveyor belt (<1 m/s)",
+          "moderate_motion": "Vehicle at 25-60 mph, hand gestures",
+          "fast_motion": "Sports, drone flight, high-speed inspection (>60 mph)",
+          "vibration": "Industrial machinery, handheld device shake"
+        }
+      },
+      "application_domains": {
+        "mobile_ar": {
+          "latency_budget_ms": 16,
+          "power_budget": "battery_constrained",
+          "accuracy_requirement": "pixel-level for overlay alignment",
+          "typical_sensors": ["RGB", "IMU", "depth (ToF/structured light)", "GPS"],
+          "key_robustness": ["rotation", "scale", "motion_blur", "occlusion", "illumination_change"]
+        },
+        "autonomous_driving": {
+          "latency_budget_ms": 33,
+          "power_budget": "moderate (vehicle power)",
+          "accuracy_requirement": "sub-meter depth, 99%+ detection",
+          "typical_sensors": ["RGB stereo", "LiDAR", "radar", "IMU", "GPS", "ToF"],
+          "key_robustness": ["scale", "perspective", "weather", "motion_blur", "occlusion", "clutter"]
+        },
+        "industrial_inspection": {
+          "latency_budget_ms": 50,
+          "power_budget": "unlimited (mains)",
+          "accuracy_requirement": "sub-pixel, sub-millimeter",
+          "typical_sensors": ["high-res RGB (12-16 bit)", "line scan", "structured light", "thermal"],
+          "key_robustness": ["color_accuracy", "geometric_distortion", "sub_pixel_resolution", "noise"]
+        },
+        "medical_imaging": {
+          "latency_budget_ms": 100,
+          "power_budget": "unlimited",
+          "accuracy_requirement": "diagnostic-grade, sub-pixel",
+          "typical_sensors": ["MRI", "CT", "ultrasound", "endoscope RGB", "OCT"],
+          "key_robustness": ["noise", "contrast", "geometric_accuracy", "tissue_deformation"]
+        },
+        "robotics_manipulation": {
+          "latency_budget_ms": 20,
+          "power_budget": "battery_constrained",
+          "accuracy_requirement": "millimeter-level pose",
+          "typical_sensors": ["RGB-D", "stereo", "IMU", "force/torque", "tactile"],
+          "key_robustness": ["occlusion", "clutter", "scale", "perspective", "dynamic_texture"]
+        },
+        "surveillance": {
+          "latency_budget_ms": 200,
+          "power_budget": "moderate (PoE)",
+          "accuracy_requirement": "person-level identification",
+          "typical_sensors": ["RGB (4K)", "IR/thermal", "PTZ"],
+          "key_robustness": ["illumination", "occlusion", "clutter", "scale", "perspective", "weather"]
+        },
+        "aerial_drone": {
+          "latency_budget_ms": 30,
+          "power_budget": "strict_thermal_limit",
+          "accuracy_requirement": "meter-level geo-referencing",
+          "typical_sensors": ["RGB", "multispectral", "LiDAR", "IMU", "GPS/RTK"],
+          "key_robustness": ["scale", "perspective", "motion_blur", "vibration", "illumination"]
+        }
+      },
+      "preprocessing_dependencies": {
+        "illumination_correction": ["CLAHE", "histogram_equalization", "LUT_remap", "gamma_correction", "CIECAM02_illuminant_adaptation"],
+        "noise_removal": ["bilateral_filter", "guided_filter", "median_filter", "rank_filter", "NL-means", "wavelet_denoising", "domain_transform"],
+        "geometric_correction": ["radial_distortion_removal", "perspective_rectification", "spherical_warp", "epipolar_rectification"],
+        "color_processing": ["RGB_to_HSV", "RGB_to_CIELab", "RGB_to_Jch", "opponent_color", "white_balance", "gamut_mapping"],
+        "scale_space": ["Gaussian_pyramid", "DoG_pyramid", "integral_image_pyramid", "non-octave_pyramid"],
+        "morphology": ["erosion", "dilation", "opening", "closing", "skeleton", "distance_transform"],
+        "segmentation": ["depth_thresholding", "super_pixel_SLIC", "watershed", "graph_cut", "texture_segmentation_LBP"]
+      }
+    },
+
+    "multimodal_fusion_taxonomy": {
+      "sensor_modalities": {
+        "RGB": {"channels": 3, "bit_depth": "8-16", "spatial_res": "up to 8K", "frame_rate": "30-240 fps"},
+        "Grayscale": {"channels": 1, "bit_depth": "8-16", "spatial_res": "up to 8K", "frame_rate": "30-1000 fps"},
+        "Depth_ToF": {"channels": 1, "bit_depth": "8-16", "spatial_res": "VGA-1080p", "frame_rate": "30-90 fps", "range": "0.3-10m"},
+        "Depth_Structured_Light": {"channels": 1, "bit_depth": "8-11", "spatial_res": "VGA-1080p", "frame_rate": "30 fps", "range": "0.5-5m"},
+        "Depth_Stereo": {"channels": 1, "bit_depth": "8-16", "spatial_res": "up to 4K", "frame_rate": "30-120 fps", "range": "1-100m+"},
+        "LiDAR": {"channels": 1, "bit_depth": "16-32", "spatial_res": "sparse point cloud", "frame_rate": "10-20 Hz", "range": "1-200m"},
+        "Thermal_IR": {"channels": 1, "bit_depth": "14-16", "spatial_res": "QVGA-VGA", "frame_rate": "30-60 fps"},
+        "Event_Camera": {"channels": 1, "bit_depth": "1 (polarity)", "spatial_res": "VGA-1MP", "frame_rate": "asynchronous μs", "dynamic_range": "120+ dB"},
+        "IMU": {"channels": 6, "bit_depth": "16-32 float", "temporal_res": "100-1000 Hz", "data": ["accel_x", "accel_y", "accel_z", "gyro_x", "gyro_y", "gyro_z"]},
+        "GPS_RTK": {"channels": 3, "bit_depth": "64 float", "temporal_res": "1-20 Hz", "accuracy": "cm-level"},
+        "Radar": {"channels": "variable", "bit_depth": "16-32", "spatial_res": "sparse", "frame_rate": "10-30 Hz", "range": "1-300m"}
+      },
+      "fusion_strategies": {
+        "early_fusion": "Concatenate raw sensor data before feature extraction (e.g., RGB-D 4-channel input)",
+        "mid_fusion": "Extract features per modality, fuse at descriptor level (e.g., SIFT vertex = 2D SIFT + 3D coord + color + texture)",
+        "late_fusion": "Independent classification per modality, combine scores (e.g., weighted voting)",
+        "cross_modal_attention": "Use one modality to guide attention in another (e.g., depth-guided RGB segmentation)",
+        "temporal_fusion": "Integrate across time (e.g., VLBP, LBP-TOP, 3D HOG over frame volumes)"
+      },
+      "coordinate_spaces": {
+        "Cartesian": {"description": "Standard x,y,z; used by most 2D descriptors", "distortion": "baked-in spherical error at FOV edges"},
+        "Polar": {"description": "r,θ; used by GLOH, shape context", "advantage": "rotational invariance"},
+        "Log_Polar": {"description": "log(r),θ; used by GLOH, shape context", "advantage": "scale + rotation invariance"},
+        "Radial": {"description": "Local r,t basis at each point; used by RIFF", "advantage": "rotationally invariant gradient expression"},
+        "Spherical": {"description": "r,θ,φ; used by 3D SIFT, HON4D", "advantage": "accurate 3D depth field modeling"},
+        "Gauge": {"description": "Local differential geometry frame; used by G-SURF", "advantage": "rotation and translation invariant derivatives"},
+        "Cylindrical": {"description": "r,θ,z; used for epipolar rectification", "advantage": "minimizes epipolar distortion"}
+      }
+    },
+
+    "metric_definitions": [
+      {
+        "id": "SIFT",
+        "name": "Scale-Invariant Feature Transform",
+        "family": "Spectra",
+        "origin": {"year": 2004, "author": "David Lowe", "reference": "[161,178]"},
+        "taxonomy_axes": {
+          "density": "Sparse Local",
+          "shape_topology": "Rectangular with circular Gaussian weighting",
+          "sampling_pattern": "Dense 4x4 sub-regions within 16x16 patch",
+          "spectra_dimensions": "Multivariate",
+          "spectra_type": ["Gradient Magnitude", "Gradient Direction", "DoG Scale-Space Extrema"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 128,
+          "data_types": ["Float32", "Float64 (for FFT sub-steps)"],
+          "compute_complexity": "O(s·N²·(αβ+γ)) — highest among common descriptors",
+          "compute_breakdown": {
+            "Gaussian_pyramid": "4·N²·W²·s ops",
+            "DoG_pyramid": "4·N²·s ops",
+            "extrema_detection": "104·s·N² ops",
+            "keypoint_localization": "100·s·α·N² ops",
+            "orientation_assignment": "48·s·N² ops",
+            "descriptor_generation": "1520·x²·(αβ+γ)·N² ops (dominant cost)"
+          },
+          "hardware_affinity": {
+            "primary": "CPU_Threads",
+            "secondary": "CPU_SIMD",
+            "gpu_viable": true,
+            "gpu_notes": "DoG pyramid and gradient computation parallelize well; descriptor binning with trilinear interpolation is branch-heavy",
+            "npu_viable": false,
+            "fixed_function": "None standard; DCT blocks in video encoders can accelerate sub-steps",
+            "dsp_viable": false
+          },
+          "memory_access_pattern": "scatter_gather (gradient binning with trilinear interpolation across 4x4x8 bins)",
+          "memory_bandwidth_impact": "High — multiple pyramid levels, 41x41 bounding box reads per keypoint",
+          "power_profile": "High (compute-bound + memory-bound)",
+          "parallelism": "Coarse-grain threads (tile image across CPU cores); fine-grain SIMD for gradient computation",
+          "distance_function": "Euclidean (L2) — or Hellinger with RootSIFT retrofit",
+          "silicon_area_note": "Float ALU requires ~4x die area vs integer; SIFT's float-heavy pipeline is power-expensive"
+        },
+        "context_aware": {
+          "ideal_applications": ["object_recognition", "panorama_stitching", "3D_reconstruction", "image_retrieval", "SLAM"],
+          "environmental_robustness": {
+            "illumination": "High (contrast normalization + histogram clipping at 0.2)",
+            "geometric": {"scale": "Full (octave pyramid + DoG extrema)", "rotation": "Full (dominant orientation assignment)", "affine": "Partial (Hessian-Affine retrofit)", "perspective": "Partial"},
+            "incompleteness": {"occlusion": "High (multiple features per object)", "noise": "Medium (Gaussian scale-space filtering)", "motion_blur": "Low-Medium", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Gaussian blur (scale-space)", "DoG computation", "contrast normalization"],
+          "preprocessing_sensitivity": "Over-smoothing destroys fine gradients (HOG research shows raw data preferred for discrimination); under-smoothing amplifies noise in DoG extrema",
+          "dynamic_routing_rules": {
+            "thermal_throttle": "Downgrade to ORB or CS-LBP retrofit (10x speedup, comparable accuracy)",
+            "low_light": "Inject CLAHE before DoG; increase contrast threshold to reject noise extrema",
+            "high_motion": "Switch to LPQ (blur-invariant phase) or RootSIFT (Hellinger distance more robust)"
+          },
+          "latency_profile_ms": {"480p": 5228, "1080p": "~15000 (estimated)"},
+          "ground_truth_requirements": ["Mikolajczyk-Schmid benchmark", "Oxford affine dataset", "Middlebury stereo"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale", "RGB (CSIFT variant)"],
+          "depth_extension": "3D SIFT — reformulates binning to spherical coordinates (φ,θ) over volumetric spatio-temporal region v(x,y,t)",
+          "imu_extension": "SIFT-GAFD — adds gravity vector from accelerometer as global orientation constraint",
+          "rgb_d_fusion": "SIFT Vertex Descriptor — 2D SIFT at RGB interest point + 3D coordinate from depth map + RGB color + LBP texture (AR pipeline, Ch.8)",
+          "coordinate_space": "Cartesian (HOG bins) or Log-Polar (GLOH retrofit)",
+          "temporal_extension": "3D SIFT over frame volumes for action recognition",
+          "cross_modal_calibration": "Requires pixel-aligned RGB-D registration; stereo rectification for depth accuracy"
+        },
+        "retrofits_and_variants": [
+          {"name": "RootSIFT", "change": "Hellinger distance instead of L2", "benefit": "Better retrieval accuracy, 1-line code change"},
+          {"name": "CS-LBP Retrofit", "change": "Replace gradients with center-symmetric LBP", "benefit": "10x speedup, comparable accuracy"},
+          {"name": "SIFT-PCA", "change": "PCA dimensionality reduction to 20-36 dims", "benefit": "Faster matching, better warp robustness"},
+          {"name": "SIFT-GLOH", "change": "Log-polar binning (17 bins) instead of Cartesian 4x4", "benefit": "Greater rotational invariance"},
+          {"name": "SIFER", "change": "Cosine-modulated Gaussian filter, 6 scales per octave", "benefit": "20% accuracy improvement, 2x slower"},
+          {"name": "SIFT-GAFD", "change": "Add IMU gravity vector", "benefit": "Global orientation for mobile AR"}
+        ]
+      },
+      {
+        "id": "ORB",
+        "name": "Oriented FAST and Rotated BRIEF",
+        "family": "Local Binary",
+        "origin": {"year": 2011, "author": "Rublee et al.", "reference": "[134]"},
+        "taxonomy_axes": {
+          "density": "Sparse Local",
+          "shape_topology": "Rectangular (31x31 patch)",
+          "sampling_pattern": "Trained high-variance point-pairs (256 pairs from 31x31 region)",
+          "spectra_dimensions": "Single Variate",
+          "spectra_type": ["Binary/Boolean", "Gradient Direction (for orientation)"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 32,
+          "data_types": ["BitVector (uint8 array)", "Int16 (for integral image smoothing)"],
+          "compute_complexity": "O(N) per keypoint — two orders of magnitude faster than SIFT",
+          "hardware_affinity": {
+            "primary": "CPU_SIMD",
+            "secondary": "CPU_Threads",
+            "gpu_viable": false,
+            "gpu_notes": "Hamming distance (XOR + popcount) is inefficient on GPU SIMT; best on CPU with SSE4.2/AVX2 popcnt instruction",
+            "npu_viable": false,
+            "fixed_function": "None standard",
+            "dsp_viable": true,
+            "dsp_notes": "Point-pair comparisons are simple threshold operations suitable for VLIW"
+          },
+          "memory_access_pattern": "scatter_gather (256 sparse point-pair reads from 31x31 patch)",
+          "memory_bandwidth_impact": "Low — 32 bytes per descriptor, bit-packed",
+          "power_profile": "Very Low (integer-only, no float ALU needed)",
+          "parallelism": "SIMD (NEON/AVX for parallel XOR + popcount across 256-bit vectors)",
+          "distance_function": "Hamming (XOR + bit count — single-cycle on modern CPUs with popcnt)",
+          "silicon_area_note": "Integer ALU only; ~4x smaller than float ALU; ideal for mobile SoC"
+        },
+        "context_aware": {
+          "ideal_applications": ["real_time_SLAM", "mobile_AR", "panorama_stitching", "robotics_navigation", "drone_odometry"],
+          "environmental_robustness": {
+            "illumination": "High (binary comparisons inherently contrast-invariant)",
+            "geometric": {"scale": "Limited (non-octave pyramid, factor 1.2)", "rotation": "Full (FAST9 + Harris + Rosin intensity centroid orientation)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium", "noise": "Medium (5x5 integral image smoothing per point)", "motion_blur": "Low", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Gaussian blur (light, for FAST corner detection)", "integral image (5x5 smoothing for BRIEF points)"],
+          "preprocessing_sensitivity": "Minimal — binary comparisons tolerate wide illumination range; compare threshold tunable for noise",
+          "dynamic_routing_rules": {
+            "thermal_throttle": "ORB is already the fallback; reduce pyramid levels from 8 to 4",
+            "low_light": "Increase FAST threshold sensitivity; inject bilateral filter before detection",
+            "high_motion": "Switch to FREAK (coarse-to-fine cascade rejects bad matches faster)"
+          },
+          "latency_profile_ms": {"480p": 15.3, "1080p": "~60 (estimated)"},
+          "ground_truth_requirements": ["Pascal VOC", "TUM RGB-D SLAM benchmark"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale"],
+          "depth_extension": "RGB-D ORB-SLAM — uses depth map for scale initialization and 3D point cloud",
+          "imu_extension": "ORB-SLAM3 — tightly-coupled IMU preintegration for 6DOF pose",
+          "rgb_d_fusion": "ORB keypoints on RGB + depth for 3D map points",
+          "coordinate_space": "Cartesian",
+          "temporal_extension": "Frame-to-frame tracking with constant velocity model",
+          "cross_modal_calibration": "RGB-D extrinsic calibration for depth-to-color alignment"
+        }
+      },
+      {
+        "id": "FREAK",
+        "name": "Fast Retina Keypoint",
+        "family": "Local Binary",
+        "origin": {"year": 2012, "author": "Alahi, Ortiz, Vandergheynst", "reference": "[130]"},
+        "taxonomy_axes": {
+          "density": "Sparse Local",
+          "shape_topology": "Circular (foveal-inspired, 31x31 bounding box)",
+          "sampling_pattern": "Foveal centered trained pairs (45 pairs, coarse-to-fine cascade of 4×16-byte groups)",
+          "spectra_dimensions": "Single Variate",
+          "spectra_type": ["Binary/Boolean (DoG 1-bit quantized)", "Orientation Vector"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 64,
+          "data_types": ["BitVector (uint8 array)", "Int16 (Gaussian smoothing)"],
+          "compute_complexity": "O(1) per keypoint after AGAST detection — 0.1% of SIFT compute",
+          "hardware_affinity": {
+            "primary": "CPU_SIMD",
+            "secondary": "DSP_VLIW",
+            "gpu_viable": false,
+            "npu_viable": false,
+            "fixed_function": "None",
+            "dsp_viable": true
+          },
+          "memory_access_pattern": "scatter_gather (foveal pattern with variable-radius Gaussian smoothing regions)",
+          "memory_bandwidth_impact": "Low — 64 bytes, coarse-to-fine cascade allows early rejection (first 16 bytes reject 90% of non-matches)",
+          "power_profile": "Very Low",
+          "parallelism": "SIMD for Hamming distance; cascade enables branch-prediction-friendly early exit",
+          "distance_function": "Hamming (cascaded: coarse 16-byte match first, then fine)",
+          "silicon_area_note": "Integer-only; cascade logic reduces average compute by 4-10x vs full descriptor comparison"
+        },
+        "context_aware": {
+          "ideal_applications": ["mobile_AR", "real_time_tracking", "robotics", "wearable_devices"],
+          "environmental_robustness": {
+            "illumination": "High",
+            "geometric": {"scale": "Full (AGAST over scale space)", "rotation": "Full (orientation from long point-pairs)", "affine": "None", "perspective": "Partial (viewpoint robust per benchmark)"},
+            "incompleteness": {"occlusion": "Medium", "noise": "High (variable-radius Gaussian smoothing)", "motion_blur": "Medium", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Gaussian smoothing (variable radius per ring)", "AGAST corner detection over scale space"],
+          "dynamic_routing_rules": {
+            "thermal_throttle": "Use only first 16-byte cascade (coarse match) for 4x speedup",
+            "low_light": "Increase Gaussian smoothing radius in outer rings",
+            "high_motion": "FREAK is preferred over ORB due to viewpoint robustness"
+          },
+          "latency_profile_ms": {"480p": "~5 (estimated from 0.1% SIFT baseline)"},
+          "ground_truth_requirements": ["Mikolajczyk-Schmid benchmark"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale"],
+          "depth_extension": "RGB-D FREAK — depth map provides scale constraint for AGAST",
+          "imu_extension": "Gravity-aligned orientation from IMU replaces long-pair orientation",
+          "rgb_d_fusion": "FREAK on RGB + depth for 3D feature anchoring",
+          "coordinate_space": "Cartesian (circular sampling)",
+          "temporal_extension": "Frame-to-frame tracking",
+          "cross_modal_calibration": "Standard RGB-D registration"
+        }
+      },
+      {
+        "id": "BRISK",
+        "name": "Binary Robust Invariant Scalable Keypoints",
+        "family": "Local Binary",
+        "origin": {"year": 2011, "author": "Leutenegger, Chli, Siegwart", "reference": "[131]"},
+        "taxonomy_axes": {
+          "density": "Sparse Local",
+          "shape_topology": "Circular symmetric (4 concentric rings, 60 points)",
+          "sampling_pattern": "Symmetric pairs (short segments for descriptor, long segments for orientation)",
+          "spectra_dimensions": "Single Variate",
+          "spectra_type": ["Binary/Boolean", "Orientation Vector (from long-pair gradients)"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 64,
+          "data_types": ["BitVector", "Int16 (Gaussian smoothing per sample point)"],
+          "compute_complexity": "O(N) — order of magnitude faster than SURF",
+          "hardware_affinity": {
+            "primary": "CPU_SIMD",
+            "secondary": "CPU_Threads",
+            "gpu_viable": false,
+            "dsp_viable": true
+          },
+          "memory_access_pattern": "scatter_gather (60 Gaussian-smoothed sample points in concentric rings)",
+          "memory_bandwidth_impact": "Low",
+          "power_profile": "Low",
+          "parallelism": "SIMD for Hamming; integral images for Gaussian approximation",
+          "distance_function": "Hamming",
+          "silicon_area_note": "Integer-only; integral image computation reuses DSP/GPU box filter hardware"
+        },
+        "context_aware": {
+          "ideal_applications": ["mobile_AR", "SLAM", "panorama_stitching", "robotics"],
+          "environmental_robustness": {
+            "illumination": "High",
+            "geometric": {"scale": "Full (FAST/AGAST in scale space)", "rotation": "Full (long-pair gradient orientation)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium", "noise": "High (Gaussian smoothing per point)", "motion_blur": "Low", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Gaussian smoothing at each sample point", "FAST/AGAST over scale space"],
+          "latency_profile_ms": {"480p": "~20 (estimated)"},
+          "ground_truth_requirements": ["Mikolajczyk-Schmid benchmark"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale"],
+          "depth_extension": "Depth-guided scale selection for AGAST",
+          "imu_extension": "IMU gravity for orientation prior",
+          "coordinate_space": "Cartesian (circular sampling)",
+          "temporal_extension": "Frame-to-frame tracking"
+        }
+      },
+      {
+        "id": "SURF",
+        "name": "Speeded-Up Robust Features",
+        "family": "Spectra",
+        "origin": {"year": 2006, "author": "Bay, Ess, Tuytelaars, Van Gool", "reference": "[160]"},
+        "taxonomy_axes": {
+          "density": "Sparse Local",
+          "shape_topology": "HAAR rectangles within 20x20 grid (rotated to dominant orientation)",
+          "sampling_pattern": "Dense 4x4 sub-regions with 5x5 sample points each",
+          "spectra_dimensions": "Multivariate",
+          "spectra_type": ["Integral Box Filter (HAAR wavelet responses dx, dy, |dx|, |dy|)", "Orientation Vector"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 64,
+          "data_types": ["Float32", "Int32 (integral images)"],
+          "compute_complexity": "O(N²) — one order of magnitude faster than SIFT",
+          "hardware_affinity": {
+            "primary": "CPU_SIMD",
+            "secondary": "CPU_Threads",
+            "gpu_viable": true,
+            "gpu_notes": "Integral image computation and HAAR responses parallelize well on GPU; MOPED provides optimized GPGPU SURF",
+            "npu_viable": false,
+            "fixed_function": "Integral image can use DSP box filter",
+            "dsp_viable": true
+          },
+          "memory_access_pattern": "in_place (integral image) + tiled (4x4 grid)",
+          "memory_bandwidth_impact": "Medium — integral image is computed once and reused",
+          "power_profile": "Medium",
+          "parallelism": "SIMD for HAAR responses; threads for grid regions",
+          "distance_function": "Euclidean (L2) or Mahalanobis",
+          "silicon_area_note": "Float ALU required for descriptor; integral image uses integer accumulation"
+        },
+        "context_aware": {
+          "ideal_applications": ["object_recognition", "image_matching", "panorama_stitching", "AR"],
+          "environmental_robustness": {
+            "illumination": "High (HAAR responses are differential)",
+            "geometric": {"scale": "Full (Hessian determinant over scale space)", "rotation": "Full (sliding sector window for dominant orientation)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium", "noise": "High (integral image averaging)", "motion_blur": "Low", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Integral image computation", "Hessian determinant over scale space"],
+          "dynamic_routing_rules": {
+            "thermal_throttle": "Switch to U-SURF (upright, no rotation) for 2x speedup",
+            "low_light": "SURF integral images are robust; minimal preprocessing needed"
+          },
+          "latency_profile_ms": {"480p": 217.3},
+          "ground_truth_requirements": ["Mikolajczyk-Schmid benchmark"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale"],
+          "depth_extension": "RGB-D SURF for 3D feature matching",
+          "coordinate_space": "Cartesian (rotated grid)",
+          "variants": ["U-SURF (no rotation)", "M-SURF (overlapping HAAR)", "G-SURF (gauge derivatives)", "MU-SURF", "MG-SURF"]
+        }
+      },
+      {
+        "id": "HOG",
+        "name": "Histogram of Oriented Gradients",
+        "family": "Spectra",
+        "origin": {"year": 2005, "author": "Dalal, Triggs", "reference": "[106]"},
+        "taxonomy_axes": {
+          "density": "Dense (overlapping blocks across entire image)",
+          "shape_topology": "Rectangular (64x128 detector window, 8x8 cells, 2x2 block normalization)",
+          "sampling_pattern": "Dense grid of overlapping blocks",
+          "spectra_dimensions": "Single Variate",
+          "spectra_type": ["Gradient Magnitude", "Gradient Direction (9-bin histogram)"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 3780,
+          "data_types": ["Float32", "Int16 (gradients)"],
+          "compute_complexity": "O(N²) per detector window",
+          "hardware_affinity": {
+            "primary": "GPU_SIMT",
+            "secondary": "CPU_SIMD",
+            "gpu_viable": true,
+            "gpu_notes": "Gradient computation and histogram binning are ideal SIMT area operations; sliding window parallelizes across detector positions",
+            "npu_viable": true,
+            "npu_notes": "HOG is a common pre-CNN feature for NPU-based classifiers",
+            "fixed_function": "Video encoder motion estimation blocks can compute gradient-like features",
+            "dsp_viable": true
+          },
+          "memory_access_pattern": "tiled (overlapping 2x2 block normalization)",
+          "memory_bandwidth_impact": "High — dense computation over entire image, 4608 floats per 64x128 window",
+          "power_profile": "Medium-High",
+          "parallelism": "SIMT (one thread per cell or per detector window)",
+          "distance_function": "Euclidean (L2) with L2-Hys block normalization",
+          "silicon_area_note": "No float needed for gradient computation ([-1,0,1] filters); float needed for normalization"
+        },
+        "context_aware": {
+          "ideal_applications": ["person_detection", "vehicle_detection", "object_classification", "pedestrian_counting"],
+          "environmental_robustness": {
+            "illumination": "High (L2 block normalization provides local contrast invariance)",
+            "geometric": {"scale": "Limited (multi-scale detector windows)", "rotation": "None (rectangular cells)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium (dense overlapping blocks)", "noise": "Low (raw data preferred — smoothing degrades accuracy by 27%)", "motion_blur": "Low", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["NONE — raw RGB data preferred (key finding: smoothing destroys discrimination)"],
+          "preprocessing_sensitivity": "CRITICAL: Do NOT apply Gaussian smoothing or noise filtering before HOG. The abrupt edges at fine scales are required for accuracy. Only post-processing normalization is used.",
+          "dynamic_routing_rules": {
+            "thermal_throttle": "Reduce detector window overlap; use PHOG (pyramid) for coarser classification",
+            "low_light": "HOG works on raw data; minimal preprocessing; consider switching to LBP for extreme low light"
+          },
+          "latency_profile_ms": {"64x128_window": "~5"},
+          "ground_truth_requirements": ["INRIA Person Dataset", "Pascal VOC", "Caltech Pedestrian"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["RGB (separate gradients per channel)", "Grayscale"],
+          "depth_extension": "3D HOG — spatio-temporal gradient orientation over volume v(x,y,t) using integral video",
+          "rgb_d_fusion": "HOG on RGB + depth gradient for RGB-D object recognition",
+          "coordinate_space": "Cartesian (R-HOG) or Log-Polar (C-HOG)",
+          "temporal_extension": "3D HOG over frame stacks for action recognition",
+          "cross_modal_calibration": "None required for 2D; RGB-D alignment for 3D"
+        }
+      },
+      {
+        "id": "LBP",
+        "name": "Local Binary Patterns",
+        "family": "Local Binary",
+        "origin": {"year": 1994, "author": "Ojala, Pietikäinen, Harwood", "reference": "[173]"},
+        "taxonomy_axes": {
+          "density": "Dense (every pixel) or Sparse Local",
+          "shape_topology": "Square/Circular (3x3 kernel or variable radius)",
+          "sampling_pattern": "Center-boundary pairs (8 neighbors vs center pixel)",
+          "spectra_dimensions": "Single Variate",
+          "spectra_type": ["Binary/Boolean (pixel pair comparisons)"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 1,
+          "data_types": ["UInt8 (single byte per pixel)", "BitVector"],
+          "compute_complexity": "O(1) per pixel — 8 comparisons + 8 bit shifts",
+          "hardware_affinity": {
+            "primary": "DSP_VLIW",
+            "secondary": "CPU_SIMD",
+            "gpu_viable": true,
+            "gpu_notes": "Trivially parallelizable — one thread per pixel; ideal for GPU compute shader",
+            "npu_viable": false,
+            "fixed_function": "Can be implemented in sensor ISP as point operation",
+            "dsp_viable": true,
+            "dsp_notes": "8 comparisons per pixel fit perfectly into VLIW instruction word"
+          },
+          "memory_access_pattern": "in_place (read 3x3 neighborhood, write single byte)",
+          "memory_bandwidth_impact": "Very Low — 1 byte output per pixel, minimal reads",
+          "power_profile": "Minimal",
+          "parallelism": "SIMD/SIMT (trivially data-parallel point operation)",
+          "distance_function": "Hamming (for bit vectors) or Chi-squared / histogram intersection (for LBP histograms)",
+          "silicon_area_note": "Minimal — can be implemented in sensor ISP silicon at near-zero cost"
+        },
+        "context_aware": {
+          "ideal_applications": ["texture_classification", "face_recognition", "dynamic_texture", "material_recognition", "scene_segmentation"],
+          "environmental_robustness": {
+            "illumination": "High (monotonic gray-level invariant — only relative ordering matters)",
+            "geometric": {"scale": "None (mono-scale 3x3)", "rotation": "Full (RILBP variant via circular bit shifting)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Low", "noise": "Medium (compare threshold tunable)", "motion_blur": "Low", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Optional: compare threshold adjustment for noise"],
+          "preprocessing_sensitivity": "Minimal — LBP is inherently robust to monotonic illumination changes; threshold handles noise",
+          "dynamic_routing_rules": {
+            "thermal_throttle": "LBP is already minimal compute; use uniform patterns (56 bins) to reduce histogram size",
+            "low_light": "Increase compare threshold to ignore noise; switch to LTP (ternary) for constant-gray regions"
+          },
+          "latency_profile_ms": {"1080p": "<1"},
+          "ground_truth_requirements": ["CUReT texture database", "Outex", "MIT Flickr Material"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale"],
+          "depth_extension": "LBP on depth maps for surface texture",
+          "rgb_d_fusion": "OCLBP (Opponent Color LBP) — 9 histograms across RGB channel pairs",
+          "coordinate_space": "Cartesian",
+          "temporal_extension": "VLBP (Volume LBP over parallel planes), LBP-TOP (orthogonal planes in x,y,t volume)",
+          "variants": ["RILBP", "ULBP (56 uniform bins)", "CS-LBP", "LTP (ternary)", "MLBP (multiscale)", "MB-LBP (block)", "VLBP", "LBP-TOP", "OCLBP", "S-LBP (semantic CIELab)", "F-LBP (Fourier color)", "LGBP (Gabor+LBP)"]
+        }
+      },
+      {
+        "id": "3D_HOG",
+        "name": "3D Histogram of Oriented Gradients",
+        "family": "3D/Volumetric",
+        "origin": {"year": 2008, "author": "Kläser, Marszałek, Schmid", "reference": "[196]"},
+        "taxonomy_axes": {
+          "density": "Sparse Local (at space-time interest points)",
+          "shape_topology": "Volumetric (3D cuboid regions)",
+          "sampling_pattern": "Dense 3D grid within cuboid",
+          "spectra_dimensions": "Multivariate",
+          "spectra_type": ["Gradient Direction (3D: x,y,t)", "Gradient Magnitude"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 312,
+          "data_types": ["Float32", "Int32 (integral video)"],
+          "compute_complexity": "O(V) where V = volume of cuboid",
+          "hardware_affinity": {
+            "primary": "GPU_SIMT",
+            "secondary": "CPU_Threads",
+            "gpu_viable": true,
+            "gpu_notes": "3D gradient computation and icosahedron projection are ideal for compute shaders; integral video enables constant-time cuboid queries",
+            "npu_viable": true,
+            "fixed_function": "None",
+            "dsp_viable": false
+          },
+          "memory_access_pattern": "scatter_gather (3D volume access, non-contiguous in memory)",
+          "memory_bandwidth_impact": "Very High — volumetric data, multiple frame reads",
+          "power_profile": "High",
+          "parallelism": "SIMT (one thread per voxel or per cuboid cell)",
+          "distance_function": "Euclidean (L2) or Chi-squared",
+          "silicon_area_note": "Float ALU required; integral video requires 32-bit accumulation"
+        },
+        "context_aware": {
+          "ideal_applications": ["action_recognition", "activity_detection", "gesture_recognition", "sports_analysis"],
+          "environmental_robustness": {
+            "illumination": "High (uses gradient orientation, not magnitude)",
+            "geometric": {"scale": "Limited (integral video over arbitrary scales)", "rotation": "None (spatial orientation fixed)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium", "noise": "High (integral video averaging)", "motion_blur": "Medium (temporal dimension captures motion)", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Integral video computation", "Space-time Harris corner detection"],
+          "latency_profile_ms": {"per_cuboid": "~10"},
+          "ground_truth_requirements": ["KTH Actions", "UCF Sports", "HMDB51"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["RGB video (spatio-temporal volume)"],
+          "depth_extension": "3D HOG on depth video sequences",
+          "coordinate_space": "Cartesian (3D cuboid)",
+          "temporal_extension": "Native — operates over frame volumes v(x,y,t)",
+          "binning_method": "20-faced icosahedron projection for gradient orientation quantization"
+        }
+      },
+      {
+        "id": "HON4D",
+        "name": "Histogram of Oriented 4D Normals",
+        "family": "3D/Volumetric",
+        "origin": {"year": 2013, "author": "Oreifej, Liu", "reference": "[198]"},
+        "taxonomy_axes": {
+          "density": "Dense Volumetric",
+          "shape_topology": "Volumetric (3D surface normals + time)",
+          "sampling_pattern": "Dense over depth sequence volume",
+          "spectra_dimensions": "Multivariate",
+          "spectra_type": ["3D Surface Normal Orientation", "Temporal Change"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": "High (600-cell polychoron histogram)",
+          "data_types": ["Float32", "Int16 (depth)"],
+          "compute_complexity": "O(V) — surface normal computation per voxel + 4D projection",
+          "hardware_affinity": {
+            "primary": "GPU_SIMT",
+            "secondary": "NPU_Tensor",
+            "gpu_viable": true,
+            "gpu_notes": "Surface normal computation from depth maps is a classic GPU compute shader task; 4D polychoron projection parallelizes",
+            "npu_viable": true,
+            "npu_notes": "4D normal histograms can be fed directly into tensor cores for classification",
+            "fixed_function": "None",
+            "dsp_viable": false
+          },
+          "memory_access_pattern": "scatter_gather (non-contiguous 3D volume access for normal computation)",
+          "memory_bandwidth_impact": "Very High — depth sequence volume, normal computation requires 3D neighborhood",
+          "power_profile": "Very High",
+          "parallelism": "SIMT (one thread per depth pixel per frame)",
+          "distance_function": "Cosine Similarity",
+          "silicon_area_note": "Float ALU required for normal computation and 4D projection"
+        },
+        "context_aware": {
+          "ideal_applications": ["action_recognition_from_depth", "gesture_recognition", "human_pose_estimation", "robotics"],
+          "environmental_robustness": {
+            "illumination": "Full Invariance (uses depth, not RGB)",
+            "geometric": {"scale": "Limited", "rotation": "None", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium", "noise": "Medium (depth sensor noise)", "motion_blur": "N/A (depth)", "clutter": "High (depth segmentation)"}
+          },
+          "preprocessing_pipeline": ["Depth map acquisition", "Surface normal computation from depth"],
+          "latency_profile_ms": {"per_sequence": "~50-200"},
+          "ground_truth_requirements": ["MSR Action3D", "MSR Daily Activity 3D"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Depth video sequences (ToF or structured light)"],
+          "depth_extension": "Native — requires depth camera",
+          "rgb_d_fusion": "Can combine with RGB features for late fusion",
+          "coordinate_space": "Spherical (4D polychoron projection)",
+          "temporal_extension": "Native — 4th dimension is time",
+          "cross_modal_calibration": "Depth camera intrinsic calibration for accurate normals"
+        }
+      },
+      {
+        "id": "POLYGON_SHAPE",
+        "name": "Polygon Shape Descriptors (Image Moments)",
+        "family": "Polygon Shape",
+        "origin": {"year": "1961+", "author": "Hu, Flusser et al.", "reference": "[7,518]"},
+        "taxonomy_axes": {
+          "density": "Regional",
+          "shape_topology": "Irregular segmented region (morphological boundary)",
+          "sampling_pattern": "Perimeter contour / dense region",
+          "spectra_dimensions": "Multivariate",
+          "spectra_type": ["Morphological Shape Metrics", "Statistical Moments", "Fourier Magnitude", "Geometric Factors"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": "Variable (200-500+ bytes: 36 floats FFT + 36 ints radial + shape factors)",
+          "data_types": ["Float32", "Float64 (FFT accuracy)", "Int16", "Int32"],
+          "compute_complexity": "O(P) for perimeter tracing + O(N log N) for FFT",
+          "hardware_affinity": {
+            "primary": "CPU_Threads",
+            "secondary": "CPU_General",
+            "gpu_viable": true,
+            "gpu_notes": "Morphology and segmentation can run on GPU; perimeter tracing and FFT are serial/algorithmic",
+            "npu_viable": false,
+            "fixed_function": "None",
+            "dsp_viable": true,
+            "dsp_notes": "Thresholding and point operations for segmentation"
+          },
+          "memory_access_pattern": "algorithmic (perimeter tracing is inherently serial; non-local data access)",
+          "memory_bandwidth_impact": "Medium — depends on image size and number of objects",
+          "power_profile": "Medium",
+          "parallelism": "Coarse-grain threads (one thread per segmented object); morphology on GPU",
+          "distance_function": "Multiple: Euclidean (shape factors), EMD (histograms), Fourier magnitude comparison",
+          "silicon_area_note": "Float64 needed for FFT accuracy; large die area for double-precision ALU"
+        },
+        "context_aware": {
+          "ideal_applications": ["industrial_inspection", "cell_biology", "particle_analysis", "automated_microscopy", "manufacturing_QC", "automobile_identification"],
+          "environmental_robustness": {
+            "illumination": "Low (requires careful thresholding and segmentation; uneven illumination breaks boundary detection)",
+            "geometric": {"scale": "Full (normalized moments)", "rotation": "Full (Hu moments, Fourier descriptors)", "affine": "Partial (affine moments)", "perspective": "None"},
+            "incompleteness": {"occlusion": "Medium (partial perimeter can still yield shape factors)", "noise": "Medium (morphology cleans up)", "motion_blur": "Low", "clutter": "Low (requires clean segmentation)"}
+          },
+          "preprocessing_pipeline": ["Illumination correction (CRITICAL)", "Thresholding (adaptive)", "Morphological cleanup (erosion+dilation)", "Segmentation", "Perimeter tracing"],
+          "preprocessing_sensitivity": "EXTREME — shape descriptors are the most preprocessing-dependent family. Wrong threshold = wrong shape = wrong measurement. Physical lighting control is preferred over algorithmic correction.",
+          "dynamic_routing_rules": {
+            "thermal_throttle": "Reduce morphology iterations; use simpler shape factors (area, perimeter, centroid only)",
+            "low_light": "Inject CLAHE + adaptive thresholding; consider switching to texture-based segmentation"
+          },
+          "latency_profile_ms": {"per_object": "~5-50"},
+          "ground_truth_requirements": ["Synthetic corner/interest alphabets", "Cell biology datasets", "Industrial inspection datasets"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale", "RGB (per-channel segmentation)"],
+          "depth_extension": "Depth-based segmentation (e.g., automobile above roadway surface in Ch.8 pipeline)",
+          "rgb_d_fusion": "RGB color + depth segmentation for region identification (hood, roof, trunk)",
+          "coordinate_space": "Cartesian (bounding box) + Polar (radial line segments for Fourier descriptor)",
+          "temporal_extension": "Frame-to-frame tracking via centroid + shape factor matching",
+          "cross_modal_calibration": "RGB-D alignment for depth-based segmentation"
+        },
+        "shape_metrics_available": [
+          "area", "perimeter", "centroid", "bounding_box", "convex_hull",
+          "major_minor_axis", "feret", "breadth", "aspect_ratio",
+          "circularity", "roundness", "compactness", "solidity",
+          "concavity", "convexity", "shape", "modification_ratio",
+          "fourier_descriptor", "shape_matrix", "chain_code_histogram",
+          "Hu_moments (7 invariant)", "Zernike_moments", "affine_moments"
+        ]
+      },
+      {
+        "id": "DAISY",
+        "name": "DAISY Descriptor",
+        "family": "Spectra",
+        "origin": {"year": 2010, "author": "Tola, Lepetit, Fua", "reference": "[215,309]"},
+        "taxonomy_axes": {
+          "density": "Dense (every pixel)",
+          "shape_topology": "Circular (flower-like overlapping concentric rings)",
+          "sampling_pattern": "Overlapping Gaussian convolution kernels at 8 orientations",
+          "spectra_dimensions": "Single Variate",
+          "spectra_type": ["Gaussian Convolution Values (oriented derivative maps)"]
+        },
+        "hardware_aware": {
+          "descriptor_memory_bytes": 200,
+          "data_types": ["Float32"],
+          "compute_complexity": "O(N²) — 40% faster than SIFT for dense matching",
+          "hardware_affinity": {
+            "primary": "GPU_SIMT",
+            "secondary": "CPU_SIMD",
+            "gpu_viable": true,
+            "gpu_notes": "Convolution orientation maps are ideal GPU compute shader tasks; recursive Gaussian computation optimizes memory",
+            "npu_viable": false,
+            "fixed_function": "GPU texture sampler for rotation",
+            "dsp_viable": false
+          },
+          "memory_access_pattern": "tiled (overlapping concentric circular regions)",
+          "memory_bandwidth_impact": "Medium — convolution maps computed once, reused for all pixels",
+          "power_profile": "Medium",
+          "parallelism": "SIMT (one thread per pixel for dense computation)",
+          "distance_function": "Euclidean (L2)",
+          "silicon_area_note": "Float ALU for convolutions; recursive Gaussian reduces multiply count"
+        },
+        "context_aware": {
+          "ideal_applications": ["dense_stereo_matching", "wide_baseline_stereo", "depth_map_generation", "optical_flow"],
+          "environmental_robustness": {
+            "illumination": "High (gradient-based)",
+            "geometric": {"scale": "Limited", "rotation": "Full (rotate sampling grid, not recompute maps)", "affine": "None", "perspective": "None"},
+            "incompleteness": {"occlusion": "High (binary occlusion masks to ignore occluded regions)", "noise": "Medium", "motion_blur": "Low", "clutter": "Medium"}
+          },
+          "preprocessing_pipeline": ["Oriented Gaussian derivative computation (8 orientations)"],
+          "latency_profile_ms": {"dense_1080p": "~100"},
+          "ground_truth_requirements": ["Middlebury Stereo", "KITTI Stereo"]
+        },
+        "multimodal_ready": {
+          "native_modalities": ["Grayscale"],
+          "depth_extension": "Daisy on depth maps for surface matching",
+          "coordinate_space": "Cartesian (circular grid)",
+          "temporal_extension": "Frame-to-frame dense matching",
+          "unique_feature": "Binary occlusion masks for handling partial visibility"
+        }
+      }
+    ],
+
+    "decision_engine_routing_rules": {
+      "thermal_throttle_fallback": {
+        "trigger": "device_temperature > 42°C OR battery < 15%",
+        "action": {
+          "downgrade_from": ["SIFT", "3D_HOG", "HON4D", "SURF"],
+          "fallback_to": ["ORB", "FREAK", "LBP"],
+          "disable_pipeline_stages": ["MVS_dense_depth", "super_pixel_segmentation", "scale_space_pyramid"],
+          "reduce_descriptor_cascade": "Use only first 16 bytes of FREAK"
+        }
+      },
+      "low_light_injection": {
+        "trigger": "ambient_lux < 50 OR histogram_mean < 40",
+        "action": {
+          "inject_preprocessing": ["CLAHE", "bilateral_filter", "CIECAM02_illuminant_correction"],
+          "switch_detector": ["Hessian", "DoG"],
+          "fallback_detector": ["FAST_AGAST", "SUSAN"],
+          "switch_descriptor": ["LBP (monotonic invariant)", "LPQ (phase-based)"]
+        }
+      },
+      "high_motion_blur": {
+        "trigger": "gyro_velocity > threshold OR estimated_blur_kernel > 5px",
+        "action": {
+          "inject_preprocessing": ["spatio_temporal_deblur", "guided_filter"],
+          "switch_descriptor": ["LPQ (Fourier phase is blur-invariant)", "Fourier_phase_descriptor"],
+          "switch_distance_function": ["Hellinger", "Earth_Movers_Distance"]
+        }
+      },
+      "depth_available_upgrade": {
+        "trigger": "RGB_D_camera_detected OR LiDAR_active",
+        "action": {
+          "upgrade_pipeline": "Add depth segmentation stage",
+          "switch_search": "Depth/Z-limited search (foreground only)",
+          "enable_3d_descriptors": ["3D_HOG", "HON4D", "SIFT_Vertex", "3D_SIFT"],
+          "enable_fusion": "Mid-fusion: RGB features + 3D coordinates + surface normals"
+        }
+      },
+      "industrial_precision_mode": {
+        "trigger": "application == industrial_inspection AND sub_pixel_required",
+        "action": {
+          "force_preprocessing": ["CIECAM02_Jch_color", "geometric_rectification", "vignette_correction"],
+          "force_descriptor": ["POLYGON_SHAPE", "Fourier_descriptor", "Zernike_moments"],
+          "force_distance": ["Euclidean", "EMD"],
+          "force_data_type": "Float64",
+          "enable_subpixel": true
+        }
+      }
+    }
+  }
+}
