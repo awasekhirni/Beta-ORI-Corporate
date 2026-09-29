@@ -1,0 +1,627 @@
+[
+  {
+    "id": 1,
+    "name": "Return on Equity (ROE)",
+    "category": "Operating Performance",
+    "business_case": "Measures the absolute return delivered to shareholders, driving industrial investment and company value.",
+    "computation": "Express earnings after tax as a percentage of owners' funds (net worth).",
+    "variables": {"EAT": "Earnings After Tax", "OF": "Owners' Funds (Net Worth)"},
+    "formula": "ROE = (EAT / OF) * 100",
+    "example": "EAT = $60m, Owners' Funds = $360m. ROE = (60 / 360) * 100 = 16.66%.",
+    "data_sources": ["ERP (SAP/Oracle)", "General Ledger", "BI Dashboard"],
+    "update_frequency": "Quarterly",
+    "complexity": "Low",
+    "related_metrics": [2, 12, 19, 21],
+    "industry_benchmark": "15-20% for mature industries; 20%+ for high-growth tech/financial services.",
+    "actionable_insight": "If ROE < WACC, investigate capital allocation efficiency, optimize debt structure, or consider strategic share buybacks.",
+    "modern_context": "Increasingly adjusted for share buybacks and evaluated alongside ESG metrics to assess sustainable, long-term shareholder value creation."
+  },
+  {
+    "id": 2,
+    "name": "Return on Total Assets (ROTA)",
+    "category": "Operating Performance",
+    "business_case": "Measures the operating efficiency of the total enterprise, independent of financing decisions.",
+    "computation": "Express earnings before interest and tax as a percentage of total assets.",
+    "variables": {"EBIT": "Earnings Before Interest and Tax", "TA": "Total Assets"},
+    "formula": "ROTA = (EBIT / TA) * 100",
+    "example": "EBIT = $112m, Total Assets = $800m. ROTA = (112 / 800) * 100 = 14.0%.",
+    "data_sources": ["ERP", "Balance Sheet", "Profit & Loss Statement"],
+    "update_frequency": "Quarterly",
+    "complexity": "Low",
+    "related_metrics": [1, 3, 4, 21],
+    "industry_benchmark": "8-12% for manufacturing; 15%+ for asset-light SaaS or financial services.",
+    "actionable_insight": "If ROTA is declining, audit asset utilization, divest underperforming fixed assets, or improve pricing power to boost margins.",
+    "modern_context": "Crucial for comparing capital-intensive industries; now often analyzed alongside ROIC to separate pure operating performance from leverage effects."
+  },
+  {
+    "id": 3,
+    "name": "Margin on Sales Percentage",
+    "category": "Operating Performance",
+    "business_case": "Identifies operating profit as a percentage of sales, highlighting core cost control and pricing efficiency.",
+    "computation": "Express EBIT as a percentage of total revenue.",
+    "variables": {"EBIT": "Earnings Before Interest and Tax", "Sales": "Total Revenue"},
+    "formula": "Margin = (EBIT / Sales) * 100",
+    "example": "EBIT = $112m, Sales = $1,120m. Margin = (112 / 1120) * 100 = 10%.",
+    "data_sources": ["ERP", "Revenue Management System", "P&L"],
+    "update_frequency": "Monthly",
+    "complexity": "Low",
+    "related_metrics": [2, 4, 24, 52],
+    "industry_benchmark": "10-15% for retail; 20-30%+ for software and specialized financial services.",
+    "actionable_insight": "If margin compresses, conduct granular variance analysis on direct costs, renegotiate supplier contracts, or implement dynamic pricing.",
+    "modern_context": "Monitored in real-time via streaming data pipelines (e.g., Kafka, Snowflake) to detect immediate margin erosion from supply chain disruptions."
+  },
+  {
+    "id": 4,
+    "name": "Sales to Total Assets Ratio (Asset Turn)",
+    "category": "Operating Performance",
+    "business_case": "Measures how effectively total assets are utilized to generate top-line revenue.",
+    "computation": "Divide total sales revenue by total assets.",
+    "variables": {"Sales": "Total Revenue", "TA": "Total Assets"},
+    "formula": "Asset Turn = Sales / TA",
+    "example": "Sales = $1,120m, Total Assets = $800m. Asset Turn = 1120 / 800 = 1.4x.",
+    "data_sources": ["ERP", "Balance Sheet", "P&L"],
+    "update_frequency": "Quarterly",
+    "complexity": "Low",
+    "related_metrics": [2, 3, 28],
+    "industry_benchmark": "1.5x - 2.5x for retail; 0.5x - 1.0x for heavy manufacturing/utilities.",
+    "actionable_insight": "If asset turn is low, identify idle or obsolete assets for liquidation, or pivot to asset-light operating models (e.g., cloud migration, outsourcing).",
+    "modern_context": "Critical in asset-light business models (e.g., SaaS, FinTech) where high asset turn compensates for initially lower margins."
+  },
+  {
+    "id": 5,
+    "name": "Current Ratio",
+    "category": "Corporate Liquidity",
+    "business_case": "Tests a company's ability to meet short-term liabilities with short-term assets, indicating immediate financial health.",
+    "computation": "Divide total current assets by total current liabilities.",
+    "variables": {"CA": "Current Assets", "CL": "Current Liabilities"},
+    "formula": "Current Ratio = CA / CL",
+    "example": "Current Assets = $216.6m, Current Liabilities = $164.7m. Current Ratio = 216.6 / 164.7 = 1.3x.",
+    "data_sources": ["ERP", "Balance Sheet", "Treasury Management System"],
+    "update_frequency": "Monthly",
+    "complexity": "Low",
+    "related_metrics": [6, 7, 8],
+    "industry_benchmark": "1.5x - 2.0x (Retail may operate safely at < 1.0x due to high inventory turnover and negative working capital cycles).",
+    "actionable_insight": "If < 1.0x, immediately secure a revolving credit facility, accelerate receivables collection, or delay non-critical capex.",
+    "modern_context": "Supplemented by dynamic, AI-driven cash flow forecasting to avoid 'window dressing' and predict liquidity crunches 30-60 days in advance."
+  },
+  {
+    "id": 6,
+    "name": "Quick Ratio (Acid Test)",
+    "category": "Corporate Liquidity",
+    "business_case": "Provides a stricter measure of short-term liquidity by excluding inventories, which may not be easily convertible to cash.",
+    "computation": "Subtract inventories from current assets, then divide by current liabilities.",
+    "variables": {"CA": "Current Assets", "Inv": "Inventories", "CL": "Current Liabilities"},
+    "formula": "Quick Ratio = (CA - Inv) / CL",
+    "example": "CA = $216.6m, Inv = $86.6m, CL = $164.7m. Quick Ratio = (216.6 - 86.6) / 164.7 = 0.8x.",
+    "data_sources": ["ERP", "Balance Sheet"],
+    "update_frequency": "Monthly",
+    "complexity": "Low",
+    "related_metrics": [5, 8],
+    "industry_benchmark": "1.0x or higher is generally considered healthy across most sectors.",
+    "actionable_insight": "A declining quick ratio alongside a stable current ratio signals dangerous inventory buildup; initiate liquidation or promotional sales.",
+    "modern_context": "Highly relevant for retail and manufacturing sectors where inventory liquidity can rapidly deteriorate due to shifting consumer demand or supply chain shocks."
+  },
+  {
+    "id": 7,
+    "name": "Working Capital to Sales Ratio",
+    "category": "Corporate Liquidity",
+    "business_case": "Relates short-term surplus liquidity to annual operating cash flow, highlighting trends like overtrading.",
+    "computation": "Express working capital (current assets less current liabilities) as a percentage of sales.",
+    "variables": {"CA": "Current Assets", "CL": "Current Liabilities", "Sales": "Total Revenue"},
+    "formula": "WC to Sales = ((CA - CL) / Sales) * 100",
+    "example": "CA = $216.6m, CL = $164.7m, Sales = $725.9m. WC to Sales = ((216.6 - 164.7) / 725.9) * 100 = 7.0%.",
+    "data_sources": ["ERP", "Balance Sheet", "P&L"],
+    "update_frequency": "Quarterly",
+    "complexity": "Medium",
+    "related_metrics": [5, 8, 27],
+    "industry_benchmark": "5-15% depending on industry; negative for highly efficient retailers (e.g., Amazon, Walmart).",
+    "actionable_insight": "If ratio is falling while sales grow rapidly, the company is 'overtrading'; inject long-term equity or debt to fund the working capital gap.",
+    "modern_context": "Used to detect overtrading in high-growth startups where sales outpace working capital funding, often monitored via automated treasury dashboards."
+  },
+  {
+    "id": 8,
+    "name": "Working Capital Days (Cash Conversion Cycle)",
+    "category": "Corporate Liquidity",
+    "business_case": "Quantifies the time gap between cash out to suppliers and cash in from customers, defining the funding requirement.",
+    "computation": "Calculate inventory days plus accounts receivable days minus accounts payable days.",
+    "variables": {"InvDays": "Inventory Days", "ARDays": "Accounts Receivable Days", "APDays": "Accounts Payable Days"},
+    "formula": "WC Days = InvDays + ARDays - APDays",
+    "example": "Inventory Days = 44, AR Days = 34, AP Days = 28. WC Days = 44 + 34 - 28 = 50 days.",
+    "data_sources": ["ERP", "Supply Chain Management System", "CRM"],
+    "update_frequency": "Monthly",
+    "complexity": "Medium",
+    "related_metrics": [5, 7, 28, 29],
+    "industry_benchmark": "30-60 days for most industries; negative for dominant retailers who get paid before they pay suppliers.",
+    "actionable_insight": "Negotiate extended payment terms with suppliers, implement automated dunning for faster AR collection, or adopt Just-In-Time (JIT) inventory.",
+    "modern_context": "Optimized via supply chain finance platforms (e.g., C2FO, Taulia) and dynamic discounting to free up trapped cash and improve the cash conversion cycle."
+  },
+  {
+    "id": 9,
+    "name": "Interest Cover",
+    "category": "Financial Strength",
+    "business_case": "Measures a company's ability to service its borrowings from operating profits, indicating long-term financial resilience.",
+    "computation": "Divide earnings before interest and tax by the interest charge.",
+    "variables": {"EBIT": "Earnings Before Interest and Tax", "Interest": "Total Interest Expense"},
+    "formula": "Interest Cover = EBIT / Interest",
+    "example": "EBIT = $92.8m, Interest = $8.5m. Interest Cover = 92.8 / 8.5 = 10.9x.",
+    "data_sources": ["P&L", "Debt Management System"],
+    "update_frequency": "Quarterly",
+    "complexity": "Low",
+    "related_metrics": [10, 11, 65],
+    "industry_benchmark": "> 3.0x is minimum for investment grade; > 5.0x is considered prudent and healthy.",
+    "actionable_insight": "If cover drops below 3.0x, prioritize debt repayment over dividends, refinance high-interest debt, or halt leveraged acquisitions.",
+    "modern_context": "Closely watched by credit rating agencies and bondholders, especially in high-interest-rate macroeconomic environments or during monetary tightening cycles."
+  },
+  {
+    "id": 10,
+    "name": "Debt to Equity Ratio (D/E)",
+    "category": "Financial Strength",
+    "business_case": "The great test of financial strength, measuring the mix of funds supplied by owners versus those borrowed.",
+    "computation": "Express total debt (long-term loans plus current liabilities) as a percentage of total funds.",
+    "variables": {"TotalDebt": "Long-term Loans + Current Liabilities", "TotalFunds": "Total Equity + Total Debt"},
+    "formula": "Debt to Total Funds = (Total Debt / Total Funds) * 100",
+    "example": "Long-term Loans = $90.9m, Current Liabilities = $164.7m, Total Funds = $516.8m. D/Total Funds = ((90.9 + 164.7) / 516.8) * 100 = 49.5%.",
+    "data_sources": ["Balance Sheet", "Capital Structure Model"],
+    "update_frequency": "Quarterly",
+    "complexity": "Medium",
+    "related_metrics": [9, 11, 21],
+    "industry_benchmark": "40-60% for stable cash-flow businesses (e.g., utilities); < 30% for volatile tech/growth sectors.",
+    "actionable_insight": "If D/E is too high, halt new debt issuance, issue equity to deleverage, or use excess free cash flow to pay down principal.",
+    "modern_context": "Analyzed alongside off-balance-sheet liabilities (e.g., operating leases under IFRS 16 / ASC 842) for a true, comprehensive leverage picture."
+  },
+  {
+    "id": 11, "name": "Return on Assets (ROA)", "category": "Operating Performance", "business_case": "Measures profitability relative to total assets.", "computation": "EBIT / Total Assets", "variables": {"EBIT": "EBIT", "TA": "Total Assets"}, "formula": "ROA = (EBIT / TA) * 100", "example": "EBIT=$100m, TA=$1000m. ROA=10%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [1, 2], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 12, "name": "Return on Net Assets (RONA)", "category": "Operating Performance", "business_case": "Return generated on net operating assets.", "computation": "NOPAT / Net Operating Assets", "variables": {"NOPAT": "NOPAT", "NOA": "Net Operating Assets"}, "formula": "RONA = NOPAT / NOA", "example": "NOPAT=$50m, NOA=$500m. RONA=10%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [2, 21], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 13, "name": "Return on Capital Employed (ROCE)", "category": "Operating Performance", "business_case": "Profitability and efficiency of capital employed.", "computation": "EBIT / Capital Employed", "variables": {"EBIT": "EBIT", "CE": "Capital Employed"}, "formula": "ROCE = (EBIT / CE) * 100", "example": "EBIT=$100m, CE=$500m. ROCE=20%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [2, 10], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 14, "name": "Operating Cash Flow", "category": "Cash Flow Metrics", "business_case": "Cash generated from core business operations.", "computation": "Net Income + Non-cash - WC Changes", "variables": {"NI": "Net Income", "NC": "Non-cash", "WC": "WC Changes"}, "formula": "OCF = NI + NC - WC", "example": "NI=$50m, NC=$20m, WC=$10m. OCF=$60m.", "data_sources": ["C/F Statement"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [34, 61], "industry_benchmark": "Operating Cash Flow > Net Income; Free Cash Flow positive and growing.", "actionable_insight": "If OCF < Net Income, investigate aggressive revenue recognition or working capital buildup; prioritize cash generation over accounting profit.", "modern_context": "Reconciled in real-time using automated cash flow forecasting tools that ingest bank feeds and ERP data via API."
+  },
+  {
+    "id": 15, "name": "EBITDA", "category": "Operating Performance", "business_case": "Proxy for operating cash flow before CapEx.", "computation": "EBIT + Depreciation + Amortization", "variables": {"EBIT": "EBIT", "D": "Depreciation", "A": "Amortization"}, "formula": "EBITDA = EBIT + D + A", "example": "EBIT=$100m, D=$20m, A=$10m. EBITDA=$130m.", "data_sources": ["P/L"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [35, 47], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 16, "name": "Net Present Value (NPV)", "category": "Investment Appraisal", "business_case": "Value of a project by discounting future cash flows.", "computation": "Sum(CF / (1+r)^t) - Initial Inv", "variables": {"CF": "Cash Flow", "r": "Discount Rate", "t": "Time"}, "formula": "NPV = Sum(CF / (1+r)^t) - Inv", "example": "PV of CF=$1.2m, Inv=$1m. NPV=$200k.", "data_sources": ["Forecasts"], "update_frequency": "Per Project", "complexity": "High", "related_metrics": [36, 37], "industry_benchmark": "NPV > 0; IRR > WACC (typically > 10-15%); Payback < 3-5 years.", "actionable_insight": "Reject projects with IRR < WACC; prioritize projects with strategic alignment and high sensitivity to favorable market conditions.", "modern_context": "Evaluated using real options analysis and Monte Carlo simulations to account for volatility and managerial flexibility in complex projects."
+  },
+  {
+    "id": 17, "name": "Internal Rate of Return (IRR)", "category": "Investment Appraisal", "business_case": "Discount rate that makes NPV of a project zero.", "computation": "Rate where NPV = 0", "variables": {"CF": "Cash Flows", "Inv": "Initial Investment"}, "formula": "0 = Sum(CF / (1+IRR)^t) - Inv", "example": "IRR calculated as 15% for a project.", "data_sources": ["Forecasts"], "update_frequency": "Per Project", "complexity": "High", "related_metrics": [36, 37], "industry_benchmark": "NPV > 0; IRR > WACC (typically > 10-15%); Payback < 3-5 years.", "actionable_insight": "Reject projects with IRR < WACC; prioritize projects with strategic alignment and high sensitivity to favorable market conditions.", "modern_context": "Evaluated using real options analysis and Monte Carlo simulations to account for volatility and managerial flexibility in complex projects."
+  },
+  {
+    "id": 18, "name": "Payback Period", "category": "Investment Appraisal", "business_case": "Time required to recover initial investment cost.", "computation": "Initial Investment / Annual Cash Flow", "variables": {"Inv": "Initial Investment", "ACF": "Annual Cash Flow"}, "formula": "Payback = Inv / ACF", "example": "Inv=$100k, ACF=$25k. Payback=4 years.", "data_sources": ["Forecasts"], "update_frequency": "Per Project", "complexity": "Low", "related_metrics": [36, 37], "industry_benchmark": "NPV > 0; IRR > WACC (typically > 10-15%); Payback < 3-5 years.", "actionable_insight": "Reject projects with IRR < WACC; prioritize projects with strategic alignment and high sensitivity to favorable market conditions.", "modern_context": "Evaluated using real options analysis and Monte Carlo simulations to account for volatility and managerial flexibility in complex projects."
+  },
+  {
+    "id": 19, "name": "Profitability Index", "category": "Investment Appraisal", "business_case": "Ratio of payoff to investment of a proposed project.", "computation": "PV of Future Cash Flows / Initial Inv", "variables": {"PV": "Present Value", "Inv": "Initial Investment"}, "formula": "PI = PV / Inv", "example": "PV=$1.2m, Inv=$1m. PI=1.2.", "data_sources": ["Forecasts"], "update_frequency": "Per Project", "complexity": "Medium", "related_metrics": [36, 37], "industry_benchmark": "NPV > 0; IRR > WACC (typically > 10-15%); Payback < 3-5 years.", "actionable_insight": "Reject projects with IRR < WACC; prioritize projects with strategic alignment and high sensitivity to favorable market conditions.", "modern_context": "Evaluated using real options analysis and Monte Carlo simulations to account for volatility and managerial flexibility in complex projects."
+  },
+  {
+    "id": 20, "name": "Asset Backing per Share", "category": "Corporate Value", "business_case": "Net asset value attributable to each share.", "computation": "(Total Assets - Total Liabilities) / Shares", "variables": {"TA": "Total Assets", "TL": "Total Liabilities", "S": "Shares"}, "formula": "Backing = (TA - TL) / S", "example": "Net Assets=$360m, S=32m. Backing=$11.25.", "data_sources": ["B/S", "Registry"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [19, 42], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 21, "name": "Market Capitalization", "category": "Corporate Value", "business_case": "Total market value of company's outstanding shares.", "computation": "Share Price * Shares Outstanding", "variables": {"Price": "Share Price", "S": "Shares Outstanding"}, "formula": "Cap = Price * S", "example": "Price=$22.50, S=32m. Cap=$720m.", "data_sources": ["Market"], "update_frequency": "Daily", "complexity": "Low", "related_metrics": [19, 41], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 22, "name": "Book Value per Share", "category": "Corporate Value", "business_case": "Equity value of company divided by shares outstanding.", "computation": "Shareholders' Equity / Shares", "variables": {"Eq": "Shareholders' Equity", "S": "Shares"}, "formula": "BVPS = Eq / S", "example": "Eq=$360m, S=32m. BVPS=$11.25.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [19, 40], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 23, "name": "Total Assets (TA)", "category": "Corporate Liquidity", "business_case": "Sum of all resources owned by the company.", "computation": "Fixed Assets + Current Assets", "variables": {"FA": "Fixed Assets", "CA": "Current Assets"}, "formula": "TA = FA + CA", "example": "FA=$600m, CA=$400m. TA=$1000m.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [2, 43], "industry_benchmark": "Current Ratio > 1.5x; Quick Ratio > 1.0x; WC Days < 60.", "actionable_insight": "Accelerate receivables, negotiate extended payables, or secure revolving credit facilities to bridge gaps.", "modern_context": "Managed via AI-driven treasury management systems and dynamic supply chain finance platforms to optimize the cash conversion cycle."
+  },
+  {
+    "id": 24, "name": "Capital Employed (CE)", "category": "Operating Performance", "business_case": "Total capital used to acquire profits.", "computation": "Total Assets - Current Liabilities", "variables": {"TA": "Total Assets", "CL": "Current Liabilities"}, "formula": "CE = TA - CL", "example": "TA=$1000m, CL=$300m. CE=$700m.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [33, 44], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 25, "name": "Net Worth (NW)", "category": "Financial Strength", "business_case": "Total value of company assets minus total liabilities.", "computation": "Total Assets - Total Liabilities", "variables": {"TA": "Total Assets", "TL": "Total Liabilities"}, "formula": "NW = TA - TL", "example": "TA=$1000m, TL=$550m. NW=$450m.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [1, 45], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 26, "name": "Working Capital (WC)", "category": "Corporate Liquidity", "business_case": "Operating liquidity available to the business.", "computation": "Current Assets - Current Liabilities", "variables": {"CA": "Current Assets", "CL": "Current Liabilities"}, "formula": "WC = CA - CL", "example": "CA=$400m, CL=$300m. WC=$100m.", "data_sources": ["B/S"], "update_frequency": "Monthly", "complexity": "Low", "related_metrics": [7, 46], "industry_benchmark": "Current Ratio > 1.5x; Quick Ratio > 1.0x; WC Days < 60.", "actionable_insight": "Accelerate receivables, negotiate extended payables, or secure revolving credit facilities to bridge gaps.", "modern_context": "Managed via AI-driven treasury management systems and dynamic supply chain finance platforms to optimize the cash conversion cycle."
+  },
+  {
+    "id": 27, "name": "Earnings Before Interest and Tax (EBIT)", "category": "Operating Performance", "business_case": "Profitability excluding interest and tax.", "computation": "Revenue - Operating Expenses", "variables": {"Rev": "Revenue", "OpEx": "Operating Expenses"}, "formula": "EBIT = Rev - OpEx", "example": "Rev=$1120m, OpEx=$1008m. EBIT=$112m.", "data_sources": ["P/L"], "update_frequency": "Monthly", "complexity": "Low", "related_metrics": [2, 47], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 28, "name": "Earnings Before Tax (EBT)", "category": "Operating Performance", "business_case": "Profit before income tax expense is deducted.", "computation": "EBIT - Interest Expense", "variables": {"EBIT": "EBIT", "Int": "Interest Expense"}, "formula": "EBT = EBIT - Int", "example": "EBIT=$112m, Int=$20m. EBT=$92m.", "data_sources": ["P/L"], "update_frequency": "Monthly", "complexity": "Low", "related_metrics": [48, 9], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 29, "name": "Earnings After Tax (EAT)", "category": "Operating Performance", "business_case": "Net profit available to shareholders after expenses.", "computation": "EBT - Tax Expense", "variables": {"EBT": "EBT", "Tax": "Tax Expense"}, "formula": "EAT = EBT - Tax", "example": "EBT=$92m, Tax=$32m. EAT=$60m.", "data_sources": ["P/L"], "update_frequency": "Monthly", "complexity": "Low", "related_metrics": [12, 49], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 30, "name": "Retained Earnings (RE)", "category": "Financial Strength", "business_case": "Cumulative net income retained rather than distributed.", "computation": "Beg RE + Net Income - Dividends", "variables": {"BegRE": "Beginning RE", "NI": "Net Income", "Div": "Dividends"}, "formula": "RE = BegRE + NI - Div", "example": "BegRE=$200m, NI=$60m, Div=$24m. RE=$236m.", "data_sources": ["B/S", "P/L"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [27, 50], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 31, "name": "Sales Growth Rate", "category": "Growth", "business_case": "Percentage increase in sales revenue over a period.", "computation": "((Current Sales - Prior Sales) / Prior) * 100", "variables": {"Curr": "Current Sales", "Prior": "Prior Sales"}, "formula": "Growth = ((Curr - Prior) / Prior) * 100", "example": "Curr=$120m, Prior=$100m. Growth=20%.", "data_sources": ["P/L"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [27, 51], "industry_benchmark": "Sustainable Growth Rate (SGR) of 8-15% for mature firms; 20%+ for growth-stage.", "actionable_insight": "If actual growth > SGR, secure long-term funding or slow growth to prevent a liquidity crisis (overtrading).", "modern_context": "Modeled using advanced financial planning and analysis (FP&A) software to balance top-line expansion with working capital constraints."
+  },
+  {
+    "id": 32, "name": "Net Profit Margin", "category": "Operating Performance", "business_case": "Percentage of revenue remaining after all expenses.", "computation": "(Net Income / Revenue) * 100", "variables": {"NI": "Net Income", "Rev": "Revenue"}, "formula": "Margin = (NI / Rev) * 100", "example": "NI=$60m, Rev=$1120m. Margin=5.3%.", "data_sources": ["P/L"], "update_frequency": "Monthly", "complexity": "Low", "related_metrics": [3, 52], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 33, "name": "Fixed Cost to Sales Ratio", "category": "Management Decision-Making", "business_case": "Proportion of sales revenue consumed by fixed costs.", "computation": "(Fixed Costs / Total Sales) * 100", "variables": {"FC": "Fixed Costs", "Sales": "Total Sales"}, "formula": "FC Ratio = (FC / Sales) * 100", "example": "FC=$60k, Sales=$200k. Ratio=30%.", "data_sources": ["Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [53, 25], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 34, "name": "Variable Cost to Sales Ratio", "category": "Management Decision-Making", "business_case": "Proportion of sales revenue consumed by variable costs.", "computation": "(Variable Costs / Total Sales) * 100", "variables": {"VC": "Variable Costs", "Sales": "Total Sales"}, "formula": "VC Ratio = (VC / Sales) * 100", "example": "VC=$120k, Sales=$200k. Ratio=60%.", "data_sources": ["Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [54, 24], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 35, "name": "Material Cost to Sales Ratio", "category": "Departmental Ratios", "business_case": "Efficiency of material usage relative to revenue.", "computation": "(Material Costs / Total Sales) * 100", "variables": {"Mat": "Material Costs", "Sales": "Total Sales"}, "formula": "Mat Ratio = (Mat / Sales) * 100", "example": "Mat=$426k, Sales=$1120k. Ratio=38%.", "data_sources": ["ERP", "Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [55, 3], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 36, "name": "Labour Cost to Sales Ratio", "category": "Departmental Ratios", "business_case": "Efficiency of labor utilization relative to revenue.", "computation": "(Labour Costs / Total Sales) * 100", "variables": {"Lab": "Labour Costs", "Sales": "Total Sales"}, "formula": "Lab Ratio = (Lab / Sales) * 100", "example": "Lab=$291k, Sales=$1120k. Ratio=26%.", "data_sources": ["ERP", "Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [56, 3], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 37, "name": "Factory Overheads to Sales Ratio", "category": "Departmental Ratios", "business_case": "Proportion of revenue consumed by manufacturing overheads.", "computation": "(Factory Overheads / Total Sales) * 100", "variables": {"FOH": "Factory Overheads", "Sales": "Total Sales"}, "formula": "FOH Ratio = (FOH / Sales) * 100", "example": "FOH=$168k, Sales=$1120k. Ratio=15%.", "data_sources": ["ERP", "Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [57, 3], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 38, "name": "Admin/Selling Costs to Sales Ratio", "category": "Departmental Ratios", "business_case": "Efficiency of administrative and selling expenses.", "computation": "(Admin & Selling Costs / Sales) * 100", "variables": {"AS": "Admin & Selling Costs", "Sales": "Total Sales"}, "formula": "AS Ratio = (AS / Sales) * 100", "example": "AS=$123k, Sales=$1120k. Ratio=11%.", "data_sources": ["ERP", "Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [58, 3], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 39, "name": "Sales to Accounts Receivable (Debtor Turnover)", "category": "Operating Performance", "business_case": "Number of times receivables are collected during a period.", "computation": "Credit Sales / Average AR", "variables": {"Sales": "Credit Sales", "AR": "Average AR"}, "formula": "Turnover = Sales / AR", "example": "Sales=$1120m, AR=$160m. Turnover=7x.", "data_sources": ["B/S", "P/L"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [29, 59], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 40, "name": "Sales to Inventories (Inventory Turnover)", "category": "Operating Performance", "business_case": "Number of times inventory is sold and replaced.", "computation": "COGS / Average Inventory", "variables": {"COGS": "COGS", "Inv": "Average Inventory"}, "formula": "Turnover = COGS / Inv", "example": "COGS=$600m, Inv=$128m. Turnover=4.7x.", "data_sources": ["B/S", "P/L"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [28, 60], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 41, "name": "Cash Flow from Operations (CFFO)", "category": "Cash Flow Metrics", "business_case": "Cash generated from normal business operations.", "computation": "Net Income + Non-cash - WC Changes", "variables": {"NI": "Net Income", "NC": "Non-cash", "WC": "WC Changes"}, "formula": "CFFO = NI + NC - WC", "example": "NI=$60m, NC=$20m, WC=$10m. CFFO=$70m.", "data_sources": ["C/F Statement"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [34, 61], "industry_benchmark": "Operating Cash Flow > Net Income; Free Cash Flow positive and growing.", "actionable_insight": "If OCF < Net Income, investigate aggressive revenue recognition or working capital buildup; prioritize cash generation over accounting profit.", "modern_context": "Reconciled in real-time using automated cash flow forecasting tools that ingest bank feeds and ERP data via API."
+  },
+  {
+    "id": 42, "name": "Cash Flow from Investing", "category": "Cash Flow Metrics", "business_case": "Cash used for or generated from long-term assets.", "computation": "Asset Sale Proceeds - Asset Purchase Costs", "variables": {"In": "Sale Proceeds", "Out": "Purchase Costs"}, "formula": "CFI = In - Out", "example": "In=$50m, Out=$100m. CFI=-$50m.", "data_sources": ["C/F Statement"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [62, 64], "industry_benchmark": "Operating Cash Flow > Net Income; Free Cash Flow positive and growing.", "actionable_insight": "If OCF < Net Income, investigate aggressive revenue recognition or working capital buildup; prioritize cash generation over accounting profit.", "modern_context": "Reconciled in real-time using automated cash flow forecasting tools that ingest bank feeds and ERP data via API."
+  },
+  {
+    "id": 43, "name": "Cash Flow from Financing", "category": "Cash Flow Metrics", "business_case": "Cash flows related to raising capital and repaying.", "computation": "Capital Raised - (Dividends + Debt Repaid)", "variables": {"In": "Capital Raised", "Out": "Dividends & Debt"}, "formula": "CFF = In - Out", "example": "In=$200m, Out=$150m. CFF=$50m.", "data_sources": ["C/F Statement"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [63, 64], "industry_benchmark": "Operating Cash Flow > Net Income; Free Cash Flow positive and growing.", "actionable_insight": "If OCF < Net Income, investigate aggressive revenue recognition or working capital buildup; prioritize cash generation over accounting profit.", "modern_context": "Reconciled in real-time using automated cash flow forecasting tools that ingest bank feeds and ERP data via API."
+  },
+  {
+    "id": 44, "name": "Net Cash Flow", "category": "Cash Flow Metrics", "business_case": "Overall change in cash position over a period.", "computation": "CFFO + CFI + CFF", "variables": {"CFFO": "Operating CF", "CFI": "Investing CF", "CFF": "Financing CF"}, "formula": "Net CF = CFFO + CFI + CFF", "example": "CFFO=$70m, CFI=-$50m, CFF=$50m. Net=$70m.", "data_sources": ["C/F Statement"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [61, 62, 63], "industry_benchmark": "Operating Cash Flow > Net Income; Free Cash Flow positive and growing.", "actionable_insight": "If OCF < Net Income, investigate aggressive revenue recognition or working capital buildup; prioritize cash generation over accounting profit.", "modern_context": "Reconciled in real-time using automated cash flow forecasting tools that ingest bank feeds and ERP data via API."
+  },
+  {
+    "id": 45, "name": "Average Interest Rate Paid", "category": "Financial Strength", "business_case": "Effective interest rate paid on interest-bearing debt.", "computation": "(Interest Expense / Interest-Bearing Debt) * 100", "variables": {"Int": "Interest Expense", "Debt": "Interest-Bearing Debt"}, "formula": "Rate = (Int / Debt) * 100", "example": "Int=$8.5m, Debt=$300m. Rate=2.8%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [9, 65], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 46, "name": "Leverage (Gearing) Ratio", "category": "Financial Strength", "business_case": "Degree to which a company is funded by debt vs equity.", "computation": "Total Debt / Total Equity", "variables": {"Debt": "Total Debt", "Eq": "Total Equity"}, "formula": "Leverage = Debt / Eq", "example": "Debt=$255m, Eq=$261m. Leverage=0.98x.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [10, 66], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 47, "name": "Equity Gearing", "category": "Financial Strength", "business_case": "Proportion of equity relative to total capital structure.", "computation": "Total Equity / (Total Equity + Total Debt) * 100", "variables": {"Eq": "Total Equity", "Debt": "Total Debt"}, "formula": "Gearing = Eq / (Eq + Debt) * 100", "example": "Eq=$261m, Debt=$255m. Gearing=50.6%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [10, 67], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 48, "name": "Paid Borrowing Percentage", "category": "Financial Strength", "business_case": "Percentage of non-equity funds that are interest-bearing.", "computation": "(Interest-Bearing Debt / Non-Equity Funds) * 100", "variables": {"IBD": "Interest-Bearing Debt", "NEF": "Non-Equity Funds"}, "formula": "Paid = (IBD / NEF) * 100", "example": "IBD=$200m, NEF=$300m. Paid=66.7%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [68, 69], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 49, "name": "Free Borrowing Percentage", "category": "Financial Strength", "business_case": "Percentage of non-equity funds that are non-interest-bearing.", "computation": "(Non-Interest Liabilities / Non-Equity Funds) * 100", "variables": {"NIBL": "Non-Interest Liabilities", "NEF": "Non-Equity Funds"}, "formula": "Free = (NIBL / NEF) * 100", "example": "NIBL=$100m, NEF=$300m. Free=33.3%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [68, 69], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 50, "name": "Cash Flow per Share", "category": "Corporate Value", "business_case": "Operating cash flow attributable to each outstanding share.", "computation": "Operating Cash Flow / Shares Outstanding", "variables": {"OCF": "Operating Cash Flow", "S": "Shares Outstanding"}, "formula": "CFPS = OCF / S", "example": "OCF=$96m, S=32m. CFPS=$3.00.", "data_sources": ["C/F Statement", "Registry"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [12, 70], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 51, "name": "Sales per Employee", "category": "Employee Ratios", "business_case": "Revenue generated per full-time employee.", "computation": "Total Revenue / Total Employees", "variables": {"Rev": "Total Revenue", "Emp": "Total Employees"}, "formula": "Sales/Emp = Rev / Emp", "example": "Rev=$1120m, Emp=1000. Sales/Emp=$1.12m.", "data_sources": ["P/L", "HR"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [71, 72], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 52, "name": "Profit per Employee", "category": "Employee Ratios", "business_case": "Net profit generated per full-time employee.", "computation": "Net Income / Total Employees", "variables": {"NI": "Net Income", "Emp": "Total Employees"}, "formula": "Profit/Emp = NI / Emp", "example": "NI=$60m, Emp=1000. Profit/Emp=$60k.", "data_sources": ["P/L", "HR"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [71, 72], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 53, "name": "Fixed Assets per Employee", "category": "Employee Ratios", "business_case": "Capital intensity of the workforce.", "computation": "Total Fixed Assets / Total Employees", "variables": {"FA": "Total Fixed Assets", "Emp": "Total Employees"}, "formula": "FA/Emp = FA / Emp", "example": "FA=$440m, Emp=1000. FA/Emp=$440k.", "data_sources": ["B/S", "HR"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [73, 74], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 54, "name": "Working Capital per Employee", "category": "Employee Ratios", "business_case": "Operating liquidity support per employee.", "computation": "Total Working Capital / Total Employees", "variables": {"WC": "Working Capital", "Emp": "Total Employees"}, "formula": "WC/Emp = WC / Emp", "example": "WC=$100m, Emp=1000. WC/Emp=$100k.", "data_sources": ["B/S", "HR"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [74, 46], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 55, "name": "Remuneration to Employee Ratio", "category": "Employee Ratios", "business_case": "Average compensation cost per employee.", "computation": "Total Remuneration / Total Employees", "variables": {"Rem": "Total Remuneration", "Emp": "Total Employees"}, "formula": "Rem/Emp = Rem / Emp", "example": "Rem=$50m, Emp=1000. Rem/Emp=$50k.", "data_sources": ["P/L", "HR"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [75, 76], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 56, "name": "Sales to Remuneration Ratio", "category": "Employee Ratios", "business_case": "Revenue generated per dollar of employee compensation.", "computation": "Total Revenue / Total Remuneration", "variables": {"Rev": "Total Revenue", "Rem": "Total Remuneration"}, "formula": "Sales/Rem = Rev / Rem", "example": "Rev=$1120m, Rem=$50m. Ratio=22.4x.", "data_sources": ["P/L"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [76, 71], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 57, "name": "Profit to Remuneration Ratio", "category": "Employee Ratios", "business_case": "Profit generated per dollar of employee compensation.", "computation": "Net Income / Total Remuneration", "variables": {"NI": "Net Income", "Rem": "Total Remuneration"}, "formula": "Profit/Rem = NI / Rem", "example": "NI=$60m, Rem=$50m. Ratio=1.2x.", "data_sources": ["P/L"], "update_frequency": "Annually", "complexity": "Low", "related_metrics": [77, 72], "industry_benchmark": "Revenue per Employee > $200k (Tech/Finance > $500k).", "actionable_insight": "If productivity is low, invest in employee training, automate repetitive tasks, or restructure underperforming teams.", "modern_context": "Enhanced by people analytics platforms that correlate employee engagement scores (eNPS) with individual and team productivity metrics."
+  },
+  {
+    "id": 58, "name": "Marketing Cost to Sales Ratio", "category": "Departmental Ratios", "business_case": "Efficiency of marketing spend relative to revenue.", "computation": "(Marketing Costs / Total Sales) * 100", "variables": {"Mkt": "Marketing Costs", "Sales": "Total Sales"}, "formula": "Mkt Ratio = (Mkt / Sales) * 100", "example": "Mkt=$50m, Sales=$1120m. Ratio=4.5%.", "data_sources": ["P/L", "ERP"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [78, 79], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 59, "name": "Advertising Cost to Sales Ratio", "category": "Departmental Ratios", "business_case": "Proportion of revenue spent specifically on advertising.", "computation": "(Advertising Costs / Total Sales) * 100", "variables": {"Adv": "Advertising Costs", "Sales": "Total Sales"}, "formula": "Adv Ratio = (Adv / Sales) * 100", "example": "Adv=$30m, Sales=$1120m. Ratio=2.7%.", "data_sources": ["P/L", "ERP"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [78, 79], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 60, "name": "Direct Material to Cost of Sales Ratio", "category": "Departmental Ratios", "business_case": "Proportion of cost of sales attributable to direct materials.", "computation": "(Direct Material Costs / COGS) * 100", "variables": {"DM": "Direct Material", "COS": "COGS"}, "formula": "DM Ratio = (DM / COS) * 100", "example": "DM=$426m, COS=$800m. Ratio=53.2%.", "data_sources": ["Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [80, 81], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 61, "name": "Direct Labour to Cost of Sales Ratio", "category": "Departmental Ratios", "business_case": "Proportion of cost of sales attributable to direct labor.", "computation": "(Direct Labour Costs / COGS) * 100", "variables": {"DL": "Direct Labour", "COS": "COGS"}, "formula": "DL Ratio = (DL / COS) * 100", "example": "DL=$291m, COS=$800m. Ratio=36.4%.", "data_sources": ["Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [80, 81], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 62, "name": "Overhead to Cost of Sales Ratio", "category": "Departmental Ratios", "business_case": "Proportion of cost of sales attributable to overheads.", "computation": "(Overhead Costs / COGS) * 100", "variables": {"OH": "Overhead Costs", "COS": "COGS"}, "formula": "OH Ratio = (OH / COS) * 100", "example": "OH=$83m, COS=$800m. Ratio=10.4%.", "data_sources": ["Costing"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [82, 80], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 63, "name": "Finished Goods to Sales Ratio", "category": "Departmental Ratios", "business_case": "Capital tied up in finished goods relative to sales.", "computation": "(Finished Goods Inventory / Total Sales) * 100", "variables": {"FG": "Finished Goods", "Sales": "Total Sales"}, "formula": "FG Ratio = (FG / Sales) * 100", "example": "FG=$50m, Sales=$1120m. Ratio=4.5%.", "data_sources": ["B/S", "P/L"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [83, 28], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 64, "name": "WIP to Cost of Sales Ratio", "category": "Departmental Ratios", "business_case": "Capital tied up in WIP relative to cost of sales.", "computation": "(WIP Inventory / COGS) * 100", "variables": {"WIP": "WIP Inventory", "COS": "COGS"}, "formula": "WIP Ratio = (WIP / COS) * 100", "example": "WIP=$30m, COS=$800m. Ratio=3.75%.", "data_sources": ["B/S", "P/L"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [84, 28], "industry_benchmark": "Marketing Cost to Sales < 15%; Labour Cost to Sales < 30% (varies widely).", "actionable_insight": "Benchmark against industry peers, automate manual processes, and reallocate budgets to highest-ROI activities.", "modern_context": "Tracked via integrated ERP and HRIS systems (e.g., Workday, SAP) to correlate departmental spend directly with revenue outcomes."
+  },
+  {
+    "id": 65, "name": "Terminal Value (Continuing)", "category": "Investment Appraisal", "business_case": "Estimated value of a business beyond forecast period.", "computation": "(Final Year CF * (1 + g)) / (WACC - g)", "variables": {"FCF": "Final Year CF", "g": "Growth Rate", "WACC": "WACC"}, "formula": "TV = (FCF * (1 + g)) / (WACC - g)", "example": "FCF=$100m, g=3%, WACC=10%. TV=$1471m.", "data_sources": ["Forecasts"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [85, 22], "industry_benchmark": "NPV > 0; IRR > WACC (typically > 10-15%); Payback < 3-5 years.", "actionable_insight": "Reject projects with IRR < WACC; prioritize projects with strategic alignment and high sensitivity to favorable market conditions.", "modern_context": "Evaluated using real options analysis and Monte Carlo simulations to account for volatility and managerial flexibility in complex projects."
+  },
+  {
+    "id": 66, "name": "Economic Value Added (EVA)", "category": "Corporate Value", "business_case": "Financial performance based on residual wealth.", "computation": "NOPAT - (Invested Capital * WACC)", "variables": {"NOPAT": "NOPAT", "IC": "Invested Capital", "WACC": "WACC"}, "formula": "EVA = NOPAT - (IC * WACC)", "example": "NOPAT=$100m, IC=$500m, WACC=10%. EVA=$50m.", "data_sources": ["P/L", "B/S"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [21, 86], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 67, "name": "Market Value Added (MVA)", "category": "Corporate Value", "business_case": "Difference between market value and capital contributed.", "computation": "Market Capitalization - Total Capital Invested", "variables": {"Cap": "Market Cap", "Inv": "Total Capital Invested"}, "formula": "MVA = Cap - Inv", "example": "Cap=$720m, Inv=$500m. MVA=$220m.", "data_sources": ["Market", "B/S"], "update_frequency": "Daily", "complexity": "Medium", "related_metrics": [19, 87], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 68, "name": "Debt to Total Funds Ratio", "category": "Financial Strength", "business_case": "Percentage of total capitalization that is debt.", "computation": "Total Debt / (Total Debt + Total Equity) * 100", "variables": {"Debt": "Total Debt", "Eq": "Total Equity"}, "formula": "Ratio = Debt / (Debt + Eq) * 100", "example": "Debt=$255m, Eq=$261m. Ratio=49.4%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [10, 88], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 69, "name": "Equity to Total Funds Ratio", "category": "Financial Strength", "business_case": "Percentage of total capitalization that is equity.", "computation": "Total Equity / (Total Debt + Total Equity) * 100", "variables": {"Eq": "Total Equity", "Debt": "Total Debt"}, "formula": "Ratio = Eq / (Debt + Eq) * 100", "example": "Eq=$261m, Debt=$255m. Ratio=50.6%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [10, 89], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 70, "name": "Total Debt to Total Funds", "category": "Financial Strength", "business_case": "Comprehensive view of debt reliance in capital structure.", "computation": "(Long-term Debt + CL) / Total Funds * 100", "variables": {"Debt": "Total Debt", "Funds": "Total Funds"}, "formula": "Ratio = (Debt / Funds) * 100", "example": "Debt=$255m, Funds=$516m. Ratio=49.5%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [11, 90], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 71, "name": "Operating Leverage", "category": "Management Decision-Making", "business_case": "Sensitivity of operating profit to changes in sales volume.", "computation": "Contribution Margin / Operating Profit", "variables": {"CM": "Contribution Margin", "OP": "Operating Profit"}, "formula": "Op Lev = CM / OP", "example": "CM=$80k, OP=$20k. Op Lev=4x.", "data_sources": ["P/L", "Costing"], "update_frequency": "Monthly", "complexity": "High", "related_metrics": [25, 91], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 72, "name": "Financial Leverage", "category": "Financial Strength", "business_case": "Sensitivity of EPS to changes in operating profit.", "computation": "EBIT / EBT", "variables": {"EBIT": "EBIT", "EBT": "EBT"}, "formula": "Fin Lev = EBIT / EBT", "example": "EBIT=$112m, EBT=$92m. Fin Lev=1.22x.", "data_sources": ["P/L"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [9, 92], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 73, "name": "Growth Equilibrium Factor (E)", "category": "Growth", "business_case": "Rate of growth a company can sustain from internal cash.", "computation": "Retained Earnings / Opening Owners' Funds", "variables": {"RE": "Retained Earnings", "OF": "Opening Owners' Funds"}, "formula": "E = RE / OF", "example": "RE=$44m, OF=$661m. E=0.066 (6.6%).", "data_sources": ["P/L", "B/S"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [27, 93], "industry_benchmark": "Sustainable Growth Rate (SGR) of 8-15% for mature firms; 20%+ for growth-stage.", "actionable_insight": "If actual growth > SGR, secure long-term funding or slow growth to prevent a liquidity crisis (overtrading).", "modern_context": "Modeled using advanced financial planning and analysis (FP&A) software to balance top-line expansion with working capital constraints."
+  },
+  {
+    "id": 74, "name": "CapEx to Sales Ratio", "category": "Investment Appraisal", "business_case": "Proportion of revenue reinvested into long-term assets.", "computation": "Capital Expenditures / Total Sales", "variables": {"CapEx": "Capital Expenditures", "Sales": "Total Sales"}, "formula": "CapEx/Sales = CapEx / Sales", "example": "CapEx=$50m, Sales=$1120m. Ratio=4.5%.", "data_sources": ["C/F Statement", "P/L"], "update_frequency": "Annually", "complexity": "Medium", "related_metrics": [94, 30], "industry_benchmark": "NPV > 0; IRR > WACC (typically > 10-15%); Payback < 3-5 years.", "actionable_insight": "Reject projects with IRR < WACC; prioritize projects with strategic alignment and high sensitivity to favorable market conditions.", "modern_context": "Evaluated using real options analysis and Monte Carlo simulations to account for volatility and managerial flexibility in complex projects."
+  },
+  {
+    "id": 75, "name": "Net WC to Sales Ratio", "category": "Corporate Liquidity", "business_case": "Operating liquidity requirement per dollar of sales.", "computation": "Net Working Capital / Total Sales", "variables": {"NWC": "Net Working Capital", "Sales": "Total Sales"}, "formula": "NWC/Sales = NWC / Sales", "example": "NWC=$100m, Sales=$1120m. Ratio=8.9%.", "data_sources": ["B/S", "P/L"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [7, 95], "industry_benchmark": "Current Ratio > 1.5x; Quick Ratio > 1.0x; WC Days < 60.", "actionable_insight": "Accelerate receivables, negotiate extended payables, or secure revolving credit facilities to bridge gaps.", "modern_context": "Managed via AI-driven treasury management systems and dynamic supply chain finance platforms to optimize the cash conversion cycle."
+  },
+  {
+    "id": 76, "name": "After-Tax Profit Margin", "category": "Operating Performance", "business_case": "Net profit margin after all taxes are accounted for.", "computation": "(Net Income / Total Revenue) * 100", "variables": {"NI": "Net Income", "Rev": "Total Revenue"}, "formula": "AT Margin = (NI / Rev) * 100", "example": "NI=$60m, Rev=$1120m. AT Margin=5.3%.", "data_sources": ["P/L"], "update_frequency": "Monthly", "complexity": "Low", "related_metrics": [52, 96], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 77, "name": "NOPAT Margin", "category": "Operating Performance", "business_case": "Operating profit margin after tax, excluding financing.", "computation": "(NOPAT / Total Revenue) * 100", "variables": {"NOPAT": "NOPAT", "Rev": "Total Revenue"}, "formula": "NOPAT Margin = (NOPAT / Rev) * 100", "example": "NOPAT=$82.5m, Rev=$1120m. Margin=7.4%.", "data_sources": ["P/L"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [21, 97], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 78, "name": "Investment in FA to Sales Ratio", "category": "Growth", "business_case": "Capital intensity required to support sales growth.", "computation": "Increase in Fixed Assets / Increase in Sales", "variables": {"dFA": "Change in FA", "dSales": "Change in Sales"}, "formula": "FA/Sales = dFA / dSales", "example": "dFA=$32m, dSales=$100m. Ratio=32%.", "data_sources": ["B/S", "P/L"], "update_frequency": "Annually", "complexity": "Medium", "related_metrics": [30, 98], "industry_benchmark": "Sustainable Growth Rate (SGR) of 8-15% for mature firms; 20%+ for growth-stage.", "actionable_insight": "If actual growth > SGR, secure long-term funding or slow growth to prevent a liquidity crisis (overtrading).", "modern_context": "Modeled using advanced financial planning and analysis (FP&A) software to balance top-line expansion with working capital constraints."
+  },
+  {
+    "id": 79, "name": "Investment in WC to Sales Ratio", "category": "Growth", "business_case": "Working capital intensity required to support sales growth.", "computation": "Increase in WC / Increase in Sales", "variables": {"dWC": "Change in WC", "dSales": "Change in Sales"}, "formula": "WC/Sales = dWC / dSales", "example": "dWC=$17m, dSales=$100m. Ratio=17%.", "data_sources": ["B/S", "P/L"], "update_frequency": "Annually", "complexity": "Medium", "related_metrics": [7, 99], "industry_benchmark": "Sustainable Growth Rate (SGR) of 8-15% for mature firms; 20%+ for growth-stage.", "actionable_insight": "If actual growth > SGR, secure long-term funding or slow growth to prevent a liquidity crisis (overtrading).", "modern_context": "Modeled using advanced financial planning and analysis (FP&A) software to balance top-line expansion with working capital constraints."
+  },
+  {
+    "id": 80, "name": "Total Debt / Total Assets", "category": "Financial Strength", "business_case": "Percentage of total assets financed by creditors.", "computation": "Total Liabilities / Total Assets * 100", "variables": {"TL": "Total Liabilities", "TA": "Total Assets"}, "formula": "Debt/TA = (TL / TA) * 100", "example": "TL=$440m, TA=$800m. Ratio=55%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [11, 100], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 81, "name": "Current Liabilities to Total Assets", "category": "Financial Strength", "business_case": "Proportion of assets funded by short-term obligations.", "computation": "Current Liabilities / Total Assets * 100", "variables": {"CL": "Current Liabilities", "TA": "Total Assets"}, "formula": "CL/TA = (CL / TA) * 100", "example": "CL=$240m, TA=$800m. Ratio=30%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [5, 101], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 82, "name": "Long-Term Loans to Total Assets", "category": "Financial Strength", "business_case": "Proportion of assets funded by long-term debt.", "computation": "Long-Term Loans / Total Assets * 100", "variables": {"LTL": "Long-Term Loans", "TA": "Total Assets"}, "formula": "LTL/TA = (LTL / TA) * 100", "example": "LTL=$200m, TA=$800m. Ratio=25%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [10, 102], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 83, "name": "Owners' Funds to Total Assets", "category": "Financial Strength", "business_case": "Proportion of assets funded by shareholders' equity.", "computation": "Owners' Funds / Total Assets * 100", "variables": {"OF": "Owners' Funds", "TA": "Total Assets"}, "formula": "OF/TA = (OF / TA) * 100", "example": "OF=$360m, TA=$800m. Ratio=45%.", "data_sources": ["B/S"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [1, 103], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 84, "name": "Retention Ratio", "category": "Corporate Value", "business_case": "Percentage of net income retained rather than paid as dividends.", "computation": "((Net Income - Dividends) / Net Income) * 100", "variables": {"NI": "Net Income", "Div": "Dividends"}, "formula": "Retention = ((NI - Div) / NI) * 100", "example": "NI=$60m, Div=$24m. Retention=60%.", "data_sources": ["P/L"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [15, 104], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 85, "name": "Sustainable Growth Rate", "category": "Growth", "business_case": "Max growth rate achievable without external equity financing.", "computation": "Retention Ratio * Return on Equity", "variables": {"RR": "Retention Ratio", "ROE": "Return on Equity"}, "formula": "SGR = RR * ROE", "example": "RR=60%, ROE=16.66%. SGR=10%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [27, 105], "industry_benchmark": "Sustainable Growth Rate (SGR) of 8-15% for mature firms; 20%+ for growth-stage.", "actionable_insight": "If actual growth > SGR, secure long-term funding or slow growth to prevent a liquidity crisis (overtrading).", "modern_context": "Modeled using advanced financial planning and analysis (FP&A) software to balance top-line expansion with working capital constraints."
+  },
+  {
+    "id": 86, "name": "Dividend Cover", "category": "Corporate Value", "business_case": "Shows how many times earnings cover dividend payout.", "computation": "EPS / DPS", "variables": {"EPS": "Earnings Per Share", "DPS": "Dividends Per Share"}, "formula": "Cover = EPS / DPS", "example": "EPS=$1.875, DPS=$0.75. Cover=2.5x.", "data_sources": ["P/L", "Registry"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [12, 13, 15], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 87, "name": "Pay-out Ratio", "category": "Corporate Value", "business_case": "Percentage of earnings distributed as cash.", "computation": "(DPS / EPS) * 100", "variables": {"DPS": "Dividends Per Share", "EPS": "Earnings Per Share"}, "formula": "Payout = (DPS / EPS) * 100", "example": "DPS=$0.75, EPS=$1.875. Payout=40%.", "data_sources": ["P/L", "Registry"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [12, 13, 14], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 88, "name": "Earnings Yield", "category": "Corporate Value", "business_case": "Return a share provides in earnings vs share price.", "computation": "(EPS / Price) * 100", "variables": {"EPS": "Earnings Per Share", "Price": "Share Price"}, "formula": "Yield = (EPS / Price) * 100", "example": "EPS=$1.875, Price=$22.50. Yield=8.3%.", "data_sources": ["P/L", "Market"], "update_frequency": "Daily", "complexity": "Low", "related_metrics": [12, 17, 18], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 89, "name": "Dividend Yield", "category": "Corporate Value", "business_case": "Allows income investors to compare cash flows.", "computation": "(DPS / Price) * 100", "variables": {"DPS": "Dividends Per Share", "Price": "Share Price"}, "formula": "Yield = (DPS / Price) * 100", "example": "DPS=$0.75, Price=$22.50. Yield=3.3%.", "data_sources": ["P/L", "Market"], "update_frequency": "Daily", "complexity": "Low", "related_metrics": [13, 16, 18], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 90, "name": "Price to Earnings Ratio (P/E)", "category": "Corporate Value", "business_case": "Years' purchase price bears to earnings, reflecting growth.", "computation": "Price / EPS", "variables": {"Price": "Share Price", "EPS": "Earnings Per Share"}, "formula": "P/E = Price / EPS", "example": "Price=$22.50, EPS=$1.875. P/E=12x.", "data_sources": ["Market", "P/L"], "update_frequency": "Daily", "complexity": "Low", "related_metrics": [12, 16, 19], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 91, "name": "Market to Book Ratio", "category": "Corporate Value", "business_case": "Assesses company status summarizing investor view.", "computation": "Market Cap / Book Value", "variables": {"Cap": "Market Capitalization", "BV": "Book Value"}, "formula": "M/B = Cap / BV", "example": "Cap=$720m, BV=$360m. M/B=2.0x.", "data_sources": ["Market", "B/S"], "update_frequency": "Daily", "complexity": "Medium", "related_metrics": [1, 18, 21], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 92, "name": "Weighted Avg Cost of Capital (WACC)", "category": "Corporate Value", "business_case": "Long-term hurdle rate blending cost of equity and debt.", "computation": "(CostEq*WtEq) + (CostDebt*WtDebt)", "variables": {"CostEq": "Cost of Equity", "WtEq": "Equity Weight", "CostDebt": "Cost of Debt", "WtDebt": "Debt Weight"}, "formula": "WACC = (CostEq*WtEq) + (CostDebt*WtDebt)", "example": "Eq: 62%@12%=7.44%. Debt: 38%@5.8%=2.20%. WACC=9.64%.", "data_sources": ["B/S", "Market", "Tax"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [10, 21, 22], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 93, "name": "Return on Invested Capital (ROIC)", "category": "Corporate Value", "business_case": "Measures performance relative to specific funds base.", "computation": "(NOPAT / Invested Capital) * 100", "variables": {"NOPAT": "Net Operating Profit After Tax", "IC": "Invested Capital"}, "formula": "ROIC = (NOPAT / IC) * 100", "example": "NOPAT=$825k, IC=$6750k. ROIC=12.2%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Quarterly", "complexity": "High", "related_metrics": [2, 20, 22], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 94, "name": "Shareholder Value Added (SVA)", "category": "Corporate Value", "business_case": "Values company based on discounted future cash flows.", "computation": "PV of Operations - Non-Equity Funds", "variables": {"PV": "Present Value of Operations", "NE": "Non-Equity Funds"}, "formula": "SVA = PV - NE", "example": "PV=$8432m, NE=$2544m. SVA=$5888m.", "data_sources": ["Forecasts", "B/S", "WACC"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [20, 21], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 95, "name": "Contribution Per Unit (CPU)", "category": "Management Decision-Making", "business_case": "Net cash in-flow from an extra unit sold.", "computation": "Price - Variable Cost", "variables": {"Price": "Selling Price", "VC": "Variable Cost"}, "formula": "CPU = Price - VC", "example": "Price=$200, VC=$120. CPU=$80.", "data_sources": ["Costing", "ERP"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [24, 25, 26], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 96, "name": "Contribution to Sales % (CPS)", "category": "Management Decision-Making", "business_case": "Converts revenue to contribution for multi-product firms.", "computation": "(CPU / Price) * 100", "variables": {"CPU": "Contribution Per Unit", "Price": "Selling Price"}, "formula": "CPS = (CPU / Price) * 100", "example": "CPU=$80, Price=$200. CPS=40%.", "data_sources": ["Costing", "ERP"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [3, 23, 25], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 97, "name": "Break-even Point (Revenue)", "category": "Management Decision-Making", "business_case": "Revenue level where company covers fixed costs.", "computation": "Fixed Costs / CPS", "variables": {"FC": "Fixed Costs", "CPS": "Contribution to Sales %"}, "formula": "B/E = FC / CPS", "example": "FC=$60k, CPS=40%. B/E=$150k.", "data_sources": ["Costing", "ERP"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [23, 24], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 98, "name": "Contribution Per Hour (CPH)", "category": "Management Decision-Making", "business_case": "Identifies most profitable product when capacity is limited.", "computation": "CPU / Capacity Hours", "variables": {"CPU": "Contribution Per Unit", "Hours": "Capacity Hours"}, "formula": "CPH = CPU / Hours", "example": "CPU=$1500, Hours=10. CPH=$150/hr.", "data_sources": ["Costing", "MES"], "update_frequency": "Monthly", "complexity": "High", "related_metrics": [23, 24], "industry_benchmark": "Contribution Margin > 40%; Break-even achieved at < 70% of total capacity.", "actionable_insight": "Shift sales focus to high-contribution products, renegotiate fixed cost structures, or optimize capacity utilization.", "modern_context": "Calculated dynamically in scenario planning tools and digital twins to assess the impact of supply chain cost spikes on profitability thresholds."
+  },
+  {
+    "id": 99, "name": "Self-funding Growth Rate", "category": "Growth", "business_case": "Growth rate sustainable from operating cash flow.", "computation": "(Retained Earnings / Opening OF) * 100", "variables": {"RE": "Retained Earnings", "OF": "Opening Owners' Funds"}, "formula": "Growth = (RE / OF) * 100", "example": "RE=$44m, OF=$661m. Growth=6.6%.", "data_sources": ["P/L", "B/S"], "update_frequency": "Annually", "complexity": "High", "related_metrics": [1, 7, 8], "industry_benchmark": "Sustainable Growth Rate (SGR) of 8-15% for mature firms; 20%+ for growth-stage.", "actionable_insight": "If actual growth > SGR, secure long-term funding or slow growth to prevent a liquidity crisis (overtrading).", "modern_context": "Modeled using advanced financial planning and analysis (FP&A) software to balance top-line expansion with working capital constraints."
+  },
+  {
+    "id": 100, "name": "Inventory Days", "category": "Operating Performance", "business_case": "Measures how long cash is tied up in inventory.", "computation": "(Inventory / Sales) * 365", "variables": {"Inv": "Inventory Value", "Sales": "Total Annual Sales"}, "formula": "Inv Days = (Inv / Sales) * 365", "example": "Inv=$128m, Sales=$1120m. Days=42 days.", "data_sources": ["B/S", "P/L", "ERP"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [4, 8, 29], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 101, "name": "Accounts Receivable Days", "category": "Operating Performance", "business_case": "Average days credit customers take before paying.", "computation": "(AR / Sales) * 365", "variables": {"AR": "Accounts Receivable", "Sales": "Total Annual Sales"}, "formula": "AR Days = (AR / Sales) * 365", "example": "AR=$160m, Sales=$1120m. Days=52 days.", "data_sources": ["B/S", "P/L", "CRM"], "update_frequency": "Monthly", "complexity": "Medium", "related_metrics": [8, 28], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 102, "name": "Sales to Fixed Assets Ratio", "category": "Operating Performance", "business_case": "Output generated by major fixed assets.", "computation": "Sales / Net Fixed Assets", "variables": {"Sales": "Total Revenue", "FA": "Net Fixed Assets"}, "formula": "Sales/FA = Sales / FA", "example": "Sales=$1120m, FA=$440m. Ratio=2.5x.", "data_sources": ["B/S", "P/L"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [2, 4], "industry_benchmark": "Varies by sector; target > 10% margin or > 1.5x asset turn.", "actionable_insight": "Conduct granular variance analysis, optimize pricing, or divest underperforming assets.", "modern_context": "Monitored via real-time BI dashboards and predictive ML models to detect operational inefficiencies before they impact quarterly results."
+  },
+  {
+    "id": 103, "name": "Debt Service Coverage Ratio (DSCR)", "category": "Financial Strength", "business_case": "Measures cash flow available to pay current debt obligations.", "computation": "Net Operating Income / Total Debt Service", "variables": {"NOI": "Net Operating Income", "TDS": "Total Debt Service"}, "formula": "DSCR = NOI / TDS", "example": "NOI=$100m, TDS=$50m. DSCR=2.0x.", "data_sources": ["P/L", "Debt Management System"], "update_frequency": "Quarterly", "complexity": "Medium", "related_metrics": [9, 10], "industry_benchmark": "Interest Cover > 3.0x; Debt/Equity < 60% for most mature industries.", "actionable_insight": "If leverage is high, prioritize debt repayment, refinance at lower rates, or raise equity to strengthen the balance sheet.", "modern_context": "Stress-tested regularly using Monte Carlo simulations to assess resilience against macroeconomic shocks and interest rate hikes."
+  },
+  {
+    "id": 104, "name": "Earnings Per Share (EPS)", "category": "Corporate Value", "business_case": "Profit earned by common shareholder per share.", "computation": "EAT / Shares Outstanding", "variables": {"EAT": "Earnings After Tax", "Shares": "Shares Outstanding"}, "formula": "EPS = EAT / Shares", "example": "EAT=$60m, Shares=32m. EPS=$1.875.", "data_sources": ["P/L", "Registry"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [1, 13, 18], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 105, "name": "Dividends Per Share (DPS)", "category": "Corporate Value", "business_case": "Actual cash return paid to shareholders per share.", "computation": "Total Dividends / Shares", "variables": {"Div": "Total Dividends", "Shares": "Shares Outstanding"}, "formula": "DPS = Div / Shares", "example": "Div=$24m, Shares=32m. DPS=$0.75.", "data_sources": ["P/L", "Registry"], "update_frequency": "Quarterly", "complexity": "Low", "related_metrics": [12, 14, 15], "industry_benchmark": "P/E 15-25x; Market/Book > 1.5x; Dividend Yield 2-4%.", "actionable_insight": "If undervalued, communicate strategic roadmap to investors, initiate share buybacks, or increase dividend payouts.", "modern_context": "Increasingly influenced by ESG ratings and algorithmic trading models that scrape alternative data for sentiment analysis."
+  },
+  {
+    "id": 106,
+    "name": "Customer Acquisition Cost (CAC)",
+    "category": "Digital & Customer Success",
+    "business_case": "Measures the total cost of acquiring a new customer, critical for evaluating marketing efficiency.",
+    "computation": "Total Sales and Marketing Expenses / Number of New Customers Acquired",
+    "variables": {"S&M": "Sales and Marketing Expenses", "NewCustomers": "Number of New Customers"},
+    "formula": "CAC = S&M / NewCustomers",
+    "example": "S&M = $1M, New Customers = 500. CAC = $2,000.",
+    "data_sources": ["CRM (Salesforce/HubSpot)", "Marketing Automation", "ERP"],
+    "update_frequency": "Monthly",
+    "complexity": "Medium",
+    "related_metrics": [107, 108],
+    "industry_benchmark": "Varies by industry; SaaS target is often < $500, with payback < 12 months.",
+    "actionable_insight": "If CAC is rising, optimize ad spend, improve conversion rates, or shift focus to organic/inbound channels.",
+    "modern_context": "Tracked via multi-touch attribution models and AI-driven marketing analytics to optimize spend across digital channels in real-time."
+  },
+  {
+    "id": 107,
+    "name": "Customer Lifetime Value (LTV)",
+    "category": "Digital & Customer Success",
+    "business_case": "Predicts the total net profit attributed to the entire future relationship with a customer.",
+    "computation": "(Average Value of Sale * Number of Transactions * Retention Time Period) * Profit Margin",
+    "variables": {"AvgSale": "Average Sale Value", "Freq": "Purchase Frequency", "Lifespan": "Customer Lifespan", "Margin": "Profit Margin"},
+    "formula": "LTV = AvgSale * Freq * Lifespan * Margin",
+    "example": "Avg Sale=$100, Freq=4/yr, Lifespan=5yrs, Margin=30%. LTV = 100 * 4 * 5 * 0.30 = $600.",
+    "data_sources": ["CRM", "Billing System", "Data Warehouse"],
+    "update_frequency": "Quarterly",
+    "complexity": "High",
+    "related_metrics": [106, 108],
+    "industry_benchmark": "LTV:CAC ratio of 3:1 or higher is considered healthy and sustainable.",
+    "actionable_insight": "If LTV is low, implement customer success programs, upsell/cross-sell initiatives, or improve product stickiness to reduce churn.",
+    "modern_context": "Calculated using predictive machine learning models that analyze user behavior patterns to forecast individual customer churn and lifetime value."
+  },
+  {
+    "id": 108,
+    "name": "LTV to CAC Ratio",
+    "category": "Digital & Customer Success",
+    "business_case": "Evaluates the efficiency of customer acquisition relative to the long-term value those customers bring.",
+    "computation": "Customer Lifetime Value / Customer Acquisition Cost",
+    "variables": {"LTV": "Customer Lifetime Value", "CAC": "Customer Acquisition Cost"},
+    "formula": "LTV:CAC = LTV / CAC",
+    "example": "LTV = $600, CAC = $200. Ratio = 3.0x.",
+    "data_sources": ["CRM", "Marketing Analytics", "BI Dashboard"],
+    "update_frequency": "Quarterly",
+    "complexity": "Medium",
+    "related_metrics": [106, 107],
+    "industry_benchmark": "3:1 is the gold standard; < 1:1 indicates a fundamentally broken business model; > 5:1 suggests under-investing in growth.",
+    "actionable_insight": "If ratio is < 3:1, either reduce CAC through marketing optimization or increase LTV through pricing adjustments and retention efforts.",
+    "modern_context": "A core metric for venture-backed startups and SaaS companies, monitored via real-time cohort analysis dashboards."
+  },
+  {
+    "id": 109,
+    "name": "Net Retention Rate (NRR)",
+    "category": "Digital & Customer Success",
+    "business_case": "Measures revenue retained from existing customers, including upsells, minus churn and downgrades.",
+    "computation": "((Starting MRR + Upgrades - Downgrades - Churn) / Starting MRR) * 100",
+    "variables": {"StartMRR": "Starting Monthly Recurring Revenue", "Upgrades": "Expansion Revenue", "Downgrades": "Contraction Revenue", "Churn": "Lost Revenue"},
+    "formula": "NRR = ((StartMRR + Upgrades - Downgrades - Churn) / StartMRR) * 100",
+    "example": "Start=$100k, Upgrades=$20k, Downgrades=$5k, Churn=$10k. NRR = ((100+20-5-10)/100)*100 = 105%.",
+    "data_sources": ["Subscription Management System", "CRM", "Billing Platform"],
+    "update_frequency": "Monthly",
+    "complexity": "Medium",
+    "related_metrics": [107, 110],
+    "industry_benchmark": "> 100% is required for SaaS growth; > 120% is considered world-class (e.g., top-tier enterprise SaaS).",
+    "actionable_insight": "If NRR < 100%, prioritize customer success, address product gaps causing churn, and build robust upsell playbooks.",
+    "modern_context": "The ultimate indicator of product-market fit and sustainable growth, heavily weighted by modern software investors over simple new logo acquisition."
+  },
+  {
+    "id": 110,
+    "name": "Cloud Cost to Revenue Ratio",
+    "category": "Digital & Technology",
+    "business_case": "Measures the efficiency of cloud infrastructure spend relative to the revenue it supports.",
+    "computation": "Total Cloud Infrastructure Costs / Total Revenue",
+    "variables": {"CloudCost": "AWS/Azure/GCP Spend", "Rev": "Total Revenue"},
+    "formula": "Cloud Cost Ratio = (CloudCost / Rev) * 100",
+    "example": "Cloud Spend = $2M, Revenue = $50M. Ratio = 4%.",
+    "data_sources": ["Cloud Provider Billing (AWS Cost Explorer)", "ERP", "FinOps Platform"],
+    "update_frequency": "Monthly",
+    "complexity": "Medium",
+    "related_metrics": [3, 4],
+    "industry_benchmark": "5-10% for typical SaaS; < 5% for highly optimized, mature platforms.",
+    "actionable_insight": "If ratio is rising, implement FinOps practices, right-size instances, adopt spot instances, or refactor monolithic apps to serverless.",
+    "modern_context": "Critical for digital transformation; managed via automated FinOps tools (e.g., CloudHealth, Vantage) to align engineering spend with business outcomes."
+  },
+  {
+    "id": 111,
+    "name": "Carbon Intensity per Revenue",
+    "category": "ESG & Sustainability",
+    "business_case": "Measures the environmental impact of the business relative to its economic output.",
+    "computation": "Total Scope 1 & 2 Carbon Emissions (tons CO2e) / Total Revenue",
+    "variables": {"Emissions": "Scope 1 & 2 CO2e", "Rev": "Total Revenue"},
+    "formula": "Carbon Intensity = Emissions / Rev",
+    "example": "Emissions = 10,000 tons, Revenue = $50M. Intensity = 0.0002 tons/$.",
+    "data_sources": ["ESG Reporting Software", "ERP", "Facility Management Systems"],
+    "update_frequency": "Annually",
+    "complexity": "High",
+    "related_metrics": [1, 2],
+    "industry_benchmark": "Highly sector-dependent; trending toward net-zero targets aligned with SBTi (Science Based Targets initiative).",
+    "actionable_insight": "If intensity is high, invest in renewable energy credits, optimize logistics, or transition to circular economy supply chain models.",
+    "modern_context": "Increasingly mandated by regulators (e.g., CSRD, SEC climate rules) and scrutinized by ESG-focused institutional investors."
+  },
+  {
+    "id": 112,
+    "name": "R&D to Revenue Ratio",
+    "category": "Innovation & Growth",
+    "business_case": "Measures the company's commitment to future growth and innovation relative to current scale.",
+    "computation": "Total Research & Development Expenses / Total Revenue",
+    "variables": {"RD": "R&D Expenses", "Rev": "Total Revenue"},
+    "formula": "R&D Ratio = (RD / Rev) * 100",
+    "example": "R&D = $15M, Revenue = $100M. Ratio = 15%.",
+    "data_sources": ["ERP", "Project Management Tools", "P&L"],
+    "update_frequency": "Quarterly",
+    "complexity": "Low",
+    "related_metrics": [1, 51],
+    "industry_benchmark": "15-20% for high-tech/pharma; 2-5% for mature manufacturing or retail.",
+    "actionable_insight": "If ratio is too low, the company risks long-term obsolescence; if too high without revenue growth, R&D productivity must be audited.",
+    "modern_context": "Analyzed alongside patent filings and time-to-market metrics to ensure R&D spend is translating into tangible competitive advantages."
+  },
+  {
+    "id": 113,
+    "name": "Employee Net Promoter Score (eNPS)",
+    "category": "Human Capital",
+    "business_case": "Measures employee loyalty and engagement, which directly correlates with productivity and retention.",
+    "computation": "% of Promoters (9-10) - % of Detractors (0-6) on a 0-10 likelihood to recommend scale.",
+    "variables": {"Promoters": "Employees scoring 9-10", "Detractors": "Employees scoring 0-6"},
+    "formula": "eNPS = % Promoters - % Detractors",
+    "example": "60% Promoters, 20% Detractors. eNPS = 40.",
+    "data_sources": ["HRIS (Workday/BambooHR)", "Engagement Survey Platform"],
+    "update_frequency": "Quarterly",
+    "complexity": "Low",
+    "related_metrics": [71, 72],
+    "industry_benchmark": "> 0 is good; > 30 is excellent; > 50 is world-class.",
+    "actionable_insight": "If eNPS is declining, conduct stay interviews, address toxic management, and improve compensation or work-life balance initiatives.",
+    "modern_context": "Tracked via continuous listening platforms and AI sentiment analysis on internal communication channels to proactively manage culture."
+  },
+  {
+    "id": 114,
+    "name": "IT Spend to Revenue Ratio",
+    "category": "Digital & Technology",
+    "business_case": "Measures the level of investment in technology infrastructure and innovation relative to business size.",
+    "computation": "Total IT Expenses (CapEx + OpEx) / Total Revenue",
+    "variables": {"IT": "Total IT Spend", "Rev": "Total Revenue"},
+    "formula": "IT Ratio = (IT / Rev) * 100",
+    "example": "IT Spend = $10M, Revenue = $200M. Ratio = 5%.",
+    "data_sources": ["IT Financial Management (ITFM)", "ERP", "P&L"],
+    "update_frequency": "Quarterly",
+    "complexity": "Medium",
+    "related_metrics": [110, 4],
+    "industry_benchmark": "3-5% for traditional industries; 8-15% for financial services and tech-driven companies.",
+    "actionable_insight": "If spend is high but business value is low, audit IT portfolio for redundant applications and shift from legacy maintenance to innovation.",
+    "modern_context": "Evolved from a pure cost-center metric to a value-driver metric, tracking investment in AI, automation, and cloud migration."
+  },
+  {
+    "id": 115,
+    "name": "Free Cash Flow Yield",
+    "category": "Corporate Value",
+    "business_case": "Measures the cash return a company generates relative to its market capitalization, a key metric for value investors.",
+    "computation": "Free Cash Flow / Market Capitalization",
+    "variables": {"FCF": "Free Cash Flow (OCF - CapEx)", "MarketCap": "Market Capitalization"},
+    "formula": "FCF Yield = (FCF / MarketCap) * 100",
+    "example": "FCF = $50M, Market Cap = $500M. Yield = 10%.",
+    "data_sources": ["Cash Flow Statement", "Market Data Feed", "BI Dashboard"],
+    "update_frequency": "Quarterly",
+    "complexity": "Medium",
+    "related_metrics": [12, 16, 34],
+    "industry_benchmark": "> 5% is generally attractive; > 10% indicates potential undervaluation or a highly cash-generative business.",
+    "actionable_insight": "If yield is high and stock is undervalued, management should consider returning capital to shareholders via dividends or buybacks.",
+    "modern_context": "Increasingly favored over P/E ratios by sophisticated investors, as it is harder to manipulate via accounting accruals."
+  }
+]
