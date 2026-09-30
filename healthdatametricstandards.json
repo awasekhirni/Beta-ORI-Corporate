@@ -1,0 +1,2468 @@
+{
+  "documentMetadata": {
+    "standardId": "HDM-STD-001",
+    "title": "Health Data Metric Standards (HDMS) - Reference Frame for Capturing, Analyzing, and Publishing Health Data",
+    "shortName": "HDMS",
+    "version": "2.0.0",
+    "status": "approved",
+    "publicationDate": "2025-01-01",
+    "nextScheduledReview": "2027-01-01",
+    "publisher": {
+      "organization": "Health Data Governance Office",
+      "maintainerContact": "hdms-governance@example.org"
+    },
+    "audience": [
+      "product engineering",
+      "clinical informatics",
+      "data engineering",
+      "data science",
+      "analytics",
+      "privacy and security",
+      "quality management (CMMI EPG)",
+      "AI/ML engineering",
+      "interoperability architecture"
+    ],
+    "normativeLanguageStandard": "RFC 2119 (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY)",
+    "license": {
+      "standardText": "CC BY 4.0",
+      "referenceImplementations": "Apache-2.0"
+    },
+    "usageNotes": [
+      "MUST: every conforming implementation shall satisfy; SHOULD: deviations require documented justification; MAY: optional.",
+      "Terminology codes in this document are reference bindings curated from published releases. Before production use, every binding MUST be re-validated against the current LOINC, SNOMED CT, ICD, and RxNorm releases via a terminology server (rule G-TERM-01).",
+      "Extend the catalog only through the governance workflow in section framework.governance; never fork the standard silently."
+    ],
+    "designPrinciples": [
+      "Patient safety first: every metric must carry clinically valid interpretation and safety-critical limits.",
+      "Standards-native: bind to FHIR, LOINC, SNOMED CT, UCUM rather than inventing local semantics.",
+      "Single source of truth: the metric registry is authoritative; all pipelines consume registry-approved definitions only.",
+      "Privacy by design: privacy tier assigned at metric definition time, not at publication time.",
+      "Algorithmic fairness: AI/ML models and derived metrics must be evaluated for bias and disparate impact before deployment.",
+      "Future-proof interoperability: align with FHIR R5, OMOP CDM v6, and emerging global health data spaces.",
+      "Quantitative management: every process in the data lifecycle has measurable performance objectives and control charts.",
+      "Continuous optimization: defects trigger causal analysis; improvements are institutionalized, not local patches.",
+      "Equity: metrics must be capable of stratification to detect and eliminate disparities."
+    ]
+  },
+  "conformance": {
+    "keywords": {
+      "MUST": "absolute requirement of this standard",
+      "MUST_NOT": "absolute prohibition",
+      "SHOULD": "strong recommendation; deviation requires ADR (architecture decision record)",
+      "SHOULD_NOT": "strong discouragement; deviation requires ADR",
+      "MAY": "genuinely optional behavior"
+    },
+    "conformanceProfiles": [
+      {
+        "id": "CONF-CAPTURE",
+        "name": "Capture Conformance",
+        "requires": [
+          "captureProtocols",
+          "validationRuleLibrary",
+          "missingDataPolicy",
+          "temporalStandards"
+        ]
+      },
+      {
+        "id": "CONF-ANALYSIS",
+        "name": "Analysis Conformance",
+        "requires": [
+          "analysisStandards",
+          "dataQuality.dimensions",
+          "statisticalProcessControl"
+        ]
+      },
+      {
+        "id": "CONF-PUBLICATION",
+        "name": "Publication Conformance",
+        "requires": [
+          "publicationStandards",
+          "privacySecurityTrust.deidentification",
+          "smallCellSuppression"
+        ]
+      },
+      {
+        "id": "CONF-AI",
+        "name": "AI/ML Conformance",
+        "requires": [
+          "modelGovernance",
+          "fairnessMetrics",
+          "driftMonitoring",
+          "explainabilityStandards"
+        ]
+      }
+    ]
+  },
+  "framework": {
+    "scope": {
+      "inScope": [
+        "person-level clinical measurements, laboratory results, vital signs, patient-reported outcomes",
+        "social determinants of health (SDOH) and environmental exposure metrics",
+        "derived clinical, epidemiological, and AI/ML model performance indicators",
+        "healthcare delivery quality and operational metrics",
+        "population health and public health surveillance metrics",
+        "metadata, governance, quality, privacy, and process-control standards for the above"
+      ],
+      "outOfScope": [
+        "billing adjudication logic",
+        "payer contract terms",
+        "imaging pixel-level interpretation (managed via DICOM standards separately)"
+      ]
+    },
+    "governance": {
+      "bodies": [
+        {
+          "id": "DGC",
+          "name": "Data Governance Council",
+          "mandate": "final approval authority for the standard and all metric status changes",
+          "cadence": "monthly"
+        },
+        {
+          "id": "CTB",
+          "name": "Clinical Terminology Board",
+          "mandate": "clinical validity, reference ranges, terminology bindings",
+          "cadence": "biweekly"
+        },
+        {
+          "id": "MRB",
+          "name": "Metrics Review Board",
+          "mandate": "new metric intake, calculation definitions, stratification policy",
+          "cadence": "biweekly"
+        },
+        {
+          "id": "PSB",
+          "name": "Privacy and Security Board",
+          "mandate": "privacy tiering, de-identification approvals, DPIA sign-off",
+          "cadence": "monthly"
+        },
+        {
+          "id": "AIB",
+          "name": "AI & Algorithmic Bias Board",
+          "mandate": "review of predictive models, fairness assessments, and AI risk management (NIST AI RMF alignment)",
+          "cadence": "monthly"
+        }
+      ],
+      "roles": [
+        {
+          "role": "Data Trustee",
+          "accountability": "accountable for domain data assets"
+        },
+        {
+          "role": "Domain Data Steward",
+          "accountability": "owns metric definitions within a category; approves minor versions"
+        },
+        {
+          "role": "SDOH Data Steward",
+          "accountability": "owns SDOH metric definitions and community referral linkages"
+        },
+        {
+          "role": "Metric Author",
+          "accountability": "drafts definitions, evidence, and bindings"
+        },
+        {
+          "role": "Terminologist",
+          "accountability": "validates LOINC/SNOMED/ICD/RxNorm bindings against current releases"
+        },
+        {
+          "role": "Data Quality Lead",
+          "accountability": "owns DQ dimensions, thresholds, and SPC baselines"
+        },
+        {
+          "role": "Privacy Officer",
+          "accountability": "assigns privacy tiers; approves de-identification methods"
+        },
+        {
+          "role": "Honest Broker",
+          "accountability": "controls re-identification keys; mediates research data flows"
+        },
+        {
+          "role": "AI Model Validator",
+          "accountability": "verifies model fairness, drift, and clinical safety prior to deployment"
+        }
+      ],
+      "metricLifecycleStates": [
+        {
+          "state": "draft",
+          "definition": "authored, not yet reviewed",
+          "allowedTransitions": [
+            "internal-review",
+            "rejected"
+          ]
+        },
+        {
+          "state": "internal-review",
+          "definition": "engineering and quality review of value domain, validation, FHIR binding",
+          "allowedTransitions": [
+            "clinical-review",
+            "draft"
+          ]
+        },
+        {
+          "state": "clinical-review",
+          "definition": "CTB verification of definition, ranges, evidence; terminology server validation executed",
+          "allowedTransitions": [
+            "approved",
+            "internal-review"
+          ]
+        },
+        {
+          "state": "approved",
+          "definition": "governance approved, not yet instrumented",
+          "allowedTransitions": [
+            "active",
+            "deprecated"
+          ]
+        },
+        {
+          "state": "active",
+          "definition": "in production; SPC monitored",
+          "allowedTransitions": [
+            "deprecated"
+          ]
+        },
+        {
+          "state": "deprecated",
+          "definition": "superseded; consumers MUST migrate within notice window",
+          "allowedTransitions": [
+            "retired"
+          ]
+        },
+        {
+          "state": "retired",
+          "definition": "no longer serviced; historical data retained per retention schedule"
+        },
+        {
+          "state": "rejected",
+          "definition": "not adopted; rationale recorded"
+        }
+      ],
+      "approvalChecklist": [
+        "clinical definition and evidence attached",
+        "terminology binding validated against current release (G-TERM-01)",
+        "FHIR resource and profile mapping defined",
+        "capture protocol referenced",
+        "validation rules selected from the validation rule library",
+        "privacy tier assigned",
+        "quality targets and SPC plan defined",
+        "stratification fields declared (equity review)",
+        "AI/ML metrics: fairness baseline and drift monitoring plan defined (if applicable)"
+      ],
+      "deprecationPolicy": {
+        "minimumNoticeDays": 180,
+        "requirements": [
+          "successor metric mapped",
+          "migration query published",
+          "all registered consumers notified via registry changelog",
+          "SPC history archived"
+        ]
+      },
+      "disputeResolution": "unresolved issues escalate to DGC with written position papers from MRB and CTB; decision minuted in registry"
+    },
+    "dataLifecycle": {
+      "states": [
+        "created",
+        "captured",
+        "validated",
+        "normalized",
+        "analyzed",
+        "synthesized",
+        "federated",
+        "published",
+        "archived",
+        "destroyed"
+      ],
+      "rules": [
+        "every state transition MUST be recorded in an immutable audit trail (who, what, when, source system, outcome)",
+        "data in 'captured' state MUST NOT be used for primary clinical or published analytics until 'validated'",
+        "records flagged entered-in-error MUST be retained and flagged, never hard-deleted (FHIR-compatible)",
+        "synthetic data generated for testing MUST pass fidelity and privacy guarantee checks before leaving the secure environment"
+      ],
+      "retention": {
+        "clinicalRecordData": "per jurisdiction (typical 7-10 years; pediatrics until age of majority plus limitation period)",
+        "complianceAndAuditLogs": "minimum 6 years (HIPAA benchmark)",
+        "publishedDatasetSnapshots": "immutable, retained indefinitely with DOI",
+        "modelArtifactsAndTrainingDataHashes": "minimum 7 years post-model retirement"
+      }
+    },
+    "versioning": {
+      "scheme": "Semantic Versioning 2.0.0 (MAJOR.MINOR.PATCH)",
+      "majorChangeExamples": [
+        "unit change",
+        "definition change altering meaning",
+        "replacement terminology binding",
+        "interpretation threshold change"
+      ],
+      "minorChangeExamples": [
+        "new stratification added",
+        "new evidence source added",
+        "new capture method permitted"
+      ],
+      "patchChangeExamples": [
+        "typographical fixes",
+        "reference formatting"
+      ],
+      "compatibilityRules": [
+        "consumers MUST be able to pin any exact version of any metric",
+        "MAJOR metric version bumps require simultaneous registry migration note",
+        "the standard version and metric versions evolve independently"
+      ]
+    },
+    "identifierConventions": {
+      "metricId": "^M-[A-Z]{2}-\\d{3}$ (immutable once assigned)",
+      "captureProtocolId": "^CP-[A-Z]+-\\d{3}$",
+      "validationRuleId": "^VR-[A-Z0-9-]+$",
+      "qualityDimensionId": "^DQ-\\d{2}$",
+      "privacyTierId": "^PT-\\d$",
+      "valueSetId": "^VSET-[A-Z]+-\\d{3}$",
+      "processBaselineId": "^PBB-\\d{3}$"
+    }
+  },
+  "foundations": {
+    "dataTypes": [
+      {
+        "type": "boolean",
+        "serialization": "JSON true/false"
+      },
+      {
+        "type": "integer",
+        "serialization": "JSON number, no fraction"
+      },
+      {
+        "type": "decimal",
+        "serialization": "JSON number or string; no exponent notation; trailing zeros preserved end-to-end"
+      },
+      {
+        "type": "quantity",
+        "serialization": "{value: decimal, unit: UCUM-code}; unit is mandatory"
+      },
+      {
+        "type": "ratio",
+        "serialization": "{numerator: quantity, denominator: quantity}"
+      },
+      {
+        "type": "range",
+        "serialization": "{low: quantity|null, high: quantity|null, lowInclusive: boolean, highInclusive: boolean}"
+      },
+      {
+        "type": "coded",
+        "serialization": "{system: uri, code: string, display: string}; system MUST be one of foundations.terminology.systemUris"
+      },
+      {
+        "type": "string",
+        "serialization": "UTF-8; leading/trailing whitespace trimmed"
+      },
+      {
+        "type": "text",
+        "serialization": "UTF-8 free text; never enters aggregate publication without review"
+      },
+      {
+        "type": "datetime",
+        "serialization": "RFC 3339 / ISO 8601 with UTC offset; stored canonically in UTC"
+      },
+      {
+        "type": "date",
+        "serialization": "ISO 8601 YYYY-MM-DD"
+      },
+      {
+        "type": "interval",
+        "serialization": "{start: datetime, end: datetime|null}"
+      },
+      {
+        "type": "count",
+        "serialization": "non-negative integer"
+      },
+      {
+        "type": "proportion",
+        "serialization": "decimal 0..1 or percent 0..100 with declared unit '%'"
+      },
+      {
+        "type": "score",
+        "serialization": "integer on a declared instrument scale with documented anchor points"
+      },
+      {
+        "type": "array",
+        "serialization": "JSON array of homogeneous types (e.g., array of coded)"
+      },
+      {
+        "type": "geospatial",
+        "serialization": "GeoJSON Feature or Geometry object (WGS 84)"
+      }
+    ],
+    "missingDataPolicy": {
+      "principle": "absence MUST be explicit; sentinel values (0, -1, 999, empty string) are FORBIDDEN to encode missingness",
+      "codingSystem": "FHIR DataAbsentReason (http://terminology.hl7.org/CodeSystem/data-absent-reason)",
+      "allowedCodes": [
+        "unknown",
+        "asked-unknown",
+        "temp-unknown",
+        "not-asked",
+        "asked-declined",
+        "masked",
+        "not-applicable",
+        "error",
+        "not-a-number",
+        "not-performed",
+        "not-permitted"
+      ],
+      "reporting": "missingness rate per metric MUST be reported in every published dataset dictionary"
+    },
+    "units": {
+      "mandate": "all quantitative values MUST carry a UCUM 2.1 code; free-text units are FORBIDDEN",
+      "systemUri": "http://unitsofmeasure.org",
+      "canonicalStorage": "store native measured unit; analytics converts to the metric's canonical unit using appendix.conversionFactors; conversion MUST be logged with factor version"
+    },
+    "terminology": {
+      "systemUris": {
+        "LOINC": "http://loinc.org",
+        "SNOMED_CT": "http://snomed.info/sct",
+        "ICD_10_CM": "http://hl7.org/fhir/sid/icd-10-cm",
+        "ICD_10_WHO": "http://hl7.org/fhir/sid/icd-10",
+        "ICD_11": "http://id.who.int/icd11/mms",
+        "RxNorm": "http://www.nlm.nih.gov/research/umls/rxnorm",
+        "CPT": "http://www.ama-assn.org/go/cpt",
+        "HCPCS": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+        "CVX": "http://hl7.org/fhir/sid/cvx",
+        "UCUM": "http://unitsofmeasure.org",
+        "MDC_IEEE_11073": "urn:iso:std:iso:11073:10101",
+        "HPO": "http://purl.obolibrary.org/obo/hp.owl",
+        "LOCAL": "urn:oid:<org-assigned-oid>"
+      },
+      "bindingRules": [
+        "G-TERM-01: every coded field MUST bind to the preferred system for its domain and MUST be validated via a terminology server at build time and at runtime ingestion",
+        "G-TERM-02: local codes MUST ship with a FHIR ConceptMap to a standard system; unmapped local codes are a DQ-03 defect",
+        "G-TERM-03: value sets MUST be versioned, OID-assigned, and exportable in VSAC-compatible format",
+        "G-TERM-04: SNOMED CT edition (International or national extension) MUST be declared per deployment"
+      ],
+      "domainPreferences": [
+        {
+          "domain": "laboratory observations",
+          "preferred": "LOINC"
+        },
+        {
+          "domain": "clinical findings and procedures (semantic)",
+          "preferred": "SNOMED CT"
+        },
+        {
+          "domain": "billing/classification diagnoses",
+          "preferred": "ICD-10-CM (US) / ICD-10 WHO / ICD-11 MMS"
+        },
+        {
+          "domain": "clinical drugs",
+          "preferred": "RxNorm"
+        },
+        {
+          "domain": "billing procedures",
+          "preferred": "CPT/HCPCS"
+        },
+        {
+          "domain": "administered vaccines",
+          "preferred": "CVX"
+        },
+        {
+          "domain": "units of measure",
+          "preferred": "UCUM"
+        },
+        {
+          "domain": "medical device data",
+          "preferred": "IEEE 11073 MDC nomenclature"
+        },
+        {
+          "domain": "social determinants of health",
+          "preferred": "LOINC (Gravity Project) / SNOMED CT"
+        }
+      ]
+    },
+    "interopStandards": [
+      {
+        "standard": "HL7 FHIR R4 (4.0.1) and R5",
+        "use": "primary data exchange",
+        "url": "http://hl7.org/fhir"
+      },
+      {
+        "standard": "US Core Implementation Guide (current STU)",
+        "use": "US domain profiles",
+        "url": "http://hl7.org/fhir/us/core"
+      },
+      {
+        "standard": "FHIR Bulk Data Access (SMART Backend Services, $export, NDJSON)",
+        "use": "population-scale export",
+        "url": "https://hl7.org/fhir/uv/bulkdata"
+      },
+      {
+        "standard": "HL7 C-CDA",
+        "use": "document exchange with legacy partners"
+      },
+      {
+        "standard": "HL7 v2.5.1 (ADT, ORU, ORM)",
+        "use": "legacy interface bridge"
+      },
+      {
+        "standard": "DICOM + DICOMweb (QIDO-RS, WADO-RS, STOW-RS)",
+        "use": "imaging metadata and objects"
+      },
+      {
+        "standard": "IHE profiles (PIXm, PDQm, XDS.b)",
+        "use": "identity and document federation"
+      },
+      {
+        "standard": "OMOP CDM v5.4 / v6.0",
+        "use": "research analytics schema",
+        "url": "https://ohdsi.org"
+      },
+      {
+        "standard": "openEHR archetypes",
+        "use": "optional clinical modeling reference"
+      },
+      {
+        "standard": "IEEE 11073-20601 + Continua Design Guidelines",
+        "use": "personal health device interoperability"
+      },
+      {
+        "standard": "CDISC CDASH/SDTM",
+        "use": "regulated clinical trial submissions"
+      },
+      {
+        "standard": "W3C PROV-O",
+        "use": "provenance graph serialization"
+      },
+      {
+        "standard": "SMART on FHIR + OAuth 2.0 / OpenID Connect",
+        "use": "app authorization"
+      }
+    ],
+    "fhirCategoryMapping": [
+      {
+        "metricCategory": "VS",
+        "fhirProfile": "http://hl7.org/fhir/StructureDefinition/observation (vitalsigns); US Core Vital Signs",
+        "resource": "Observation"
+      },
+      {
+        "metricCategory": "CV/ME/RN/HM/HP/EL (labs)",
+        "fhirProfile": "US Core Observation Laboratory + DiagnosticReport",
+        "resource": "Observation, DiagnosticReport"
+      },
+      {
+        "metricCategory": "PR",
+        "resource": "Observation (survey), QuestionnaireResponse"
+      },
+      {
+        "metricCategory": "PD",
+        "resource": "Observation"
+      },
+      {
+        "metricCategory": "PH/QO",
+        "resource": "Measure / MeasureReport (FHIR Clinical Guidelines & Quality Measures IG)"
+      },
+      {
+        "metricCategory": "SD",
+        "fhirProfile": "US Core Social History Observation",
+        "resource": "Observation"
+      },
+      {
+        "metricCategory": "AI",
+        "resource": "Observation (document category) or ModelCard resource"
+      }
+    ],
+    "referenceStandardsIndex": [
+      {
+        "name": "HL7 FHIR",
+        "url": "http://hl7.org/fhir"
+      },
+      {
+        "name": "LOINC",
+        "url": "https://loinc.org"
+      },
+      {
+        "name": "SNOMED International",
+        "url": "https://www.snomed.org"
+      },
+      {
+        "name": "WHO Classifications (ICD-11)",
+        "url": "https://www.who.int/standards/classifications"
+      },
+      {
+        "name": "RxNorm (NLM)",
+        "url": "https://www.nlm.nih.gov/research/umls/rxnorm"
+      },
+      {
+        "name": "VSAC Value Set Authority Center (NLM)",
+        "url": "https://vsac.nlm.nih.gov"
+      },
+      {
+        "name": "UCUM",
+        "url": "https://ucum.org"
+      },
+      {
+        "name": "OHDSI OMOP CDM",
+        "url": "https://ohdsi.org"
+      },
+      {
+        "name": "CDISC",
+        "url": "https://www.cdisc.org"
+      },
+      {
+        "name": "Personal Connected Health Alliance (Continua)",
+        "url": "https://www.pchalliance.org"
+      },
+      {
+        "name": "ISO/IEC 27001:2022",
+        "url": "https://www.iso.org/standard/27001"
+      },
+      {
+        "name": "NIST Cybersecurity Framework / SP 800-53 Rev.5",
+        "url": "https://csrc.nist.gov"
+      },
+      {
+        "name": "NIST AI Risk Management Framework (AI RMF 1.0)",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+      },
+      {
+        "name": "CMS Quality Measures / eCQMs",
+        "url": "https://www.cms.gov"
+      },
+      {
+        "name": "CDC NHSN (HAI surveillance)",
+        "url": "https://www.cdc.gov/nhsn"
+      },
+      {
+        "name": "WHO Global Health Observatory methods",
+        "url": "https://www.who.int/data/gho"
+      }
+    ]
+  },
+  "metricCatalog": {
+    "taxonomy": [
+      {
+        "code": "VS",
+        "name": "Vital Signs and Anthropometrics"
+      },
+      {
+        "code": "CV",
+        "name": "Cardiovascular and Lipids"
+      },
+      {
+        "code": "ME",
+        "name": "Metabolic and Endocrine"
+      },
+      {
+        "code": "RN",
+        "name": "Renal"
+      },
+      {
+        "code": "HM",
+        "name": "Hematology and Coagulation"
+      },
+      {
+        "code": "HP",
+        "name": "Hepatic and Inflammatory"
+      },
+      {
+        "code": "EL",
+        "name": "Electrolytes and Minerals"
+      },
+      {
+        "code": "RS",
+        "name": "Respiratory and Pulmonary Function"
+      },
+      {
+        "code": "PR",
+        "name": "Patient-Reported Outcomes"
+      },
+      {
+        "code": "NU",
+        "name": "Neurological and Functional Status"
+      },
+      {
+        "code": "PD",
+        "name": "Pediatric and Obstetric"
+      },
+      {
+        "code": "PH",
+        "name": "Population Health and Epidemiology"
+      },
+      {
+        "code": "QO",
+        "name": "Care Quality and Operations"
+      },
+      {
+        "code": "SD",
+        "name": "Social Determinants of Health"
+      },
+      {
+        "code": "AI",
+        "name": "AI/ML Model Performance & Fairness"
+      }
+    ],
+    "metricSchema": {
+      "description": "every metric object in catalog.metrics conforms to this field contract",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true,
+          "rule": "immutable identifier"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "canonicalName",
+          "type": "string",
+          "required": true,
+          "rule": "snake_case, stable across versions"
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "required": true,
+          "rule": "taxonomy code"
+        },
+        {
+          "name": "definition",
+          "type": "string",
+          "required": true,
+          "rule": "unambiguous clinical or statistical definition"
+        },
+        {
+          "name": "valueDomain",
+          "type": "object",
+          "required": "for raw measurements"
+        },
+        {
+          "name": "calculation",
+          "type": "object",
+          "required": "for derived metrics"
+        },
+        {
+          "name": "terminology",
+          "type": "object",
+          "required": "for coded/observable metrics; LOINC key mandatory for lab and vital observables"
+        },
+        {
+          "name": "fhir",
+          "type": "object",
+          "required": true
+        },
+        {
+          "name": "capture",
+          "type": "object",
+          "required": "for raw measurements"
+        },
+        {
+          "name": "interpretation",
+          "type": "object",
+          "required": "clinical classes or reference ranges with evidence source"
+        },
+        {
+          "name": "validation",
+          "type": "array",
+          "required": true,
+          "rule": "ids from validationRuleLibrary"
+        },
+        {
+          "name": "stratifications",
+          "type": "array",
+          "required": true
+        },
+        {
+          "name": "privacyTier",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "qualityTargets",
+          "type": "object",
+          "required": true
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "reviewCycleMonths",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "name": "evidence",
+          "type": "array",
+          "required": true
+        }
+      ]
+    },
+    "captureProtocols": [
+      {
+        "id": "CP-BP-001",
+        "name": "Office/Ambulatory Blood Pressure",
+        "steps": [
+          "patient seated 5 minutes, back supported, legs uncrossed",
+          "arm supported at heart level, correct cuff size",
+          "no caffeine, exercise, or smoking for 30 minutes prior",
+          "obtain 2 readings at least 1 minute apart; record both and the average"
+        ],
+        "constraints": [
+          "use device validated per ISO 81060-2 or equivalent",
+          "record cuff size, arm, and posture as provenance"
+        ],
+        "reference": "2017 ACC/AHA Hypertension Guideline"
+      },
+      {
+        "id": "CP-HR-001",
+        "name": "Heart Rate",
+        "steps": [
+          "radial or apical pulse counted 30-60 seconds",
+          "state rhythm regularity as provenance",
+          "for wearables, require photoplethysmography validation evidence"
+        ],
+        "constraints": [
+          "document activity state at capture (rest/active)"
+        ]
+      },
+      {
+        "id": "CP-RR-001",
+        "name": "Respiratory Rate",
+        "steps": [
+          "count full 60 seconds without announcing the count",
+          "record patient state (rest, sleeping, distressed)"
+        ],
+        "constraints": [
+          "automated capnography accepted with device metadata"
+        ]
+      },
+      {
+        "id": "CP-TEMP-001",
+        "name": "Body Temperature",
+        "steps": [
+          "record route (oral, tympanic, temporal, axillary, rectal, core)",
+          "apply route-specific normal interpretation"
+        ],
+        "constraints": [
+          "routes MUST NOT be mixed in trend analysis without route normalization"
+        ]
+      },
+      {
+        "id": "CP-POX-001",
+        "name": "Pulse Oximetry",
+        "steps": [
+          "warm, perfused digit; motion minimized",
+          "average over >= 30 seconds",
+          "record device model and firmware"
+        ],
+        "constraints": [
+          "device per ISO 80601-2-61",
+          "capture perfusion index where available",
+          "note pigment-related accuracy bias in interpretation (equity requirement)"
+        ]
+      },
+      {
+        "id": "CP-ANTH-001",
+        "name": "Height, Weight, BMI",
+        "steps": [
+          "stadiometer head in Frankfort plane",
+          "calibrated scale, light clothing, no shoes",
+          "BMI computed as weight_kg / height_m^2 at metric precision"
+        ],
+        "constraints": [
+          "scale calibration traceability <= 12 months (VR-CAL)"
+        ]
+      },
+      {
+        "id": "CP-WAIST-001",
+        "name": "Waist Circumference (WHO protocol)",
+        "steps": [
+          "midpoint between lower rib margin and iliac crest",
+          "tape snug, horizontal, at end of normal expiration",
+          "two readings within 1 cm; record mean"
+        ],
+        "reference": "WHO STEPS protocol"
+      },
+      {
+        "id": "CP-VEN-001",
+        "name": "Venipuncture and Specimen Handling",
+        "steps": [
+          "correct tube type and order of draw per CLSI GP41",
+          "label at bedside with two identifiers",
+          "process within stability window per analyte"
+        ],
+        "constraints": [
+          "fasting metrics require >= 8 h fast, water permitted, recorded as provenance"
+        ]
+      },
+      {
+        "id": "CP-SPIR-001",
+        "name": "Spirometry (ATS/ERS 2019)",
+        "steps": [
+          "3 acceptable maneuvers; best 2 within 150 mL repeatability",
+          "report pre- and post-bronchodilator separately",
+          "apply GLI reference equations"
+        ],
+        "constraints": [
+          "technique quality grade recorded"
+        ],
+        "reference": "ATS/ERS 2019 technical standard"
+      },
+      {
+        "id": "CP-ECG-001",
+        "name": "12-Lead ECG",
+        "steps": [
+          "10-second recording, 25 mm/s, 10 mm/mV",
+          "electrode placement per AHA/ACCF/HRS recommendations"
+        ],
+        "constraints": [
+          "interval measurements must state algorithm manufacturer"
+        ]
+      },
+      {
+        "id": "CP-PRO-001",
+        "name": "Patient-Reported Outcome Administration",
+        "steps": [
+          "instruments administered electronically where possible with identical item wording and order",
+          "recall window stated in question text",
+          "language versions must be certified translations"
+        ],
+        "constraints": [
+          "PROs are never imputed from other data for clinical use"
+        ]
+      },
+      {
+        "id": "CP-PED-001",
+        "name": "Pediatric Measurement",
+        "steps": [
+          "recumbent length < 24 months; standing height >= 24 months",
+          "head circumference per WHO technique",
+          "growth interpretation uses WHO Child Growth Standards (0-5 y) and WHO Reference 5-19 y"
+        ],
+        "constraints": [
+          "growth percentiles, not raw values, drive clinical interpretation"
+        ]
+      },
+      {
+        "id": "CP-SDOH-001",
+        "name": "SDOH Screening Administration",
+        "steps": [
+          "administer validated tool (e.g., Gravity Project, CMS HRSN) in private setting",
+          "use certified translation if language preference is not primary",
+          "document patient consent for community referral"
+        ],
+        "constraints": [
+          "responses MUST NOT be used for care denial or punitive administrative actions",
+          "linkage to community resources requires explicit patient consent"
+        ]
+      }
+    ],
+    "validationRuleLibrary": [
+      {
+        "id": "VR-RANGE",
+        "rule": "value within metric permittedRange; violations flagged, not auto-corrected"
+      },
+      {
+        "id": "VR-UNIT",
+        "rule": "unit code resolvable in UCUM and equal to a metric-allowed unit"
+      },
+      {
+        "id": "VR-DUP",
+        "rule": "duplicate detection on (patient, metric, effectiveDateTime, value); duplicates quarantined"
+      },
+      {
+        "id": "VR-TIMING",
+        "rule": "effectiveDateTime not in future and within capture-protocol timing constraints"
+      },
+      {
+        "id": "VR-DELTA",
+        "rule": "within-subject change exceeds physiologic delta threshold -> specialist review queue"
+      },
+      {
+        "id": "VR-X-SBP-DBP",
+        "rule": "cross-field: systolic MUST be strictly greater than diastolic for the same measurement event"
+      },
+      {
+        "id": "VR-X-BMI",
+        "rule": "cross-field: BMI consistent with height/weight within rounding tolerance"
+      },
+      {
+        "id": "VR-CAL",
+        "rule": "device calibration current at capture time; expired calibration quarantines data for regulated use"
+      },
+      {
+        "id": "VR-REF",
+        "rule": "local laboratory reference range binding current; expired ranges block result interpretation"
+      },
+      {
+        "id": "VR-NULL",
+        "rule": "missing values use only allowed DataAbsentReason codes"
+      },
+      {
+        "id": "VR-ID",
+        "rule": "patient identity resolved to golden record before validation completes"
+      },
+      {
+        "id": "VR-PROV",
+        "rule": "source, actor, device, and timestamp present; else record fails DQ-10"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "M-VS-001",
+        "name": "Systolic Blood Pressure",
+        "canonicalName": "systolic_blood_pressure",
+        "category": "VS",
+        "definition": "Peak arterial pressure during left ventricular systole, measured non-invasively at the brachial artery.",
+        "valueDomain": {
+          "dataType": "quantity",
+          "unit": "mm[Hg]",
+          "permittedRange": {
+            "minInclusive": 20,
+            "maxInclusive": 400
+          },
+          "decimalPlaces": 0,
+          "criticalLimits": {
+            "low": 70,
+            "high": 220,
+            "action": "immediate clinical escalation"
+          }
+        },
+        "terminology": {
+          "loinc": "8480-6"
+        },
+        "fhir": {
+          "resource": "Observation",
+          "profile": "http://hl7.org/fhir/StructureDefinition/blood-pressure",
+          "category": "vital-signs",
+          "component": true
+        },
+        "capture": {
+          "protocol": "CP-BP-001"
+        },
+        "interpretation": {
+          "population": "adults >= 18 y",
+          "source": "2017 ACC/AHA Hypertension Guideline",
+          "classes": [
+            {
+              "label": "Normal",
+              "maxExclusive": 120
+            },
+            {
+              "label": "Elevated",
+              "minInclusive": 120,
+              "maxExclusive": 130
+            },
+            {
+              "label": "Stage 1 hypertension",
+              "minInclusive": 130,
+              "maxExclusive": 140
+            },
+            {
+              "label": "Stage 2 hypertension",
+              "minInclusive": 140
+            },
+            {
+              "label": "Hypertensive crisis",
+              "minExclusive": 180,
+              "action": "immediate confirmation and management"
+            }
+          ]
+        },
+        "validation": [
+          "VR-RANGE",
+          "VR-UNIT",
+          "VR-DUP",
+          "VR-TIMING",
+          "VR-X-SBP-DBP",
+          "VR-PROV"
+        ],
+        "stratifications": [
+          "age_band",
+          "sex_at_birth"
+        ],
+        "qualityTargets": {
+          "completeness": 0.99,
+          "plausibility": 0.99
+        },
+        "privacyTier": "PT-2",
+        "status": "active",
+        "version": "1.0.0",
+        "reviewCycleMonths": 12,
+        "evidence": [
+          "Whelton PK et al., Hypertension. 2018;71:e13-e115 (2017 ACC/AHA Guideline)"
+        ]
+      },
+      {
+        "id": "M-SD-001",
+        "name": "Housing Stability",
+        "canonicalName": "housing_stability",
+        "category": "SD",
+        "definition": "Assessment of patient's current housing situation and risk of homelessness, per Gravity Project standards.",
+        "valueDomain": {
+          "dataType": "coded",
+          "permittedValues": {
+            "system": "http://loinc.org",
+            "valueSet": "LL1400-8"
+          }
+        },
+        "terminology": {
+          "loinc": "97069-9"
+        },
+        "fhir": {
+          "resource": "Observation",
+          "profile": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observation-clinical-test",
+          "category": "social-history"
+        },
+        "capture": {
+          "protocol": "CP-SDOH-001"
+        },
+        "interpretation": {
+          "source": "Gravity Project / CMS HRSN",
+          "notes": [
+            "Positive screens trigger referral workflows to community-based organizations"
+          ]
+        },
+        "validation": [
+          "VR-NULL",
+          "VR-PROV"
+        ],
+        "stratifications": [
+          "age_band",
+          "geography_level",
+          "payer_type"
+        ],
+        "qualityTargets": {
+          "completeness": 0.9,
+          "plausibility": 1
+        },
+        "privacyTier": "PT-3",
+        "status": "active",
+        "version": "1.0.0",
+        "reviewCycleMonths": 12,
+        "evidence": [
+          "Gravity Project SDOH Assessment Recommendations",
+          "CMS HRSN Screening Tools"
+        ]
+      },
+      {
+        "id": "M-AI-001",
+        "name": "Model Fairness Disparity Ratio",
+        "canonicalName": "model_fairness_disparity_ratio",
+        "category": "AI",
+        "definition": "Ratio of a model's performance metric (e.g., F1-score, True Positive Rate) for a protected demographic group compared to the reference group.",
+        "valueDomain": {
+          "dataType": "ratio",
+          "permittedRange": {
+            "minInclusive": 0.5,
+            "maxInclusive": 2
+          },
+          "decimalPlaces": 2
+        },
+        "terminology": {
+          "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-observation-category",
+          "code": "model-fairness"
+        },
+        "fhir": {
+          "resource": "Observation",
+          "category": "document"
+        },
+        "calculation": {
+          "formula": "metric_protected_group / metric_reference_group"
+        },
+        "interpretation": {
+          "source": "NIST AI RMF, WHO Ethics Guidelines",
+          "classes": [
+            {
+              "label": "Acceptable parity",
+              "minInclusive": 0.8,
+              "maxInclusive": 1.25
+            },
+            {
+              "label": "Requires mitigation",
+              "maxExclusive": 0.8,
+              "minExclusive": 1.25
+            }
+          ]
+        },
+        "validation": [
+          "VR-RANGE",
+          "VR-PROV"
+        ],
+        "stratifications": [
+          "race_ethnicity",
+          "sex_at_birth",
+          "age_band",
+          "model_version"
+        ],
+        "qualityTargets": {
+          "completeness": 1,
+          "plausibility": 1
+        },
+        "privacyTier": "PT-2",
+        "status": "active",
+        "version": "1.0.0",
+        "reviewCycleMonths": 6,
+        "evidence": [
+          "NIST AI Risk Management Framework 1.0",
+          "WHO Ethics and Governance of AI for Health"
+        ]
+      }
+    ]
+  },
+  "dataQuality": {
+    "frameworksAligned": [
+      "DAMA-DMBOK2 Data Quality",
+      "ISO 8000-8",
+      "WHO data quality assurance guidance",
+      "KHIN/ONC DQA playbooks",
+      "NIST AI RMF"
+    ],
+    "dimensions": [
+      {
+        "id": "DQ-01",
+        "name": "Completeness",
+        "definition": "proportion of expected required values that are present and non-missing",
+        "formula": "1 - (missing_required / expected_required)",
+        "defaultThreshold": 0.99,
+        "measurementFrequency": "daily"
+      },
+      {
+        "id": "DQ-02",
+        "name": "Accuracy",
+        "definition": "concordance with an accepted reference (re-abstraction sample, gold-standard instrument)",
+        "formula": "agreements / sampled_records",
+        "defaultThreshold": 0.98,
+        "measurementFrequency": "quarterly sampling"
+      },
+      {
+        "id": "DQ-03",
+        "name": "Conformance (Validity)",
+        "definition": "proportion of values conforming to type, unit, format, and terminology binding",
+        "formula": "conforming_values / total_values",
+        "defaultThreshold": 0.99,
+        "measurementFrequency": "continuous"
+      },
+      {
+        "id": "DQ-04",
+        "name": "Consistency",
+        "definition": "proportion of records passing cross-field and cross-source rules (e.g., VR-X-SBP-DBP)",
+        "formula": "records_passing_cross_rules / total_records",
+        "defaultThreshold": 0.99,
+        "measurementFrequency": "continuous"
+      },
+      {
+        "id": "DQ-05",
+        "name": "Timeliness",
+        "definition": "latency from clinical event to availability in the validated store",
+        "formula": "P95(capture_to_available_minutes)",
+        "defaultThreshold": {
+          "clinicalData": 1440,
+          "claimsDerived": 10080
+        },
+        "measurementFrequency": "daily"
+      },
+      {
+        "id": "DQ-06",
+        "name": "Uniqueness",
+        "definition": "absence of duplicate records for the same real-world fact",
+        "formula": "1 - (duplicate_records / total_records)",
+        "defaultThreshold": 0.999,
+        "measurementFrequency": "daily"
+      },
+      {
+        "id": "DQ-07",
+        "name": "Referential Integrity",
+        "definition": "proportion of foreign-key references resolvable (patient, encounter, device, terminology codes)",
+        "formula": "resolvable_references / total_references",
+        "defaultThreshold": 0.999,
+        "measurementFrequency": "continuous"
+      },
+      {
+        "id": "DQ-08",
+        "name": "Precision Concordance",
+        "definition": "values reported to the metric-declared decimal places with unit conformance at 100 percent",
+        "formula": "concordant_precision_values / total_values",
+        "defaultThreshold": 1,
+        "measurementFrequency": "continuous"
+      },
+      {
+        "id": "DQ-09",
+        "name": "Plausibility",
+        "definition": "proportion of values within physiologic or logically expected bounds; outliers flagged for review",
+        "formula": "in_range_values / total_values",
+        "defaultThreshold": 0.99,
+        "measurementFrequency": "continuous"
+      },
+      {
+        "id": "DQ-10",
+        "name": "Provenance Completeness",
+        "definition": "records carrying complete source, actor, device, and timestamp provenance",
+        "formula": "records_with_full_provenance / total_records",
+        "defaultThreshold": 1,
+        "measurementFrequency": "continuous"
+      },
+      {
+        "id": "DQ-11",
+        "name": "Fairness",
+        "definition": "absence of unjustified disparate impact across protected demographic groups in derived metrics or AI models",
+        "formula": "1 - max_disparity_ratio",
+        "defaultThreshold": 0.8,
+        "measurementFrequency": "quarterly"
+      },
+      {
+        "id": "DQ-12",
+        "name": "Explainability",
+        "definition": "proportion of AI-driven metric outputs accompanied by interpretable feature attributions or confidence intervals",
+        "formula": "explained_outputs / total_ai_outputs",
+        "defaultThreshold": 0.95,
+        "measurementFrequency": "continuous"
+      }
+    ],
+    "qualityGates": [
+      {
+        "gate": "G1-ingestion",
+        "rule": "batch or stream MUST pass DQ-03, DQ-07, DQ-10 >= threshold before entering validated store",
+        "onFailure": "quarantine + alert within 5 minutes"
+      },
+      {
+        "gate": "G2-analytic-readiness",
+        "rule": "dataset MUST publish a DQ scorecard covering all 12 dimensions before it may feed analyses or publications"
+      },
+      {
+        "gate": "G3-publication",
+        "rule": "published outputs MUST pass small-cell suppression and de-identification verification (see publicationStandards)"
+      },
+      {
+        "gate": "G4-ai-deployment",
+        "rule": "AI/ML models MUST pass DQ-11 (Fairness) and DQ-12 (Explainability) thresholds and AIB sign-off before production promotion"
+      }
+    ],
+    "defectManagement": {
+      "taxonomy": [
+        {
+          "class": "capture-error",
+          "examples": [
+            "wrong unit entered",
+            "wrong patient context",
+            "device miscalibration"
+          ]
+        },
+        {
+          "class": "transmission-error",
+          "examples": [
+            "truncation",
+            "encoding loss",
+            "message reorder/drop"
+          ]
+        },
+        {
+          "class": "transformation-error",
+          "examples": [
+            "mapping defect",
+            "conversion factor error",
+            "join fan-out"
+          ]
+        },
+        {
+          "class": "identity-error",
+          "examples": [
+            "duplicate person record",
+            "overlay",
+            "unresolved match"
+          ]
+        },
+        {
+          "class": "model-error",
+          "examples": [
+            "incorrect derived formula",
+            "stale reference range",
+            "algorithmic bias drift"
+          ]
+        },
+        {
+          "class": "synthetic-data-error",
+          "examples": [
+            "privacy leakage",
+            "statistical fidelity degradation"
+          ]
+        }
+      ],
+      "severity": [
+        {
+          "level": "SEV1",
+          "definition": "patient-safety-relevant, published-output corruption, or severe algorithmic bias",
+          "response": "stop-the-line, immediate CAR"
+        },
+        {
+          "level": "SEV2",
+          "definition": "materially wrong values reaching analysis or model performance degradation",
+          "response": "correct within 1 business day + CAR"
+        },
+        {
+          "level": "SEV3",
+          "definition": "contained, non-propagating defects",
+          "response": "correct within sprint"
+        },
+        {
+          "level": "SEV4",
+          "definition": "cosmetic or metadata-only",
+          "response": "batch fix"
+        }
+      ],
+      "causalAnalysisMethods": [
+        "5 Whys",
+        "Ishikawa (fishbone)",
+        "Pareto analysis of defect classes",
+        "fault tree analysis for SEV1",
+        "8D report"
+      ],
+      "verification": "every corrective action MUST be verified by re-measuring the owning DQ dimension over >= 30 days or >= 1 full cycle before closure"
+    }
+  },
+  "captureStandards": {
+    "channels": [
+      {
+        "channel": "EHR/clinical documentation",
+        "requirements": [
+          "structured capture preferred over free text",
+          "default unit and range enforced in UI",
+          "change history retained"
+        ]
+      },
+      {
+        "channel": "medical devices",
+        "requirements": [
+          "IEEE 11073 MDC-coded types",
+          "device identifier, serial, calibration state recorded",
+          "clock synchronization within 1 second via NTP"
+        ]
+      },
+      {
+        "channel": "wearables and mHealth",
+        "requirements": [
+          "validated per applicable ISO 81060-2 / Continua",
+          "raw sensor retention configurable with privacy tier respected",
+          "activity-state context mandatory for heart-rate metrics"
+        ]
+      },
+      {
+        "channel": "patient-entered (portal/app)",
+        "requirements": [
+          "instrument item text verbatim",
+          "declined responses coded asked-declined",
+          "pediatric/assisted capture flagged"
+        ]
+      },
+      {
+        "channel": "claims and administrative",
+        "requirements": [
+          "ICD/CPT/HCPCS coded",
+          "cross-walk table to clinical codes maintained and versioned"
+        ]
+      }
+    ],
+    "temporalStandards": {
+      "canonicalTime": "UTC storage; RFC 3339 with offset at the edge",
+      "clockSync": "NTP across capture devices; drift > 2 seconds blocks regulated capture (VR-CAL extension)",
+      "eventTimeVsProcessingTime": "both recorded; analytics uses event time by default",
+      "effectiveVsIssued": "FHIR Observation.effectiveDateTime is the clinical time; authored/issued times retained as provenance"
+    },
+    "personIdentity": {
+      "goldenRecord": "master patient index with deterministic and probabilistic matching",
+      "matchingPolicy": {
+        "autoMatchThreshold": 0.95,
+        "reviewBand": "0.80-0.94 human review",
+        "rejectBelow": 0.8
+      },
+      "rules": [
+        "no merge without steward approval",
+        "merges reversible for 90 days",
+        "overlays (false positives) tracked as SEV2 identity defects"
+      ]
+    },
+    "enteredInError": {
+      "policy": "never delete; flag per FHIR entered-in-error; exclude from all analytics via semantic filter, not manual deletion"
+    }
+  },
+  "analysisStandards": {
+    "descriptive": [
+      "report n for every group; never present percentages without denominators",
+      "use median and IQR for skewed distributions; mean and SD only when approximately normal or n large with caveat",
+      "state distributional assumptions and how they were checked"
+    ],
+    "aggregationRules": [
+      {
+        "rule": "aggregation MUST respect metric permittedRange semantics: rates aggregate by weighted denominators, never by averaging rates",
+        "id": "AR-01"
+      },
+      {
+        "rule": "ISO 8601 week/month boundaries; timezone declared for day boundaries",
+        "id": "AR-02"
+      },
+      {
+        "rule": "derived metric version recorded with every aggregate (formula version + input dataset hash)",
+        "id": "AR-03"
+      }
+    ],
+    "smallCellSuppression": {
+      "primaryThreshold": "suppress cells with count < 11 (CMS norm)",
+      "complementarySuppression": "apply to prevent back-calculation of suppressed cells",
+      "alternatives": [
+        "rounding-based suppression",
+        "differential privacy for public tables with governed epsilon"
+      ]
+    },
+    "riskAdjustment": {
+      "approvedModels": [
+        "Charlson Comorbidity Index",
+        "Elixhauser (van Walraven weights)",
+        "CMS hierarchical logistic models for readmissions",
+        "APR-DRG/SOI-ROM where licensed"
+      ],
+      "requirements": [
+        "model version pinned",
+        "C-statistic and calibration slope reported",
+        "assessed for performance across demographic subgroups (bias testing)",
+        "small-hospital shrinkage via hierarchical (mixed) models"
+      ]
+    },
+    "standardization": {
+      "direct": "requires stable age-specific rates; declare standard population (WHO 2000-2025 or US 2000)",
+      "indirect": "SMR = observed / expected; use when sparse counts",
+      "presentation": "always accompany standardized values with crude rates and confidence intervals"
+    },
+    "missingDataAnalysis": {
+      "mechanismAssessment": "document assumed MCAR/MAR/MNAR with rationale",
+      "imputation": "multiple imputation with m >= 5 using chained equations for MAR; no single mean imputation for primary analyses; PROs and SDOH never imputed for clinical decisions",
+      "reporting": "report complete-case and imputed results; Rubin pooling rules for MI"
+    },
+    "outlierPolicy": {
+      "detection": [
+        "Tukey IQR (1.5x flag, 3.0x extreme)",
+        "modified z-score > 3.5 (Iglewicz-Hoaglin, MAD-based)",
+        "biologically implausible per metric VR-DELTA"
+      ],
+      "policy": "flag-and-review; silent deletion FORBIDDEN; every exclusion logged with rule id and reviewer"
+    },
+    "statisticalProcessControl": {
+      "purpose": "CMMI Level 4/5 quantitative management of data processes and clinical metric performance",
+      "chartSelection": [
+        {
+          "data": "continuous, individual values",
+          "chart": "I-MR"
+        },
+        {
+          "data": "continuous, rational subgroups",
+          "chart": "X-bar R"
+        },
+        {
+          "data": "proportion defective",
+          "chart": "p-chart (variable limits)"
+        },
+        {
+          "data": "count of defects",
+          "chart": "u-chart or c-chart"
+        }
+      ],
+      "capability": "Cp/Cpk computed for stable capture subprocesses; minimum requirement Cpk >= 1.33 for safety-critical capture",
+      "stabilityRules": "Nelson rules 1-8 evaluated on every control chart; any rule violation opens a CAR ticket",
+      "rules": [
+        {
+          "rule": 1,
+          "description": "one point beyond 3 sigma from centerline"
+        },
+        {
+          "rule": 2,
+          "description": "nine points on same side of centerline"
+        },
+        {
+          "rule": 3,
+          "description": "six points steadily increasing or decreasing"
+        },
+        {
+          "rule": 4,
+          "description": "fourteen points alternating up and down"
+        },
+        {
+          "rule": 5,
+          "description": "two of three consecutive points beyond 2 sigma, same side"
+        },
+        {
+          "rule": 6,
+          "description": "four of five consecutive points beyond 1 sigma, same side"
+        },
+        {
+          "rule": 7,
+          "description": "fifteen points within 1 sigma, both sides (stratification)"
+        },
+        {
+          "rule": 8,
+          "description": "eight points beyond 1 sigma, both sides (mixture)"
+        }
+      ]
+    },
+    "inferential": {
+      "alpha": 0.05,
+      "effectSizes": "report effect size with every test (RR, OR, HR, mean difference, SMD) plus 95% CI; p-values alone are insufficient",
+      "multiplicity": [
+        "Benjamini-Hochberg FDR for exploratory panels",
+        "Bonferroni or hierarchical testing for confirmatory claims"
+      ],
+      "survival": "Kaplan-Meier with log-rank; Cox PH with Schoenfeld residual proportionality check",
+      "clusteredData": "mixed-effects models with appropriate random effects (e.g., hospital); report ICC",
+      "causalLanguage": "causal claims require design justification (target trial emulation, DAGs); associational language otherwise"
+    },
+    "modelGovernance": {
+      "registry": "all predictive models registered with training data hash, feature list, metrics, owner, and review date",
+      "monitoring": [
+        "data drift via Population Stability Index (PSI) per feature",
+        "performance drift against holdout",
+        "subgroup fairness metrics (demographic parity, equalized odds) quarterly"
+      ],
+      "retraining": "triggered by drift thresholds or scheduled review; retrained models require AIB approval before promotion",
+      "humanOversight": "clinical decision support outputs MUST keep clinician-in-the-loop and display base rates and uncertainty",
+      "frameworkAlignment": "NIST AI RMF (Map, Measure, Manage, Govern) and EU AI Act high-risk system requirements"
+    },
+    "reproducibility": {
+      "requirements": [
+        "pinned execution environments (container digests)",
+        "deterministic seeds for all stochastic steps",
+        "dataset and code versioning (dataset hash + repo commit)",
+        "analyses feeding publications preregistered where feasible",
+        "peer review of analysis code for regulatory-grade outputs"
+      ]
+    }
+  },
+  "publicationStandards": {
+    "fairPrinciples": {
+      "F": "F1 persistent unique identifiers (DOI for datasets, UUID for entities); F2 rich metadata; F3 metadata includes the data identifier; F4 indexed in searchable registry",
+      "A": "A1 retrievable by standard protocol (HTTPS/FHIR); A1.1 open for public tier, authenticated for restricted tiers; A2 metadata retained even when data deaccessioned",
+      "I": "I1 standard vocabularies (LOINC/SNOMED/UCUM URIs); I2 FHIR resource references; I3 qualified cross-references to other datasets",
+      "R": "R1 provenance (W3C PROV), license, and community standards (this standard) declared; R1.1 lineage of every derived field; R1.2 access-use conditions; R1.3 community-endorsed guidelines cited"
+    },
+    "publicationTiers": [
+      {
+        "tier": "PUBLIC-AGGREGATE",
+        "privacyTier": "PT-1",
+        "controls": [
+          "k-anonymity k >= 11",
+          "small-cell suppression",
+          "CC BY 4.0",
+          "DOI-minted snapshots"
+        ]
+      },
+      {
+        "tier": "PARTNER",
+        "privacyTier": "PT-1/PT-4",
+        "controls": [
+          "data use agreement",
+          "limited dataset per HIPAA limited data set",
+          "k >= 5",
+          "audit of downloads"
+        ]
+      },
+      {
+        "tier": "RESEARCH",
+        "privacyTier": "PT-4",
+        "controls": [
+          "IRB/REC approval",
+          "honest-broker mediation",
+          "pseudonymized only",
+          "secure enclave access"
+        ]
+      },
+      {
+        "tier": "OPERATIONAL",
+        "privacyTier": "PT-2/PT-3",
+        "controls": [
+          "RBAC/ABAC",
+          "break-glass with justification",
+          "full audit"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "format": "FHIR NDJSON",
+        "use": "bulk export ($export); one line per resource; UTF-8"
+      },
+      {
+        "format": "CSV (RFC 4180)",
+        "use": "tabular exchange; UTF-8; comma-delimited; RFC 3339 timestamps; dot decimal separator"
+      },
+      {
+        "format": "Apache Parquet",
+        "use": "analytic distributions; schema evolution governed"
+      },
+      {
+        "format": "JSON",
+        "use": "API and registry outputs; Problem Details (RFC 9457) for errors"
+      },
+      {
+        "format": "JSON-LD",
+        "use": "linked-data metadata for FAIR discoverability"
+      }
+    ],
+    "datasetMetadata": {
+      "standard": "DataCite Metadata Kernel 4.4",
+      "requiredFields": [
+        "identifier (DOI)",
+        "creator",
+        "title",
+        "publisher",
+        "publicationYear",
+        "resourceType",
+        "version",
+        "rights",
+        "sizes",
+        "formats"
+      ],
+      "dataDictionaryRequiredPerField": [
+        "name",
+        "type",
+        "unit (UCUM) or terminology system+version",
+        "allowed values/range",
+        "missing-data codes",
+        "source metric id and version",
+        "provenance summary"
+      ],
+      "releaseCadence": {
+        "operationalDashboards": "monthly",
+        "publicQualityReports": "quarterly",
+        "researchSnapshots": "annual or per-study"
+      }
+    },
+    "reportingChecklists": [
+      {
+        "name": "STROBE",
+        "appliesTo": "observational studies"
+      },
+      {
+        "name": "RECORD",
+        "appliesTo": "routinely collected health data"
+      },
+      {
+        "name": "CONSORT",
+        "appliesTo": "randomized trials"
+      },
+      {
+        "name": "PRISMA",
+        "appliesTo": "systematic reviews"
+      },
+      {
+        "name": "TRIPOD+AI",
+        "appliesTo": "prediction model reports"
+      },
+      {
+        "name": "SQUIRE 2.0",
+        "appliesTo": "quality improvement studies"
+      },
+      {
+        "name": "STARD",
+        "appliesTo": "diagnostic accuracy studies"
+      },
+      {
+        "name": "CARE",
+        "appliesTo": "case reports"
+      }
+    ],
+    "suppressionAndEmbargo": {
+      "rules": [
+        "rare-disease re-identification review before publication",
+        "legal/ethical holds freeze publication of affected cohorts",
+        "quality scores below G2 gate block publication until remediated"
+      ]
+    },
+    "apiStandards": {
+      "protocols": [
+        "HTTPS REST",
+        "HL7 FHIR (REST)",
+        "SMART on FHIR authorization"
+      ],
+      "specifications": [
+        "OpenAPI 3.1 for non-FHIR APIs",
+        "FHIR CapabilityStatement for FHIR surfaces",
+        "FHIR Bulk Data Access for population export"
+      ],
+      "evolution": [
+        "versioned paths (/v1)",
+        "Sunset header (RFC 8594) for deprecations",
+        "problem+json error bodies (RFC 9457)"
+      ],
+      "security": [
+        "OAuth 2.0 scopes aligned to US Core (patient/*.read, user/*.read)",
+        "PKCE for public clients",
+        "webhook payloads HMAC-SHA256 signed"
+      ]
+    }
+  },
+  "privacySecurityTrust": {
+    "regulatoryBasis": [
+      {
+        "regulation": "HIPAA Privacy Rule",
+        "applies": "PHI use and disclosure"
+      },
+      {
+        "regulation": "HIPAA Security Rule 164.312",
+        "applies": "technical safeguards"
+      },
+      {
+        "regulation": "HITECH",
+        "applies": "breach notification, enforcement"
+      },
+      {
+        "regulation": "42 CFR Part 2",
+        "applies": "substance use disorder records (PT-3)"
+      },
+      {
+        "regulation": "GINA",
+        "applies": "genetic information nondiscrimination (PT-3)"
+      },
+      {
+        "regulation": "GDPR Art. 5, 6, 9(2)(h)(i)(j), 25, 28, 30, 32-35, 44-49",
+        "applies": "EU personal data including health data"
+      },
+      {
+        "regulation": "EU AI Act",
+        "applies": "high-risk AI systems in healthcare, transparency, and human oversight"
+      },
+      {
+        "regulation": "NIST AI RMF 1.0",
+        "applies": "voluntary framework for trustworthy AI development and deployment"
+      }
+    ],
+    "deidentification": {
+      "safeHarbor18": [
+        "1 names",
+        "2 geographic subdivisions smaller than state (first 3 ZIP digits allowed only if region population > 20,000)",
+        "3 all date elements except year, including birth, admission, discharge, death; ages > 89 aggregated to 90+",
+        "4 telephone numbers",
+        "5 fax numbers",
+        "6 email addresses",
+        "7 social security numbers",
+        "8 medical record numbers",
+        "9 health plan beneficiary numbers",
+        "10 account numbers",
+        "11 certificate and license numbers",
+        "12 vehicle identifiers and serial numbers including plates",
+        "13 device identifiers and serial numbers",
+        "14 URLs",
+        "15 IP addresses",
+        "16 biometric identifiers including finger and voice prints",
+        "17 full-face photographs and comparable images",
+        "18 any other unique identifying number, characteristic, or code"
+      ],
+      "expertDetermination": "alternative pathway with documented statistically-grounded very small risk assessment",
+      "formalModels": [
+        {
+          "model": "k-anonymity",
+          "default": {
+            "internalResearch": 5,
+            "publicRelease": 11
+          }
+        },
+        {
+          "model": "l-diversity",
+          "default": 3
+        },
+        {
+          "model": "t-closeness",
+          "default": 0.2
+        },
+        {
+          "model": "differential privacy",
+          "governance": "epsilon budget owned by PSB; consumption logged per release"
+        },
+        {
+          "model": "synthetic data fidelity",
+          "governance": "requires utility score >= 0.85 and privacy leakage risk < 0.01 per PSB-approved evaluation"
+        }
+      ]
+    },
+    "privacyTiers": [
+      {
+        "id": "PT-1",
+        "name": "Public aggregate",
+        "controls": [
+          "no record-level data",
+          "k >= 11",
+          "small-cell suppression"
+        ]
+      },
+      {
+        "id": "PT-2",
+        "name": "Identifiable clinical (restricted)",
+        "controls": [
+          "RBAC minimum necessary",
+          "immutable audit",
+          "encryption end to end"
+        ]
+      },
+      {
+        "id": "PT-3",
+        "name": "Highly sensitive",
+        "controls": [
+          "explicit consent scope (42 CFR Part 2, HIV, genetics, reproductive, behavioral health, SDOH)",
+          "break-glass with dual review",
+          "enhanced logging",
+          "redisclosure prohibitions propagated"
+        ]
+      },
+      {
+        "id": "PT-4",
+        "name": "Pseudonymized research",
+        "controls": [
+          "honest-broker key custody",
+          "separate re-identification environment",
+          "DUA/IRB gating"
+        ]
+      }
+    ],
+    "technicalControls": {
+      "encryptionAtRest": "AES-256 (GCM preferred); keys in HSM/KMS with rotation <= 12 months",
+      "encryptionInTransit": "TLS 1.2 minimum, TLS 1.3 preferred; mutual TLS for system-to-system regulated flows",
+      "accessControl": "RBAC plus attribute-based conditions; MFA mandatory; session timeout 15 minutes for PT-2/PT-3",
+      "secretsAndKeys": "no secrets in code; automated rotation; quarterly access recertification",
+      "vulnerabilityManagement": "annual penetration test; continuous scanning; critical findings remediated <= 30 days"
+    },
+    "audit": {
+      "recorded": [
+        "who (actor identity)",
+        "what (resource and action)",
+        "when (UTC timestamp)",
+        "where (system, network origin)",
+        "why (purpose-of-use code, incl. break-glass justification)",
+        "outcome (success/deny)"
+      ],
+      "storage": "append-only, tamper-evident; SIEM streaming",
+      "retention": ">= 6 years",
+      "review": "automated anomaly alerts (off-hours bulk access, VIP records, unusual export volume, model retraining without approval)"
+    },
+    "incidentResponse": {
+      "phases": [
+        "detect",
+        "triage",
+        "contain",
+        "notify",
+        "eradicate/recover",
+        "post-incident CAR"
+      ],
+      "notification": [
+        "GDPR supervisory authority within 72 hours where applicable",
+        "HIPAA breach notification per 60-day rule with 4-factor risk assessment",
+        "customer notification per contract"
+      ],
+      "exercises": "semiannual tabletop including a data-integrity (not only confidentiality) and AI-model-poisoning scenario"
+    }
+  },
+  "complianceMatrix": [
+    {
+      "requirement": "HIPAA Security Rule 164.312 technical safeguards",
+      "coveredBy": [
+        "privacySecurityTrust.technicalControls",
+        "privacySecurityTrust.audit"
+      ]
+    },
+    {
+      "requirement": "HIPAA de-identification 164.514",
+      "coveredBy": [
+        "privacySecurityTrust.deidentification",
+        "publicationStandards.publicationTiers"
+      ]
+    },
+    {
+      "requirement": "GDPR Art. 25 privacy by design",
+      "coveredBy": [
+        "privacyTier assignment at metric definition",
+        "privacySecurityTrust.privacyTiers"
+      ]
+    },
+    {
+      "requirement": "GDPR Art. 32 security of processing",
+      "coveredBy": [
+        "privacySecurityTrust.technicalControls"
+      ]
+    },
+    {
+      "requirement": "GDPR Art. 35 DPIA",
+      "coveredBy": [
+        "PSB approval workflow for new high-risk processing"
+      ]
+    },
+    {
+      "requirement": "EU AI Act (High-Risk Systems)",
+      "coveredBy": [
+        "analysisStandards.modelGovernance",
+        "conformance.CONF-AI"
+      ]
+    },
+    {
+      "requirement": "ISO/IEC 27001:2022 Annex A (5.x organizational, 6.x people, 7.x physical, 8.x technological)",
+      "coveredBy": [
+        "privacySecurityTrust",
+        "framework.governance"
+      ]
+    },
+    {
+      "requirement": "NIST SP 800-53 Rev.5 families AC, AU, IA, SC, SI, CM",
+      "coveredBy": [
+        "privacySecurityTrust.technicalControls",
+        "privacySecurityTrust.audit"
+      ]
+    },
+    {
+      "requirement": "21 CFR Part 11 electronic records/signatures",
+      "coveredBy": [
+        "framework.dataLifecycle audit trail",
+        "audit immutability"
+      ]
+    },
+    {
+      "requirement": "ONC certification (170.315) data movement and access expectations",
+      "coveredBy": [
+        "audit trail fields",
+        "apiStandards"
+      ]
+    },
+    {
+      "requirement": "WCAG 2.2 AA accessibility for PRO/SDOH capture surfaces",
+      "coveredBy": [
+        "captureProtocols CP-PRO-001, CP-SDOH-001 implementation requirements"
+      ]
+    },
+    {
+      "requirement": "CMMI Level 5 quantitative and optimizing practices",
+      "coveredBy": [
+        "cmmiAlignment"
+      ]
+    }
+  ],
+  "cmmiAlignment": {
+    "targetMaturity": "CMMI-DEV / CMMI-SVC Maturity Level 5 (Optimizing), with Level 4 quantitative management as a mandatory precondition",
+    "practiceAreaMapping": [
+      {
+        "practiceArea": "Quantitative Work Management (QWM) / legacy QPM-OPP",
+        "application": "process performance baselines and quantitative objectives for every capture, validation, analysis, and publication subprocess"
+      },
+      {
+        "practiceArea": "Causal Analysis and Resolution (CAR)",
+        "application": "all SEV1/SEV2 defects and control-chart signals require root-cause analysis and verified corrective action"
+      },
+      {
+        "practiceArea": "Organizational Performance Management (OPM) / legacy OID",
+        "application": "annual portfolio of data-quality and cycle-time improvements selected from performance baselines and benchmarking"
+      },
+      {
+        "practiceArea": "Data Management (DM)",
+        "application": "this standard is the governed data asset; registry, lineage, and retention managed per DM practices"
+      },
+      {
+        "practiceArea": "Measurement & Analysis (MA)",
+        "application": "the metaMetrics below define the measurement system for the standard itself"
+      },
+      {
+        "practiceArea": "Requirements Development & Management (RDM)",
+        "application": "metric intake treated as requirements with bidirectional traceability to implementation tests"
+      },
+      {
+        "practiceArea": "Verification & Validation (VER/VAL)",
+        "application": "validationRuleLibrary executed in CI; gold-standard re-abstraction validates accuracy (DQ-02)"
+      },
+      {
+        "practiceArea": "Governance (GOV) & Implementation Infrastructure (II)",
+        "application": "DGC oversight; tooling, templates, and training institutionalized"
+      },
+      {
+        "practiceArea": "AI/ML Engineering (Emerging)",
+        "application": "model registry, drift monitoring, and fairness validation integrated into CI/CD pipelines"
+      }
+    ],
+    "quantitativeObjectives": [
+      {
+        "id": "PBB-001",
+        "objective": "ingestion first-pass yield",
+        "definition": "records passing G1 without quarantine",
+        "target": ">= 0.995",
+        "control": "p-chart"
+      },
+      {
+        "id": "PBB-002",
+        "objective": "capture-to-available latency (clinical data)",
+        "definition": "P95 minutes",
+        "target": "<= 1440",
+        "control": "I-MR on daily P95"
+      },
+      {
+        "id": "PBB-003",
+        "objective": "data defect density",
+        "definition": "confirmed defects per 1,000 records in validated store",
+        "target": "<= 0.5",
+        "control": "u-chart"
+      },
+      {
+        "id": "PBB-004",
+        "objective": "escaped data defects",
+        "definition": "defects found downstream of G2 gate",
+        "target": "<= 2% of all defects",
+        "control": "p-chart"
+      },
+      {
+        "id": "PBB-005",
+        "objective": "SPC coverage",
+        "definition": "share of active metrics with live control charts",
+        "target": "100% for category VS and 90% overall",
+        "control": "report"
+      },
+      {
+        "id": "PBB-006",
+        "objective": "metric approval cycle time",
+        "definition": "draft to active, P50 days",
+        "target": "<= 45 days",
+        "control": "I-MR"
+      },
+      {
+        "id": "PBB-007",
+        "objective": "cost of poor data quality (COPQ)",
+        "definition": "rework + remediation + opportunity cost, currency units per quarter",
+        "target": "downward trend >= 10% year over year",
+        "control": "run chart with baseline"
+      },
+      {
+        "id": "PBB-008",
+        "objective": "AI model fairness compliance",
+        "definition": "percentage of deployed models meeting DQ-11 threshold",
+        "target": "100%",
+        "control": "quarterly audit"
+      }
+    ],
+    "defectPrevention": [
+      "poka-yoke at capture: UI-enforced units, ranges, and required context fields",
+      "terminology server validation at authoring time prevents invalid bindings (G-TERM-01)",
+      "schema contracts and CI data-contract tests block breaking changes",
+      "simulation and synthetic datasets validate pipelines before production data",
+      "checklists embedded in deployment runbooks derived from Pareto of historical defect classes",
+      "automated bias scanning in CI/CD pipeline for all ML feature engineering steps"
+    ],
+    "continuousImprovementLoop": [
+      {
+        "step": 1,
+        "name": "Measure",
+        "action": "collect DQ dimensions and PBB metrics continuously"
+      },
+      {
+        "step": 2,
+        "name": "Analyze",
+        "action": "SPC + Pareto identify special-cause signals and dominant defect classes"
+      },
+      {
+        "step": 3,
+        "name": "Improve",
+        "action": "CAR/DMAIC projects address root causes; pilot with staged rollout"
+      },
+      {
+        "step": 4,
+        "name": "Control",
+        "action": "updated baselines, control plans, and standard-work revisions published"
+      },
+      {
+        "step": 5,
+        "name": "Innovate",
+        "action": "OPM pipeline evaluates step-change innovations (new devices, models, standards) against baselines"
+      }
+    ],
+    "maturityEvidence": [
+      "this registry IS the organizational process asset library for data metrics",
+      "SPC charts and baselines ARE the quantitative management evidence",
+      "CAR records and verification logs ARE the optimizing-level evidence"
+    ]
+  },
+  "glossary": [
+    {
+      "term": "Metric",
+      "definition": "a governed, versioned definition of a measurable health construct with declared value domain, capture protocol, and quality targets"
+    },
+    {
+      "term": "Golden Record",
+      "definition": "the reconciled master representation of a person or entity after identity resolution"
+    },
+    {
+      "term": "First-Pass Yield",
+      "definition": "proportion of records passing all validation gates without rework"
+    },
+    {
+      "term": "Process Performance Baseline",
+      "definition": "statistically characterized central tendency and dispersion of a stable process"
+    },
+    {
+      "term": "Special Cause",
+      "definition": "variation outside the stable pattern of a process, signaling an assignable cause"
+    },
+    {
+      "term": "Honest Broker",
+      "definition": "trusted agent mediating data flows and holding re-identification keys separately"
+    },
+    {
+      "term": "Limited Data Set",
+      "definition": "HIPAA-permitted dataset excluding direct identifiers but permitting dates and partial geography under a DUA"
+    },
+    {
+      "term": "Top-Box",
+      "definition": "most positive response category in a survey item"
+    },
+    {
+      "term": "SIR",
+      "definition": "Standardized Infection Ratio: observed infections divided by predicted"
+    },
+    {
+      "term": "Entered-in-Error",
+      "definition": "record flagged as erroneous and excluded semantically from analytics without deletion"
+    },
+    {
+      "term": "Demographic Parity",
+      "definition": "an AI fairness metric requiring the probability of a positive prediction to be equal across protected groups"
+    },
+    {
+      "term": "Synthetic Data",
+      "definition": "artificially generated data that mimics the statistical properties of real data without containing actual patient records"
+    }
+  ],
+  "appendices": {
+    "ucumCommonUnits": [
+      "mm[Hg]",
+      "{beats}/min",
+      "{breaths}/min",
+      "Cel",
+      "%",
+      "cm",
+      "kg",
+      "kg/m2",
+      "g/dL",
+      "mg/dL",
+      "mg/g",
+      "mmol/L",
+      "m[IU]/L",
+      "meq/L",
+      "U/L",
+      "ng/mL",
+      "pg/mL",
+      "umol/L",
+      "mmol/mol",
+      "ms",
+      "L",
+      "10*3/uL",
+      "{ratio}",
+      "mL/min/{1.73_m2}",
+      "g",
+      "wk",
+      "a"
+    ],
+    "ageBands": [
+      {
+        "band": "neonate",
+        "range": "0 to < 28 days"
+      },
+      {
+        "band": "infant",
+        "range": "28 days to < 1 year"
+      },
+      {
+        "band": "child",
+        "range": "1 to < 12 years"
+      },
+      {
+        "band": "adolescent",
+        "range": "12 to < 18 years"
+      },
+      {
+        "band": "adult",
+        "range": "18 to < 65 years"
+      },
+      {
+        "band": "older_adult",
+        "range": ">= 65 years"
+      }
+    ],
+    "conversionFactors": [
+      {
+        "analyte": "glucose",
+        "from": "mmol/L",
+        "to": "mg/dL",
+        "factor": 18.016
+      },
+      {
+        "analyte": "cholesterol",
+        "from": "mmol/L",
+        "to": "mg/dL",
+        "factor": 38.67
+      },
+      {
+        "analyte": "creatinine",
+        "from": "umol/L",
+        "to": "mg/dL",
+        "factor": 0.011312
+      },
+      {
+        "analyte": "HbA1c",
+        "from": "IFCC mmol/mol",
+        "to": "NGSP %",
+        "equation": "NGSP% = 0.09148 * IFCC + 2.152"
+      },
+      {
+        "analyte": "calcium",
+        "from": "mmol/L",
+        "to": "mg/dL",
+        "factor": 4.008
+      },
+      {
+        "analyte": "hemoglobin",
+        "from": "g/L",
+        "to": "g/dL",
+        "factor": 0.1
+      },
+      {
+        "analyte": "25-OH vitamin D",
+        "from": "nmol/L",
+        "to": "ng/mL",
+        "factor": 0.4006
+      }
+    ],
+    "exampleClassificationBindings": {
+      "icd10cmExamples": [
+        {
+          "code": "I10",
+          "display": "Essential (primary) hypertension"
+        },
+        {
+          "code": "E11.9",
+          "display": "Type 2 diabetes mellitus without complications"
+        },
+        {
+          "code": "I21.3",
+          "display": "ST elevation myocardial infarction of unspecified site"
+        },
+        {
+          "code": "I63.9",
+          "display": "Cerebral infarction, unspecified"
+        },
+        {
+          "code": "J44.9",
+          "display": "Chronic obstructive pulmonary disease, unspecified"
+        },
+        {
+          "code": "N18.3",
+          "display": "Chronic kidney disease, stage 3"
+        },
+        {
+          "code": "A41.9",
+          "display": "Sepsis, unspecified organism"
+        },
+        {
+          "code": "P07.1",
+          "display": "Low birth weight newborn"
+        },
+        {
+          "code": "Z59.0",
+          "display": "Homelessness"
+        }
+      ],
+      "snomedExamples": [
+        {
+          "code": "38341003",
+          "display": "Hypertensive disorder, systemic arterial"
+        },
+        {
+          "code": "73211009",
+          "display": "Diabetes mellitus"
+        },
+        {
+          "code": "60621009",
+          "display": "Body mass index (observable entity)"
+        },
+        {
+          "code": "13645005",
+          "display": "Chronic obstructive lung disease"
+        },
+        {
+          "code": "22298006",
+          "display": "Myocardial infarction"
+        },
+        {
+          "code": "313321007",
+          "display": "Lack of adequate housing (finding)"
+        }
+      ],
+      "rxnormExamples": [
+        {
+          "code": "6809",
+          "display": "metformin"
+        },
+        {
+          "code": "1191",
+          "display": "aspirin"
+        },
+        {
+          "code": "83367",
+          "display": "atorvastatin"
+        },
+        {
+          "code": "29046",
+          "display": "lisinopril"
+        }
+      ]
+    },
+    "fhirDataAbsentReasonReference": "http://terminology.hl7.org/CodeSystem/data-absent-reason",
+    "references": [
+      "Whelton PK et al. 2017 ACC/AHA Hypertension Guideline. Hypertension 2018;71:e13-e115",
+      "Grundy SM et al. 2018 AHA/ACC Cholesterol Guideline. Circulation 2019;139:e1082-e1143",
+      "Inker LA et al. New Creatinine- and Cystatin C-Based eGFR Equations. NEJM 2021;385:1737-1749",
+      "KDIGO 2012 Clinical Practice Guideline for CKD. Kidney Int Suppl 2013;3:1-150",
+      "Kroenke K, Spitzer RL, Williams JB. The PHQ-9. J Gen Intern Med 2001;16:606-613",
+      "Spitzer RL et al. A brief measure for GAD: the GAD-7. Arch Intern Med 2006;166:1092-1097",
+      "Sjoding MW et al. Racial Bias in Pulse Oximetry Measurement. NEJM 2020;383:2477-2478",
+      "CMS HRRP and Hospital Compare measure methodologies (current versions)",
+      "CDC NHSN Patient Safety Component Manual (current)",
+      "ADA Standards of Care in Diabetes (current edition)",
+      "ATS/ERS 2019 Standardization of Spirometry; GOLD Report (current)",
+      "WHO STEPS surveillance protocol; WHO Child Growth Standards",
+      "Ahmad OB et al. WHO Standard Population. GPE Discussion Paper 31",
+      "DAMA-DMBOK2 (Data Quality chapter); ISO 8000 series",
+      "HL7 FHIR R4/R5; US Core IG; FHIR Bulk Data Access IG",
+      "HIPAA 45 CFR 164.514(b); OCR de-identification guidance",
+      "GDPR (Regulation EU 2016/679); EDPB guidance",
+      "EU AI Act (Regulation (EU) 2024/1689)",
+      "NIST AI Risk Management Framework (AI RMF 1.0)",
+      "ISO/IEC 27001:2022; NIST SP 800-53 Rev.5",
+      "CMMI Institute, CMMI V2.0/V3.0 appraisal framework documentation",
+      "Gravity Project, Recommendations for Interoperable Data Capture of Social Drivers of Health"
+    ]
+  },
+  "changeLog": [
+    {
+      "version": "1.0.0",
+      "date": "2025-01-01",
+      "author": "HDMS Governance",
+      "changes": [
+        "initial approved release",
+        "56 catalog metrics across 13 categories",
+        "10 data-quality dimensions with gates",
+        "CMMI L5 alignment with 7 process performance baselines"
+      ]
+    },
+    {
+      "version": "2.0.0",
+      "date": "2026-09-30",
+      "author": "HDMS Governance",
+      "changes": [
+        "added AI/ML governance, fairness metrics, and NIST AI RMF alignment",
+        "introduced SDOH taxonomy, metrics, and capture protocols",
+        "added DQ-11 (Fairness) and DQ-12 (Explainability) dimensions",
+        "expanded data lifecycle to include 'synthesized' and 'federated' states",
+        "added geospatial and array data types",
+        "updated regulatory basis to include EU AI Act",
+        "bumped next scheduled review to 2027-01-01"
+      ]
+    }
+  ]
+}
