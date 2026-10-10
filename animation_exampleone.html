@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sieve-funnel — hairline</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --hairline-plate: #101014;
+      --hairline-hi: #fafafa;
+      --hairline-edge: #a1a1aa;
+      --hairline-mid: #52525b;
+      --hairline-lo: #27272a;
+      --hairline-stroke: 0.9;
+    }
+    
+    @media (prefers-color-scheme: light) {
+      :root {
+        --hairline-plate: #fafafa;
+        --hairline-hi: #101014;
+        --hairline-edge: #52525b;
+        --hairline-mid: #a1a1aa;
+        --hairline-lo: #d4d4d8;
+      }
+    }
+    
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--hairline-plate);
+      color: var(--hairline-hi);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .stage {
+      width: 400px;
+      height: 320px;
+      background: var(--hairline-plate);
+      border: 1px solid var(--hairline-edge);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    path, polygon, ellipse, line {
+      fill: none;
+      stroke: var(--hairline-mid);
+      stroke-width: var(--hairline-stroke);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    
+    .sil { stroke: var(--hairline-edge); }
+    .hi { stroke: var(--hairline-hi); }
+    .lo { stroke: var(--hairline-lo); }
+    .nf { fill: none; }
+    .fo { fill: var(--hairline-plate); stroke: none; }
+    .dash { stroke-dasharray: 2 3; }
+    
+    circle.dot { fill: var(--hairline-hi); stroke: none; }
+    circle.dot.m { fill: var(--hairline-mid); }
+    circle.dot.off { fill: var(--hairline-lo); }
+    
+    .read {
+      font-family: ui-monospace, monospace;
+      font-size: 0.875rem;
+      color: var(--hairline-mid);
+      min-height: 1.5em;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    button {
+      padding: 0.5rem 1rem;
+      background: var(--hairline-plate);
+      color: var(--hairline-hi);
+      border: 1px solid var(--hairline-edge);
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    
+    button:hover {
+      border-color: var(--hairline-hi);
+    }
+    
+    input[type="range"] {
+      width: 200px;
+    }
+    
+    .means {
+      font-size: 0.875rem;
+      color: var(--hairline-mid);
+      max-width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="fade-mask">
+          <rect width="400" height="320" fill="white"/>
+        </mask>
+      </defs>
+    </svg>
+  </div>
+  <div class="read" id="read">rest</div>
+  <div class="controls">
+    <button id="play-btn">Play Tour</button>
+    <input type="range" id="intensity" min="0" max="2" step="0.1" value="1">
+  </div>
+  <div class="means" id="means"></div>
+
+  <script>
+// Minimal hairline kernel implementation
+const HL = (() => {
+  const rad = (deg) => (deg * Math.PI) / 180;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const r2 = (n) => Math.round(n * 100) / 100;
+
+  function Cam(azDeg, k, S) {
+    const az = rad(azDeg);
+    const cosAz = Math.cos(az), sinAz = Math.sin(az);
+    const el = Math.asin(k);
+    const cosEl = Math.cos(el), sinEl = k;
+    return { az, el, cosAz, sinAz, cosEl, sinEl, S, cx: 0, cy: 0 };
+  }
+
+  function fit(C, points, cx, cy) {
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for (const [x, y, z] of points) {
+      const sx = (x * C.cosAz - y * C.sinAz) * C.S;
+      const sy = (x * C.sinAz * C.sinEl + y * C.cosAz * C.sinEl - z * C.cosEl) * C.S;
+      minX = Math.min(minX, sx);
+      maxX = Math.max(maxX, sx);
+      minY = Math.min(minY, sy);
+      maxY = Math.max(maxY, sy);
+    }
+    C.cx = cx - (minX + maxX) / 2;
+    C.cy = cy - (minY + maxY) / 2;
+  }
+
+  function proj(C) {
+    return function P(x, y, z) {
+      const sx = (x * C.cosAz - y * C.sinAz) * C.S + C.cx;
+      const sy = (x * C.sinAz * C.sinEl + y * C.cosAz * C.sinEl - z * C.cosEl) * C.S + C.cy;
+      return [sx, sy];
+    };
+  }
+
+  function rrect(u0, v0, u1, v1, r, n = 4) {
+    const samples = [];
+    const w = u1 - u0, h = v1 - v0;
+    r = Math.min(r, w / 2, h / 2);
+    
+    const corners = [
+      [u1 - r, v0, 0],
+      [u1, v0 + r, Math.PI / 2],
+      [u1 - r, v1, Math.PI],
+      [u0, v1 - r, (3 * Math.PI) / 2],
+      [u0 + r, v0, 0]
+    ];
+
+    for (let i = 0; i < corners.length - 1; i++) {
+      const [cx, cy, startAngle] = corners[i];
+      const endAngle = corners[i + 1][2] || startAngle + Math.PI / 2;
+      const steps = n;
+      for (let j = 0; j <= steps; j++) {
+        const angle = lerp(startAngle, endAngle, j / steps);
+        const u = cx + r * Math.cos(angle);
+        const v = cy + r * Math.sin(angle);
+        const nu = Math.cos(angle);
+        const nv = Math.sin(angle);
+        samples.push({ u, v, nu, nv });
+      }
+    }
+    return samples;
+  }
+
+  function rings(x0, y0, x1, y1, r, b) {
+    const ring = rrect(x0, y0, x1, y1, r);
+    const inner = rrect(x0 + b, y0 + b, x1 - b, y1 - b, Math.max(0, r - b));
+    return [ring, inner];
+  }
+
+  function prism(P, front, ring, inner, z0, z1) {
+    const topRing = ringAt(P, ring, z1);
+    const baseRing = ringAt(P, ring, z0);
+    const allPoints = topRing.concat(baseRing);
+    const sil = poly(hull(allPoints));
+    
+    const innerTop = ringAt(P, run(inner, front), z1);
+    const crease = open(innerTop);
+    
+    return { sil, crease };
+  }
+
+  function ringAt(P, ring, z) {
+    return ring.map(s => P(s.u, s.v, z));
+  }
+
+  function run(ring, keep) {
+    const result = [];
+    let started = false;
+    for (let i = 0; i < ring.length * 2; i++) {
+      const sample = ring[i % ring.length];
+      if (keep(sample)) {
+        if (!started) started = true;
+        result.push(sample);
+      } else if (started) {
+        break;
+      }
+    }
+    return result;
+  }
+
+  function hull(points) {
+    if (points.length < 3) return points;
+    
+    const sorted = points.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const lower = [];
+    for (const p of sorted) {
+      while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) {
+        lower.pop();
+      }
+      lower.push(p);
+    }
+    
+    const upper = [];
+    for (let i = sorted.length - 1; i >= 0; i--) {
+      const p = sorted[i];
+      while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) {
+        upper.pop();
+      }
+      upper.push(p);
+    }
+    
+    upper.pop();
+    lower.pop();
+    return lower.concat(upper);
+  }
+
+  function cross(o, a, b) {
+    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  }
+
+  function poly(points) {
+    if (points.length === 0) return "";
+    let d = `M${r2(points[0][0])},${r2(points[0][1])}`;
+    for (let i = 1; i < points.length; i++) {
+      d += `L${r2(points[i][0])},${r2(points[i][1])}`;
+    }
+    return d + "Z";
+  }
+
+  function open(points) {
+    if (points.length === 0) return "";
+    let d = `M${r2(points[0][0])},${r2(points[0][1])}`;
+    for (let i = 1; i < points.length; i++) {
+      d += `L${r2(points[i][0])},${r2(points[i][1])}`;
+    }
+    return d;
+  }
+
+  function spring(x, opts = {}) {
+    const { k = 100, c = 18, m = 1, eps = 0.01 } = opts;
+    return { x, v: 0, t: x, k, c, m, eps };
+  }
+
+  function stepS(sp, dt) {
+    const force = -sp.k * (sp.x - sp.t) - sp.c * sp.v;
+    const a = force / sp.m;
+    sp.v += a * dt;
+    sp.x += sp.v * dt;
+    
+    if (Math.abs(sp.x - sp.t) < sp.eps && Math.abs(sp.v) < sp.eps) {
+      sp.x = sp.t;
+      sp.v = 0;
+      return false;
+    }
+    return true;
+  }
+
+  function mk(tag, attrs, parent) {
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      el.setAttribute(k, v);
+    }
+    if (parent) parent.appendChild(el);
+    return el;
+  }
+
+  function solid(parent) {
+    const g = mk("g", {}, parent);
+    const sil = mk("path", { class: "sil" }, g);
+    const cr = mk("path", { class: "lo" }, g);
+    return { g, sil, cr };
+  }
+
+  function put(solid, paths) {
+    solid.sil.setAttribute("d", paths.sil);
+    solid.cr.setAttribute("d", paths.crease);
+  }
+
+  function place(el, point) {
+    el.setAttribute("cx", r2(point[0]));
+    el.setAttribute("cy", r2(point[1]));
+  }
+
+  let tickCallbacks = [];
+  let rafId = null;
+  let lastTime = 0;
+
+  function register(stage, tick) {
+    tickCallbacks.push(tick);
+    
+    function wake() {
+      if (!rafId) {
+        lastTime = performance.now();
+        rafId = requestAnimationFrame(loop);
+      }
+    }
+
+    function unregister() {
+      tickCallbacks = tickCallbacks.filter(t => t !== tick);
+      if (tickCallbacks.length === 0 && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+
+    return { wake, unregister };
+  }
+
+  function loop(now) {
+    const dt = (now - lastTime) / 1000;
+    lastTime = now;
+    
+    let stillMoving = false;
+    for (const tick of tickCallbacks) {
+      if (tick(dt, now)) stillMoving = true;
+    }
+    
+    if (stillMoving || tickCallbacks.length > 0) {
+      rafId = requestAnimationFrame(loop);
+    } else {
+      rafId = null;
+    }
+  }
+
+  function pointer(stage, handlers) {
+    const svg = stage.querySelector("svg");
+    const rect = () => svg.getBoundingClientRect();
+    
+    function toViewBox(e) {
+      const r = rect();
+      const x = ((e.clientX - r.left) / r.width) * 400;
+      const y = ((e.clientY - r.top) / r.height) * 320;
+      return [x, y];
+    }
+
+    function onMove(e) {
+      if (handlers.move) handlers.move(toViewBox(e));
+    }
+
+    function onLeave() {
+      if (handlers.leave) handlers.leave();
+    }
+
+    svg.addEventListener("mousemove", onMove);
+    svg.addEventListener("mouseleave", onLeave);
+
+    return function dispose() {
+      svg.removeEventListener("mousemove", onMove);
+      svg.removeEventListener("mouseleave", onLeave);
+    };
+  }
+
+  function disposer() {
+    const disposers = [];
+    return {
+      add(d) { disposers.push(d); },
+      on(fn) { disposers.push(fn); },
+      dispose() { disposers.forEach(d => d()); }
+    };
+  }
+
+  function facing(C) {
+    return function front(sample) {
+      return sample.nu * C.cosAz + sample.nv * C.sinAz > 0;
+    };
+  }
+
+  return {
+    Cam, fit, proj, facing,
+    rrect, rings, prism, ringAt, run, hull,
+    poly, open, clamp, lerp, rad, r2,
+    spring, stepS,
+    mk, solid, put, place,
+    register, pointer, disposer
+  };
+})();
+
+Object.assign(window, HL);
+  </script>
+
+  <script>
+const name = "sieve-funnel";
+const means = "Three stacked sieves narrowing downward; the pointer's height raises one to show the filtered layer.";
+const rules = [1, 3, 4, 5, 8, 9];
+const range = [0, 1, 2];
+
+function mount({ stage, svg, read }, value) {
+  const bag = disposer();
+  const C = Cam(45, 0.5, 1.6);
+  const P = proj(C);
+  const front = facing(C);
+
+  fit(C, [
+    [-70, -70, 40], [70, 70, 40], 
+    [-70, 70, 0], [70, -70, 0]
+  ], 200, 160);
+
+  const sieves = [
+    { id: 0, x0: -70, y0: -70, x1: 70, y1: 70, rest_z: 24, r: 6, label: "tier 1" },
+    { id: 1, x0: -45, y0: -45, x1: 45, y1: 45, rest_z: 12, r: 5, label: "tier 2" },
+    { id: 2, x0: -20, y0: -20, x1: 20, y1: 20, rest_z: 0, r: 4, label: "tier 3" }
+  ];
+
+  const springs = sieves.map(() => spring(0));
+  const g = mk("g", {}, svg);
+
+  const solids = sieves.map(s => {
+    const s_solid = solid(g);
+    return { ...s, solid: s_solid, ring: rings(s.x0, s.y0, s.x1, s.y1, s.r, 1.5) };
+  });
+
+  let target_idx = -1;
+
+  bag.add(pointer(stage, {
+    move(pt) {
+      const sy = pt[1];
+      if (sy < 120) target_idx = 0;
+      else if (sy < 220) target_idx = 1;
+      else target_idx = 2;
+      
+      for (let i = 0; i < 3; i++) {
+        springs[i].t = (i === target_idx) ? 16 : 0;
+      }
+      read.textContent = solids[target_idx].label;
+      wake();
+    },
+    leave() {
+      target_idx = -1;
+      for (let i = 0; i < 3; i++) springs[i].t = 0;
+      read.textContent = "rest";
+      wake();
+    }
+  }));
+
+  const meshes = solids.map(s => {
+    const dots = [];
+    const step = 14;
+    for (let x = s.x0 + 12; x < s.x1; x += step) {
+      for (let y = s.y0 + 12; y < s.y1; y += step) {
+        dots.push([x, y]);
+      }
+    }
+    return dots;
+  });
+
+  const dot_els = meshes.map((mesh, i) => {
+    const g_dots = mk("g", { class: "dot m" }, solids[i].solid.g);
+    return mesh.map(pt => {
+      const el = mk("circle", { r: 1.2 }, g_dots);
+      return { el, x: pt[0], y: pt[1] };
+    });
+  });
+
+  const { wake, unregister } = register(stage, (dt, now) => {
+    let moving = false;
+    for (let i = 0; i < 3; i++) {
+      moving = stepS(springs[i], dt) || moving;
+    }
+
+    for (let i = 2; i >= 0; i--) {
+      const s = solids[i];
+      const z = s.rest_z + springs[i].x;
+      const is_active = (i === target_idx);
+      
+      const { sil, crease } = prism(P, front, s.ring[0], s.ring[1], z, z + 2);
+      put(s.solid, { sil, crease });
+      
+      s.solid.sil.classList.toggle("hi", is_active);
+      s.solid.sil.classList.toggle("sil", !is_active);
+
+      const dz = z + 1;
+      for (const dot of dot_els[i]) {
+        const [sx, sy] = P(dot.x, dot.y, dz);
+        place(dot.el, [sx, sy]);
+      }
+    }
+    return moving;
+  });
+
+  if (value !== undefined) {
+    target_idx = Math.round(value);
+    for (let i = 0; i < 3; i++) {
+      springs[i].t = (i === target_idx) ? 16 : 0;
+    }
+    read.textContent = target_idx >= 0 ? solids[target_idx].label : "rest";
+    wake();
+  } else {
+    read.textContent = "rest";
+  }
+
+  return {
+    set(v) {
+      target_idx = Math.round(v);
+      for (let i = 0; i < 3; i++) {
+        springs[i].t = (i === target_idx) ? 16 : 0;
+      }
+      read.textContent = target_idx >= 0 ? solids[target_idx].label : "rest";
+      wake();
+    },
+    destroy: bag.dispose
+  };
+}
+
+hairline({ 
+  name, 
+  means, 
+  rules, 
+  range, 
+  tour: [[200, 100], [200, 160], [200, 220], null], 
+  mount 
+});
+
+function hairline({ name, means, rules, range, tour, mount }) {
+  const stage = document.getElementById("stage");
+  const svg = stage.querySelector("svg");
+  const read = document.getElementById("read");
+  const meansEl = document.getElementById("means");
+  const playBtn = document.getElementById("play-btn");
+  const intensitySlider = document.getElementById("intensity");
+  
+  meansEl.textContent = means;
+  
+  const figure = mount({ stage, svg, read }, range[1]);
+  
+  intensitySlider.addEventListener("input", (e) => {
+    const v = parseFloat(e.target.value);
+    figure.set(v);
+  });
+  
+  let playing = false;
+  let tourIdx = 0;
+  
+  playBtn.addEventListener("click", () => {
+    if (playing) {
+      playing = false;
+      playBtn.textContent = "Play Tour";
+      return;
+    }
+    
+    playing = true;
+    playBtn.textContent = "Stop";
+    tourIdx = 0;
+    
+    function nextStop() {
+      if (!playing || tourIdx >= tour.length) {
+        playing = false;
+        playBtn.textContent = "Play Tour";
+        return;
+      }
+      
+      const stop = tour[tourIdx];
+      if (stop === null) {
+        figure.set(range[1]);
+        tourIdx++;
+        setTimeout(nextStop, 1000);
+      } else {
+        const [x, y] = stop;
+        const sy = y;
+        let idx = 2;
+        if (sy < 120) idx = 0;
+        else if (sy < 220) idx = 1;
+        
+        figure.set(idx);
+        intensitySlider.value = idx;
+        tourIdx++;
+        setTimeout(nextStop, 1500);
+      }
+    }
+    
+    nextStop();
+  });
+  
+  if (new URLSearchParams(window.location.search).get("play") === "1") {
+    setTimeout(() => playBtn.click(), 500);
+  }
+}
+  </script>
+</body>
+</html>
